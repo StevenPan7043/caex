@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.LockAmountMapper">
+
+
+
+	<!-- 修改一条数据 -->
+	<update id="update" parameterType="java.util.Map">
+		UPDATE m_lock_amount m SET m.r_release=#{r_release},m.unnum=#{unnum}
+<!--&#45;&#45; 		<if test="unnum != null and unnum != ''">,m.unnum=#{unnum}</if>-->
+		<if test="amount != null and amount != ''">,m.amount=#{amount}</if>
+		WHERE m.id=#{id}
+	</update>
+
+
+	<insert id="insert" parameterType="java.util.Map">
+		insert into m_lock_amount (member_id,currency_id,currency,amount,unnum,r_release)
+		values (#{member_id},#{currency_id},#{currency},#{amount},#{unnum},#{r_release})
+	</insert>
+
+	<select id="findByPage" resultType="com.pmzhongguo.ex.business.entity.LockAmount" parameterType="java.util.Map">
+		SELECT * FROM m_lock_amount m
+		 WHERE m.member_id=#{member_id} ORDER BY id ASC
+	</select>
+
+	<select id="findAllCurrency" resultType="com.pmzhongguo.ex.business.entity.LockAmount" parameterType="java.util.Map">
+		SELECT * FROM m_lock_amount m
+		 WHERE m.member_id=#{member_id}
+	</select>
+
+	<select id="findOne" resultType="com.pmzhongguo.ex.business.entity.LockAmount" parameterType="java.util.Map">
+		SELECT * FROM m_lock_amount m
+		 WHERE m.member_id=#{member_id} and m.currency_id=#{currency_id}
+	</select>
+
+
+
+</mapper>

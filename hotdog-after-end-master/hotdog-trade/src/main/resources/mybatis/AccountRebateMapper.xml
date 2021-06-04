@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ex.business.mapper.AccountRebateMapper">
+<!--    查找符合静态奖励的用户情况-->
+    <select id="selectStaticRewardList" resultType="java.util.Map">
+        SELECT a.total_balance,a.frozen_balance,m.introduce_m_id,m.id
+        FROM m_account a LEFT JOIN m_member m
+        ON a.member_id = m.id
+        WHERE a.currency = #{currency}
+        AND a.total_balance - frozen_balance >= #{rewardNum}
+    </select>
+<!--    查找符合动态邀请奖励的用户情况-->
+<!--    目前是查找注册日期在昨日12点到今日12点之间的用户-->
+    <select id="selectInviteRewardList" resultType="java.util.Map">
+        SELECT a.total_balance,a.frozen_balance,m.introduce_m_id,m.id
+        FROM m_account a LEFT JOIN m_member m
+        ON a.member_id = m.id
+        WHERE a.currency = #{currency}
+        AND m.introduce_m_id != 0
+        AND m.reg_time >= DATE_FORMAT(date_sub(current_date(),interval 1 day),'%Y-%m-%d 12:00:00')
+        AND DATE_FORMAT(now(),'%Y-%m-%d 12:00:00') > m.reg_time;
+    </select>
+<!--    批量插入返利-->
+<!--    要用到主键-->
+    <insert id="insertRebateForeach" parameterType="java.util.List"
+            useGeneratedKeys="true" keyProperty="id" >
+        INSERT INTO m_account_rebate
+        (member_id,currency,total_balance,frozen_balance,available_balance,rebate_balance,r_status,
+        r_type,introduce_m_id,create_time,update_time)
+        VALUES 
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.memberId},
+                #{item.currency},
+                #{item.totalBalance},
+                #{item.frozenBalance},
+                #{item.availableBalance},
+                #{item.rebateBalance},
+                #{item.rStatus},
+                #{item.rType},
+                #{item.introduceMId},
+                now(),
+                now()
+            )
+        </foreach>
+    </insert>
+
+    <select id="getUnRewardedAccountRebateList" resultMap="BaseResultMap">
+        SELECT * FROM m_account_rebate m
+        WHERE m.r_status = 0
+    </select>
+
+    <select id="getAccountRebateListPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT * FROM m_account_rebate m
+        WHERE 1 = 1
+        <if test="memberId != null and memberId != ''">
+            and member_id=#{memberId}
+        </if>
+        <if test="currency != null and currency != ''">
+            and currency=#{currency}
+        </if>
+        <if test="rType != null and rType != ''">
+            and r_type=#{rType}
+        </if>
+        <if test="rStatus != null and rStatus != ''">
+            and r_status=#{rStatus}
+        </if>
+        <if test="introduceMId != null and introduceMId != ''">
+            and introduce_m_id=#{introduceMId}
+        </if>
+    </select>
+
+
+    <resultMap id="BaseResultMap" type="com.pmzhongguo.ex.business.scheduler.AccountRebate">
+        <id column="id" property="id"/>
+        <result column="member_id" property="memberId"/>
+        <result column="currency" property="currency"/>
+        <result column="total_balance" property="totalBalance"/>
+        <result column="frozen_balance" property="frozenBalance"/>
+        <result column="available_balance" property="availableBalance"/>
+        <result column="rebate_balance" property="rebateBalance"/>
+        <result column="r_status" property="rStatus"/>
+        <result column="r_type" property="rType"/>
+        <result column="introduce_m_id" property="introduceMId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+</mapper>

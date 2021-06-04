@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper
+        namespace="com.pmzhongguo.ex.business.mapper.WarehouseAccountMapper">
+    <resultMap id="WarehouseBaseResultMap"  type="com.pmzhongguo.ex.business.vo.WarehouseAccountVo">
+        <id column="id" property="id"/>
+        <result column="member_id" property="memberId"/>
+        <result column="account_id" property="accountId"/>
+        <result column="currency" property="currency"/>
+        <result column="warehouse_amount" property="warehouseAmount"/>
+        <result column="warehouse_release_amount" property="warehouseReleaseAmount"/>
+        <result column="warehouse_count" property="warehouseCount"/>
+        <result column="warehouse_release_count" property="warehouseReleaseCount"/>
+        <result column="next_release_time" property="nextReleaseTime"/>
+        <result column="rule_ids" property="ruleIds"/>
+        <result column="is_release" property="isRelease"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="r_address" property="rAddress"/>
+        <result column="coin_recharge_id" property="coinRechargeId"/>
+    </resultMap>
+
+    <select id="getWarehouseAccountListPage" resultMap="WarehouseBaseResultMap"
+            parameterType="java.util.Map">
+        select id,member_id,account_id,currency,warehouse_amount,warehouse_release_amount,
+        warehouse_count,warehouse_release_count,rule_ids,is_release,create_by,create_time,r_address,is_deleted,next_release_time,update_time
+        from m_warehouse_account
+        where 1=1
+        <if test="memberId != null and memberId != ''">
+            and member_id=#{memberId}
+        </if>
+        <if test="accountId != null and accountId != ''">
+            and account_id=#{accountId}
+        </if>
+        <if test="currency != null and currency != ''">
+            and currency=#{currency}
+        </if>
+        <if test="coinRechargeId != null and coinRechargeId != ''">
+            and coin_recharge_id=#{coinRechargeId}
+        </if>
+        <if test="warehouseAmount != null and warehouseAmount != ''">
+            and warehouse_amount=#{warehouseAmount}
+        </if>
+        <if test="warehouseReleaseAmount != null and warehouseReleaseAmount != ''">
+            and warehouse_release_amount=#{warehouseReleaseAmount}
+        </if>
+        <if test="warehouseCount != null and warehouseCount != ''">
+            and warehouse_count=#{warehouseCount}
+        </if>
+        <if test="warehouseReleaseCount != null and warehouseReleaseCount != ''">
+            and warehouse_release_count=#{warehouseReleaseCount}
+        </if>
+        <if test="nextReleaseTime != null and nextReleaseTime != ''">
+            and next_release_time <![CDATA[ <= ]]> #{nextReleaseTime}
+        </if>
+        <if test="ruleIds != null and ruleIds != ''">
+            and rule_ids=#{ruleIds}
+        </if>
+        <if test="isRelease != null and isRelease != ''">
+            and is_release=#{isRelease}
+        </if>
+        <if test="createBy != null and createBy != ''">
+            and create_by=#{createBy}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time=#{createTime}
+        </if>
+        <if test="rAddress != null and rAddress != ''">
+            and r_address=#{rAddress}
+        </if>
+        <if test="updateBy != null and updateBy != ''">
+            and update_by=#{updateBy}
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+            and update_time=#{updateTime}
+        </if>
+        <if test="isDeleted != null and isDeleted != ''">
+            and is_deleted=#{isDeleted}
+        </if>
+        <if test="unDeleted != null and unDeleted != ''">
+            and is_release != #{unDeleted}
+        </if>
+    </select>
+
+
+    <select id="getSumWarehouseAccount" resultType="java.math.BigDecimal">
+		SELECT
+		SUM( warehouse_amount ) - SUM( warehouse_release_amount ) unRelease
+		FROM m_warehouse_account
+		WHERE
+		member_id = #{memberId}
+		AND currency = #{currency}
+		AND is_release = 0
+		AND is_deleted = 0
+		GROUP BY currency;
+    </select>
+
+    <insert id="insertWarehouseAccount" parameterType="com.pmzhongguo.ex.business.vo.WarehouseAccountVo">
+      INSERT INTO m_warehouse_account
+          (member_id,account_id,currency,warehouse_amount,warehouse_release_amount,warehouse_count,warehouse_release_count,next_release_time,rule_ids,is_release,
+          create_by,create_time,update_by,update_time,is_deleted,r_address,coin_recharge_id)
+      VALUES
+          (#{memberId},#{accountId},#{currency},#{warehouseAmount},#{warehouseReleaseAmount},#{warehouseCount},#{warehouseReleaseCount},#{nextReleaseTime},#{ruleIds},#{isRelease},
+          #{createBy},#{createTime},#{updateBy},#{updateTime},#{isDeleted},#{rAddress},#{coinRechargeId})
+    </insert>
+    <select id="getWarehouseAccountList" resultMap="WarehouseBaseResultMap"
+            parameterType="com.pmzhongguo.ex.business.vo.WarehouseAccountVo">
+        select *
+        from m_warehouse_account
+        where 1=1
+        <if test="memberId != null and memberId != ''">
+            and member_id=#{memberId}
+        </if>
+        <if test="accountId != null and accountId != ''">
+            and account_id=#{accountId}
+        </if>
+        <if test="coinRechargeId != null and coinRechargeId != ''">
+            and coin_recharge_id=#{coinRechargeId}
+        </if>
+        <if test="currency != null and currency != ''">
+            and currency=#{currency}
+        </if>
+        <if test="warehouseAmount != null and warehouseAmount != ''">
+            and warehouse_amount=#{warehouseAmount}
+        </if>
+        <if test="warehouseReleaseAmount != null and warehouseReleaseAmount != ''">
+            and warehouse_release_amount=#{warehouseReleaseAmount}
+        </if>
+        <if test="warehouseCount != null and warehouseCount != ''">
+            and warehouse_count=#{warehouseCount}
+        </if>
+        <if test="warehouseReleaseCount != null and warehouseReleaseCount != ''">
+            and warehouse_release_count=#{warehouseReleaseCount}
+        </if>
+        <if test="nextReleaseTime != null and nextReleaseTime != ''">
+            and next_release_time <![CDATA[ <= ]]> #{nextReleaseTime}
+        </if>
+        <if test="ruleIds != null and ruleIds != ''">
+            and rule_ids=#{ruleIds}
+        </if>
+        <if test="isRelease != null">
+            and is_release=#{isRelease}
+        </if>
+        <if test="createBy != null and createBy != ''">
+            and create_by=#{createBy}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time=#{createTime}
+        </if>
+        <if test="rAddress != null and rAddress != ''">
+            and r_address=#{rAddress}
+        </if>
+        <if test="updateBy != null and updateBy != ''">
+            and update_by=#{updateBy}
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+            and update_time=#{updateTime}
+        </if>
+        <if test="isDeleted != null and isDeleted != ''">
+            and is_deleted=#{isDeleted}
+        </if>
+    </select>
+</mapper>

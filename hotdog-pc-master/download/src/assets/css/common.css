@@ -1,0 +1,102 @@
+body {
+    font: 15px/1 Roboto, PingFang SC, Hiragino Sans GB, Heiti SC, Microsoft YaHei, WenQuanYi Micro Hei, serif;
+}
+blockquote,
+body,
+button,
+caption,
+dd,
+div,
+dl,
+dt,
+fieldset,
+figure,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+html,
+input,
+legend,
+li,
+menu,
+ol,
+p,
+pre,
+table,
+td,
+textarea,
+th,
+ul {
+    margin: 0;
+    padding: 0;
+}
+li {
+    list-style: none;
+}
+
+q:after,
+q:before {
+    content: none;
+}
+
+textarea {
+    overflow: auto;
+    resize: none;
+}
+
+label,
+summary {
+    cursor: default;
+}
+
+a,
+button {
+    cursor: pointer;
+}
+
+a,
+a:focus,
+button {
+    outline: none;
+}
+
+a,
+a:hover,
+del,
+ins,
+s,
+u {
+    text-decoration: none;
+}
+
+* {
+    cursor: pointer;
+}
+
+*,
+:active,
+:focus {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+
+a.smart {
+    color: #1882d4;
+}
+
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+::-webkit-scrollbar {
+    width: 0px;
+}

@@ -1,0 +1,64 @@
+@charset "UTF-8";
+/*iphone手机的input的样式问题*/
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+button {-webkit-appearance: none;}
+/*css初始值*/
+*{-webkit-tap-highlight-color: transparent;}
+html{-webkit-text-size-adjust: 100%; font-size: 62.5%;}
+body, div, p, ul, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, form, input, select, button, textarea, iframe, table, th, td {margin: 0;padding: 0;list-style-type: none;}
+body {margin:0 auto;font-size: 0.875rem;line-height: 180%;color: #000000;padding:0px;}
+img { border:0px}
+a:link {font-size:1.275rem;color: #000000;text-decoration: none;}
+a:visited {font-size:1.275rem;color:#000000;text-decoration: none;}
+a:hover {font-size:1.275rem;color:#000000;text-decoration: none;}
+:focus,:hover{-webkit-appearance: none !important;outline: none !important;}
+input[type=number] {-moz-appearance:textfield;}input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button {    -webkit-appearance: none;}
+.main{ width:100%; overflow:hidden; margin:0; padding:0;}
+table { border-collapse: collapse; border-spacing: 0; empty-cells: show; font-size: 0.875rem }
+fieldset, img { border: 0 }
+cite, em, s, i, b { font-style: normal }
+input, button, textarea, select { font-size: 0.875rem; }
+a, input, textarea { text-decoration: none; outline: 0 }
+li, img, label, input { vertical-align: middle }
+var { font-style: normal }
+ins { text-decoration: none }
+body { font-size: 1.25rem }
+.bdbr-1px, .bdbt-1px{position: relative;}
+.bdbt-1px:before{z-index: 1;position: absolute;content: "";left: 0;top: 0;right: 0;border-top: 1px solid #D9D9D9;-webkit-transform-origin: 0 0;transform-origin: 0 0;-webkit-transform: scaleY(0.5);transform: scaleY(0.5);}
+.bdbr-1px:after{z-index: 1;position: absolute;content: "";left: 0;bottom: -1px;right: 0;border-top: 1px solid #D9D9D9;-webkit-transform-origin: 0 0;transform-origin: 0 0;-webkit-transform: scaleY(0.5);transform: scaleY(0.5);}
+.fl{float: left;}
+.fr{float: right;}
+.black{width:100%;height:5px;background: #F2F2F2;}
+
+/*头部弹出菜单*/
+.hid{ display:none;}
+.goods_nav{ width:30%; float:right; right:5px; overflow:hidden; position:fixed;margin-top:25px; z-index:9999999}
+.Triangle{ width:100%; height:20px; }
+.Triangle h2{width: 0;height: 0;border-style: solid;border-color: transparent transparent #565553 transparent;border-width: 10px;transition: 0.6s;float:right;margin-right:10px;}
+.goods_nav ul{ width:100%; overflow:hidden;background-color:rgba(46,45,45,0.9);border-radius:2px;}
+.goods_nav li{ width:100%; height:50px; border-bottom:1px solid #959595;}
+.nl5{ background:#2D2D2D}
+.goods_nav li span{display: block;width:25px;height:25px; float:left; margin-top:5px; margin-left:5px;}
+.goods_nav li i{ font-style:normal; color:#f3f1f1; font-size:0.875rem; display:block; float:left; line-height:2.5rem;}
+.menu1{ background-position:0 4px;}
+.menu2{ background-position:0 -19px;}
+.menu3{ background-position:0 -41px;}
+.menu4{ background-position:0 -64px;}
+
+/* 页面头部  */
+.header {width:100%; height:4.4rem; background:#EC584E;top:0; z-index:9999; border:0;position: relative;}
+.header:after, #header:after{z-index: 1;position: absolute;content: "";left: 0;bottom: -1px;right: 0;border-top: 1px solid #D9D9D9;-webkit-transform-origin: 0 0;transform-origin: 0 0;-webkit-transform: scaleY(0.5);transform: scaleY(0.5);}
+.h-left{float:left; height:4.4rem;}
+.h-left a{ display:block; width:4.4rem; height:4.4rem;}
+.h-right{float:right;height:4.4rem;}
+.h-right a{color:#FFF;width: 4.4rem;font-size:1.5rem;line-height: 4.4rem;text-align: center;display: block;}
+.h-left a.wh-back{background: url(../images/wback.svg) no-repeat center;background-size: 24px;}
+
+.h-mid {width:70%;height:50px;float:left;text-align:center;font-size: 1.7rem;color: #FFF;line-height:4.4rem;position:relative;}
+.h-mid h6 { color:#333; font-size:1rem;font-weight:normal;}
+/*弹出菜单*/
+.top_bar{float:right; display:block;margin-right:8px; width:40px; height:40px;}
+#show_more{width:30px; height:20px; float:right;background-position:0 -110px; margin-left:10px; margin-top:10px;}
+.goods_nav{ width:30%; float:right; right:5px; overflow:hidden; position:fixed;margin-top:-20px; z-index:9999999}

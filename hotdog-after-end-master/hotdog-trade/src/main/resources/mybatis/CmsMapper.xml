@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.CmsMapper">
+	<select id="listColumnPage" parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT c.*, p.c_name c_parent_name FROM cms_column c 
+		LEFT JOIN cms_column p ON c.parent_id = p.id 
+		where 1 = 1 
+		<if test="site_id != null and site_id != ''">and c.site_id = #{site_id}</if>
+		<if test="parent_id != null and parent_id != ''">and c.parent_id = #{parent_id}</if>
+		<if test="is_use != null and is_use != ''">and c.is_use = #{is_use}</if>
+		<if test="is_display_in_menu != null and is_display_in_menu != ''">and c.is_display_in_menu = #{is_display_in_menu}</if>
+	</select>
+	
+	
+	<select id="listArticleSimple" parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT 
+		a.id, a.a_title, a.a_title_en, a_time,a.a_title_ko,a.a_title_jp
+		 
+		<include refid="listArticleCommonSQL"/>
+		
+		<if test="wwwOrder != null and wwwOrder != ''">${wwwOrder}</if>
+
+		<include refid="com.pmzhongguo.ex.framework.mapper.CommonMapper.orderByAndPagin"/>
+	</select>
+	<select id="listArticlePage" parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT 
+		<if test="isPicAndTitle != null and isPicAndTitle == 1">
+			a.id, a.column_id, a.a_title, a.a_title_en, a.a_abstract, a.a_abstract_en, a_time, create_time, a.a_img_file, a.a_img_file_en,a.is_jump,a.jump_url
+			,a.a_title_ko
+			,a.a_title_jp
+			,a.a_abstract_ko
+			,a.a_abstract_jp
+			,a.a_img_file_ko
+			,a.a_img_file_jp
+		</if>
+		<if test="isPicAndTitle == null">
+			a.*, d.dic_data_name status_name
+		</if>
+		 
+		<include refid="listArticleCommonSQL"/>
+	</select>
+	<select id="listArticleCount" parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT count(1) as total 
+		
+		<include refid="listArticleCommonSQL"/>
+	</select>
+	<sql id="listArticleCommonSQL">
+		FROM cms_article a, frm_dictionary d 
+		WHERE a.a_status = d.dic_data_code and d.dic_code = 'article_status' 
+		<if test="a_status != null and a_status != ''">and a_status = #{a_status}</if>
+		<if test="a_title != null and a_title != ''">and a_title like concat('%',#{a_title},'%')</if>
+		<if test="site_id != null and site_id != ''">and site_id = #{site_id}</if>
+		<if test="column_id != null and column_id != ''">and a.column_id = #{column_id}</if>
+		<if test="soTxt != null and soTxt != ''">and (a.a_title like CONCAT('%', #{soTxt}, '%') or a.a_content like CONCAT('%', #{soTxt}, '%'))</if>
+		<if test="orderZero != null and orderZero == '0'.toString()">and a.a_order = 0</if>
+		<if test="orderZero != null and orderZero == '1'.toString()">and a.a_order > 0</if>
+		<if test="a_is_banner != null and a_is_banner != ''">and a.a_is_banner = #{a_is_banner}</if>
+	</sql>
+	
+	
+	
+	<select id="loadColumnById" parameterType="int" resultType="com.pmzhongguo.ex.business.entity.Column">  
+            SELECT * FROM cms_column
+			WHERE id = #{id}
+    </select>
+    
+    <select id="loadArticleById" parameterType="int" resultType="com.pmzhongguo.ex.business.entity.Article">  
+            SELECT a.*, c.thumb_width, c.thumb_height, c.c_name column_name, c.site_id FROM cms_article a, cms_column c
+			WHERE a.id = #{id} and a.column_id = c.id
+    </select>
+	
+	<insert id="addColumn" parameterType="com.pmzhongguo.ex.business.entity.Column">
+   		INSERT INTO cms_column(parent_id,site_id,c_name,c_desc,c_type,c_template_file,c_article_template_file,is_display_in_menu,c_order,thumb_width,thumb_height,is_use)
+   		VALUES
+   		(#{parent_id},#{site_id},#{c_name},#{c_desc},#{c_type},#{c_template_file},#{c_article_template_file},#{is_display_in_menu},#{c_order},#{thumb_width},#{thumb_height},#{is_use})
+   	</insert>
+   	
+   	<insert id="addArticle" parameterType="com.pmzhongguo.ex.business.entity.Article">
+   		INSERT INTO cms_article(column_id,a_title,a_title_en,a_abstract,a_abstract_en,a_img_file,a_source
+   		,a_author,a_time,a_content_type,a_content,a_content_en,a_viedo_url,a_viedo_width,a_viedo_height
+   		,a_relation_article_ids,a_order,creator_id,creator_name,create_time,column_name
+   		,site_id,a_is_banner,jump_url,is_jump
+   		,a_title_ko
+   		,a_title_jp
+   		,a_abstract_ko
+   		,a_abstract_jp
+   		,a_content_ko
+   		,a_content_jp
+   		)
+   		VALUES
+   		(#{column_id},#{a_title},#{a_title_en},#{a_abstract},#{a_abstract_en},#{a_img_file},#{a_source},#{a_author},#{a_time},#{a_content_type},#{a_content},#{a_content_en},#{a_viedo_url},#{a_viedo_width},#{a_viedo_height},#{a_relation_article_ids},#{a_order},#{creator_id},#{creator_name},#{create_time}
+   		,(select c_name from cms_column where id = #{column_id})
+   		,(select site_id from cms_column where id = #{column_id})
+   		,#{a_is_banner}
+   		,#{jump_url}
+   		,#{is_jump}
+   		,#{a_title_ko}
+   		,#{a_title_jp}
+   		,#{a_abstract_ko}
+   		,#{a_abstract_jp}
+   		,#{a_content_ko}
+   		,#{a_content_jp}
+   		)
+   	</insert>
+   
+   	<update id="updateColumn" parameterType="com.pmzhongguo.ex.business.entity.Column">
+    	UPDATE cms_column SET parent_id=#{parent_id},site_id=#{site_id},c_name=#{c_name},
+    	c_desc=#{c_desc},c_type=#{c_type},c_template_file=#{c_template_file},c_article_template_file=#{c_article_template_file},
+    	is_display_in_menu=#{is_display_in_menu},c_order=#{c_order},thumb_width=#{thumb_width},
+    	thumb_height=#{thumb_height},is_use=#{is_use}
+    	where id = #{id}
+    </update>
+    
+    <update id="updateArticle" parameterType="com.pmzhongguo.ex.business.entity.Article">
+		UPDATE cms_article SET a_title=#{a_title},a_title_en=#{a_title_en},
+		a_abstract=#{a_abstract},a_abstract_en=#{a_abstract_en},a_source=#{a_source},
+		column_id=#{column_id},
+		a_author=#{a_author},a_time=#{a_time},a_content_type=#{a_content_type},a_content=#{a_content},a_content_en=#{a_content_en},
+		a_viedo_url=#{a_viedo_url},a_viedo_width=#{a_viedo_width},a_viedo_height=#{a_viedo_height},
+		a_relation_article_ids=#{a_relation_article_ids},a_order=#{a_order}, 
+		a_status = 20
+		,column_name = (select c_name from cms_column where id = #{column_id})
+   		,site_id = (select site_id from cms_column where id = #{column_id}) 
+   		,a_is_banner=#{a_is_banner} 
+   		,jump_url=#{jump_url}
+   		,is_jump=#{is_jump}
+   		,a_title_ko=#{a_title_ko}
+   		,a_title_jp=#{a_title_jp}
+   		,a_abstract_ko=#{a_abstract_ko}
+   		,a_abstract_jp=#{a_abstract_jp}
+   		,a_content_ko=#{a_content_ko}
+   		,a_content_jp=#{a_content_jp}
+    	where id = #{id}
+    </update>
+    
+    <update id="setArticleThumb" parameterType="com.pmzhongguo.ex.business.entity.Article">
+		UPDATE cms_article SET a_img_file=#{a_img_file}
+		, a_img_file_en=#{a_img_file_en}
+		, a_img_file_ko=#{a_img_file_ko}
+		, a_img_file_jp=#{a_img_file_jp}
+		, a_status = 20
+    	where id = #{id}
+    </update>
+    
+    <update id="updateArticleStatus" parameterType="com.pmzhongguo.ex.business.entity.Article">
+		UPDATE cms_article SET a_status = #{a_status}
+		<if test="audit_comments != null and audit_comments != ''">, audit_comments = concat(#{audit_comments}, IFNULL(audit_comments, ''))</if>
+		<if test="auditor_id != null and auditor_id != ''">, auditor_id = #{auditor_id}</if>
+		<if test="auditor_name != null and auditor_name != ''">, auditor_name = #{auditor_name}</if>
+		<if test="audit_time != null and audit_time != ''">, audit_time = #{audit_time}</if>
+    	where id = #{id}
+    </update>
+    
+	<delete id="delColumn" parameterType="int">
+      	DELETE FROM cms_column WHERE id =#{_parameter}
+    </delete>
+    
+    <delete id="delArticle" parameterType="int">
+      	DELETE FROM cms_article WHERE id =#{_parameter}
+    </delete>
+
+	<select id="findArticleTitleOrContentPage" parameterType="java.util.Map" resultType="java.util.HashMap">
+		select
+		a.id, a.column_id, a.a_content
+		,a.a_content_en
+		,a.a_content_ko
+		,a.a_content_jp
+		,a.a_author, a.a_count
+		,a.a_title
+		, a.a_title_en
+		, a.a_title_ko
+		, a.a_title_jp
+		, a.a_abstract
+		, a.a_abstract_en
+		, a.a_abstract_ko
+		, a.a_abstract_jp
+		, a_time, create_time
+		, a.a_img_file
+		, a.a_img_file_en
+		, a.a_img_file_ko
+		, a.a_img_file_jp
+		,a.is_jump,a.jump_url
+		from cms_article a where a_title like CONCAT('%', #{a_title}, '%') or a_content like  CONCAT('%', #{a_content}, '%') and is_jump = 0 order by a.id asc
+	</select>
+
+	<select id="findArticleWithRecentlyByPage"  parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT ca.a_title
+		,ca.a_title_en
+		,ca.a_title_ko
+		,ca.a_title_jp
+		,cc.c_name as parent_name,cc.c_name_en as parent_name_en, ca.a_time,ca.id,ca.a_author,cc.parent_id
+
+		from cms_article ca left join cms_column cc on ca.column_id = cc.id
+		where 1 = 1
+		<if test="column_id != null and column_id != ''">AND column_id = #{column_id}</if>
+		ORDER by ca.audit_time desc
+	</select>
+
+	<select id="loadColumns"  resultType="java.util.HashMap">
+		SELECT id, c_name ,c_name_en,parent_id FROM cms_column c
+		where 1 = 1 and c.is_use = 1 and c.is_display_in_menu = 1
+	</select>
+</mapper>

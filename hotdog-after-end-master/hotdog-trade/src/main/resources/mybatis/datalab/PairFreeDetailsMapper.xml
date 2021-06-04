@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ex.datalab.mapper.PairFreeDetailsMapper">
+
+    <resultMap id="BaseResultMap" type="com.pmzhongguo.ex.datalab.entity.PairFreeDetail">
+        <result column="id" property="id"/>
+        <result column="member_id" property="memberId"/>
+        <result column="currency_pair_id" property="currencyPairId"/>
+        <result column="currency_pair" property="currencyPair"/>
+        <result column="t_type" property="tType"/>
+        <result column="fee_scale" property="feeScale"/>
+        <result column="fee_currency" property="feeCurrency"/>
+        <result column="fee_total_amount" property="feeTotalAmount"/>
+        <result column="real_amount" property="realAmount"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="search_date" property="searchDate"/>
+    </resultMap>
+
+    <resultMap id="DtoResultMap" type="com.pmzhongguo.ex.datalab.entity.dto.PairFreeDetailDto">
+        <result column="id" property="id"/>
+        <result column="member_id" property="memberId"/>
+        <result column="currency_pair_id" property="currencyPairId"/>
+        <result column="currency_pair" property="currencyPair"/>
+        <result column="t_type" property="tType"/>
+        <result column="fee_scale" property="feeScale"/>
+        <result column="fee_currency" property="feeCurrency"/>
+        <result column="fee_total_amount" property="feeTotalAmount"/>
+        <result column="real_amount" property="realAmount"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="search_date" property="searchDate"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                member_id,
+                currency_pair_id,
+                currency_pair,
+                t_type,
+                fee_scale,
+                fee_currency,
+                fee_total_amount,
+                real_amount,
+                search_date,
+                remark,
+                create_time
+    </sql>
+
+    <insert id="insert" parameterType="com.pmzhongguo.ex.datalab.entity.PairFreeDetail">
+        INSERT INTO c_pair_free_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test='null != memberId'>
+                member_id,
+            </if>
+            <if test='null != currencyPairId'>
+                currency_pair_id,
+            </if>
+            <if test='null != currencyPair'>
+                currency_pair,
+            </if>
+            <if test='null != tType'>
+                t_type,
+            </if>
+            <if test='null != feeScale'>
+                fee_scale,
+            </if>
+            <if test='null != feeCurrency'>
+                fee_currency,
+            </if>
+            <if test='null != feeTotalAmount'>
+                fee_total_amount,
+            </if>
+            <if test='null != realAmount'>
+                real_amount,
+            </if>
+            <if test='null != remark'>
+                remark,
+            </if>
+            <if test='null != searchDate'>
+                search_date,
+            </if>
+            <if test='null != createTime'>
+                create_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test='null != memberId'>
+                #{memberId},
+            </if>
+            <if test='null != currencyPairId'>
+                #{currencyPairId},
+            </if>
+            <if test='null != currencyPair'>
+                #{currencyPair},
+            </if>
+            <if test='null != tType'>
+                #{tType},
+            </if>
+            <if test='null != feeScale'>
+                #{feeScale},
+            </if>
+            <if test='null != feeCurrency'>
+                #{feeCurrency},
+            </if>
+            <if test='null != feeTotalAmount'>
+                #{feeTotalAmount},
+            </if>
+            <if test='null != realAmount'>
+                #{realAmount},
+            </if>
+            <if test='null != remark'>
+                #{remark},
+            </if>
+            <if test='null != searchDate'>
+                #{searchDate},
+            </if>
+            <if test='null != createTime'>
+                #{createTime}
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateById" parameterType="com.pmzhongguo.ex.datalab.entity.PairFreeDetail">
+        UPDATE c_pair_free_details
+        <set>
+            <if test='null != memberId'>member_id = #{memberId},</if>
+            <if test='null != currencyPairId'>currency_pair_id = #{currencyPairId},</if>
+            <if test='null != currencyPair'>currency_pair = #{currencyPair},</if>
+            <if test='null != tType'>t_type = #{tType},</if>
+            <if test='null != feeScale'>fee_scale = #{feeScale},</if>
+            <if test='null != feeCurrency'>fee_currency = #{feeCurrency},</if>
+            <if test='null != feeTotalAmount'>fee_total_amount = #{feeTotalAmount},</if>
+            <if test='null != realAmount'>real_amount = #{realAmount},</if>
+            <if test='null != remark'>remark = #{remark},</if>
+            <if test='null != createTime'>create_time = #{createTime}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="getPairFreeDetailListByPage" resultMap="DtoResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from c_pair_free_details
+        where 1=1
+        <if test='null != memberId'>and member_id = #{memberId}</if>
+        <if test='null != currencyPairId'>and currency_pair_id = #{currencyPairId}</if>
+        <if test='null != currencyPair'>and currency_pair = #{currencyPair}</if>
+        <if test='null != tType'>and t_type = #{tType}</if>
+        <if test='null != feeCurrency'>and fee_currency = #{feeCurrency}</if>
+        <if test='null != searchDate'>and search_date = #{searchDate}</if>
+        <if test='null != createTime'>and create_time = #{createTime}</if>
+    </select>
+
+</mapper>

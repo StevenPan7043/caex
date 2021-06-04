@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.ContractMapper">
+
+    <select id="queryUsdtTransferListByPage" parameterType="java.util.Map" resultType="com.pmzhongguo.contract.dto.UsdtTransferDto">
+        SELECT *
+        FROM(select
+        cct.phone pName,
+        ccr.phone parentName,
+        cb.phone salesmanName,
+        cct.parentid parentCid,
+        cct.salesman salesman,
+        cud.typeid typeid,
+        cud.isout isout,
+        cud.cost cost,
+        date_format(cud.createtime, '%Y-%m-%d %H:%i:%s') createtime,
+        mcu.login contrSysLogin
+        from c_usdt_detail cud
+        left join c_customer cct on cct.id = cud.cid
+        left join c_customer ccr on ccr.id = cct.parentid
+        left join c_customer cb on cb.id = cct.salesman
+        left join mt_clique_user mcu on mcu.id = cct.userid
+        where 1=1 and cud.isout = #{isout} and cud.typeid between 100 and 108
+        <if test="pName != '' and pName != null ">
+            and cct.phone = #{pName}
+        </if>
+        <if test="salesmanName != '' and salesmanName != null ">
+            and cb.phone = #{salesmanName}
+        </if>
+        <if test="userid != '' and userid != null">
+            and mcu.id = #{userid}
+        </if>
+        <if test="startDate !=null and startDate != ''">
+            and
+            DATE_FORMAT(cud.createtime,'%Y%m%d')&gt;=DATE_FORMAT(#{startDate,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="endDate !=null and endDate != ''">
+            and
+            DATE_FORMAT(cud.createtime,'%Y%m%d')&lt;=DATE_FORMAT(#{endDate,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+
+        union all
+
+        select
+        cct.phone pName,
+        ccr.phone parentName,
+        cb.phone salesmanName,
+        cct.parentid parentCid,
+        cct.salesman salesman,
+        cud.typeid typeid,
+        cud.isout isout,
+        cud.cost cost,
+        date_format(cud.createtime, '%Y-%m-%d %H:%i:%s') createtime,
+        mcu.login contrSysLogin
+        from c_zc_detail cud
+        left join c_customer cct on cct.id = cud.cid
+        left join c_customer ccr on ccr.id = cct.parentid
+        left join c_customer cb on cb.id = cct.salesman
+        left join mt_clique_user mcu on mcu.id = cct.userid
+        where 1=1 and cud.isout = #{isout} and cud.typeid between 100 and 108
+        <if test="pName != '' and pName != null ">
+            and cct.phone = #{pName}
+        </if>
+        <if test="salesmanName != '' and salesmanName != null ">
+            and cb.phone = #{salesmanName}
+        </if>
+        <if test="userid != '' and userid != null">
+            and mcu.id = #{userid}
+        </if>
+        <if test="startDate !=null and startDate != ''">
+            and
+            DATE_FORMAT(cud.createtime,'%Y%m%d')&gt;=DATE_FORMAT(#{startDate,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="endDate !=null and endDate != ''">
+            and
+            DATE_FORMAT(cud.createtime,'%Y%m%d')&lt;=DATE_FORMAT(#{endDate,jdbcType=VARCHAR},'%Y%m%d')
+        </if>)table1
+    </select>
+    <select id="querySysUsers" parameterType="java.util.Map" resultType="com.pmzhongguo.contract.entity.MtCliqueUser">
+      select  * from mt_clique_user where roleid !=1
+    </select>
+    <select id="queryUsdtTransferSum" resultType="java.math.BigDecimal" parameterType="java.util.Map">
+        SELECT sum(cost) sumCost
+        FROM(select
+        cct.phone pName,
+        ccr.phone parentName,
+        cb.phone salesmanName,
+        cct.parentid parentCid,
+        cct.salesman salesman,
+        cud.typeid typeid,
+        cud.isout isout,
+        cud.cost cost,
+        date_format(cud.createtime, '%Y-%m-%d %H:%i:%s') createtime,
+        mcu.login contrSysLogin
+        from c_usdt_detail cud
+        left join c_customer cct on cct.id = cud.cid
+        left join c_customer ccr on ccr.id = cct.parentid
+        left join c_customer cb on cb.id = cct.salesman
+        left join mt_clique_user mcu on mcu.id = cct.userid
+        where 1=1 and cud.isout = #{isout} and cud.typeid between 100 and 108
+        <if test="pName != '' and pName != null ">
+            and cct.phone = #{pName}
+        </if>
+        <if test="salesmanName != '' and salesmanName != null ">
+            and cb.phone = #{salesmanName}
+        </if>
+        <if test="userid != '' and userid != null">
+            and mcu.id = #{userid}
+        </if>
+        <if test="startDate !=null and startDate != ''">
+            and
+            DATE_FORMAT(cud.createtime,'%Y%m%d')&gt;=DATE_FORMAT(#{startDate,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="endDate !=null and endDate != ''">
+            and
+            DATE_FORMAT(cud.createtime,'%Y%m%d')&lt;=DATE_FORMAT(#{endDate,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+
+        union all
+
+        select
+        cct.phone pName,
+        ccr.phone parentName,
+        cb.phone salesmanName,
+        cct.parentid parentCid,
+        cct.salesman salesman,
+        cud.typeid typeid,
+        cud.isout isout,
+        cud.cost cost,
+        date_format(cud.createtime, '%Y-%m-%d %H:%i:%s') createtime,
+        mcu.login contrSysLogin
+        from c_zc_detail cud
+        left join c_customer cct on cct.id = cud.cid
+        left join c_customer ccr on ccr.id = cct.parentid
+        left join c_customer cb on cb.id = cct.salesman
+        left join mt_clique_user mcu on mcu.id = cct.userid
+        where 1=1 and cud.isout = #{isout} and cud.typeid between 100 and 108
+        <if test="pName != '' and pName != null ">
+            and cct.phone = #{pName}
+        </if>
+        <if test="salesmanName != '' and salesmanName != null ">
+            and cb.phone = #{salesmanName}
+        </if>
+        <if test="userid != '' and userid != null">
+            and mcu.id = #{userid}
+        </if>
+        <if test="startDate !=null and startDate != ''">
+            and
+            DATE_FORMAT(cud.createtime,'%Y%m%d')&gt;=DATE_FORMAT(#{startDate,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="endDate !=null and endDate != ''">
+            and
+            DATE_FORMAT(cud.createtime,'%Y%m%d')&lt;=DATE_FORMAT(#{endDate,jdbcType=VARCHAR},'%Y%m%d')
+        </if>)table1
+    </select>
+    <select id="queryUsdtTransferTeam" resultType="com.pmzhongguo.contract.dto.UsdtTransferDto" parameterType="java.util.Map">
+        SELECT
+        isout,
+        SUM( cost ) cost,
+        count(cost) queryCount,
+        contrSysLogin
+        FROM(select
+        cct.phone pName,
+        ccr.phone parentName,
+        cb.phone salesmanName,
+        cct.parentid parentCid,
+        cct.salesman salesman,
+        cud.typeid typeid,
+        cud.isout isout,
+        cud.cost cost,
+        date_format(cud.createtime, '%Y-%m-%d %H:%i:%s') createtime,
+        mcu.login contrSysLogin
+        from c_usdt_detail cud
+        left join c_customer cct on cct.id = cud.cid
+        left join c_customer ccr on ccr.id = cct.parentid
+        left join c_customer cb on cb.id = cct.salesman
+        left join mt_clique_user mcu on mcu.id = cct.userid
+        where 1=1  and cud.typeid between 100 and 108
+        <if test="pName != '' and pName != null ">
+            and cct.phone = #{pName}
+        </if>
+        <if test="isout != '' and isout != null ">
+            and cud.isout = #{isout}
+        </if>
+        <if test="salesmanName != '' and salesmanName != null ">
+            and cb.phone = #{salesmanName}
+        </if>
+        <if test="userid != '' and userid != null">
+            and mcu.id = #{userid}
+        </if>
+        <if test="startDate !=null and startDate != ''">
+            and
+            DATE_FORMAT(cud.createtime,'%Y%m%d')&gt;=DATE_FORMAT(#{startDate,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="endDate !=null and endDate != ''">
+            and
+            DATE_FORMAT(cud.createtime,'%Y%m%d')&lt;=DATE_FORMAT(#{endDate,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+
+        union all
+
+        select
+        cct.phone pName,
+        ccr.phone parentName,
+        cb.phone salesmanName,
+        cct.parentid parentCid,
+        cct.salesman salesman,
+        cud.typeid typeid,
+        cud.isout isout,
+        cud.cost cost,
+        date_format(cud.createtime, '%Y-%m-%d %H:%i:%s') createtime,
+        mcu.login contrSysLogin
+        from c_zc_detail cud
+        left join c_customer cct on cct.id = cud.cid
+        left join c_customer ccr on ccr.id = cct.parentid
+        left join c_customer cb on cb.id = cct.salesman
+        left join mt_clique_user mcu on mcu.id = cct.userid
+        where 1=1  and cud.typeid between 100 and 108
+        <if test="pName != '' and pName != null ">
+            and cct.phone = #{pName}
+        </if>
+        <if test="isout != '' and isout != null ">
+            and cud.isout = #{isout}
+        </if>
+        <if test="salesmanName != '' and salesmanName != null ">
+            and cb.phone = #{salesmanName}
+        </if>
+        <if test="userid != '' and userid != null">
+            and mcu.id = #{userid}
+        </if>
+        <if test="startDate !=null and startDate != ''">
+            and
+            DATE_FORMAT(cud.createtime,'%Y%m%d')&gt;=DATE_FORMAT(#{startDate,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="endDate !=null and endDate != ''">
+            and
+            DATE_FORMAT(cud.createtime,'%Y%m%d')&lt;=DATE_FORMAT(#{endDate,jdbcType=VARCHAR},'%Y%m%d')
+        </if>)table1
+        GROUP BY contrSysLogin,isout
+    </select>
+</mapper>

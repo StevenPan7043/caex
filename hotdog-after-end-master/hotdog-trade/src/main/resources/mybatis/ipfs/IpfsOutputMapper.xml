@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ipfs.mapper.IpfsOutputMapper">
+    <resultMap id="BaseResultMap" type="com.pmzhongguo.ipfs.entity.IpfsOutput">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="project_id" jdbcType="INTEGER" property="projectId"/>
+        <result column="output_currency" jdbcType="VARCHAR" property="outputCurrency"/>
+        <result column="capacity" jdbcType="DECIMAL" property="capacity"/>
+        <result column="capacity_out" jdbcType="DECIMAL" property="capacityOut"/>
+        <result column="output_status" jdbcType="INTEGER" property="outputStatus"/>
+        <result column="output_date" jdbcType="VARCHAR" property="outputDate"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, project_id, output_currency, capacity, output_date, create_time, capacity_out, output_status
+  </sql>
+
+    <sql id="where_list">
+        <where>
+            <!-- 需要的条件自己加 -->
+            <if test="id != null">
+                id = #{id,jdbcType=INTEGER}
+            </if>
+
+            <if test="outputStatus != null">
+                output_status = #{outputStatus,jdbcType=INTEGER}
+            </if>
+
+            <if test="projectId != null and projectId != ''">
+                and project_id = #{projectId,jdbcType=INTEGER}
+            </if>
+
+            <if test="outputDate != null and outputDate != ''">
+                and output_date = #{outputDate,jdbcType=VARCHAR}
+            </if>
+            <if test="pageNum != null || limit != null">
+                limit #{pageNum,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+            </if>
+
+            <!--      <if test="login_start != null and login_start != ''">-->
+            <!--        <![CDATA[and m.last_login_time >= #{login_start,jdbcType=VARCHAR}]]>-->
+            <!--      </if>-->
+            <!--      <if test="o_status_in != null and o_status_in != ''">and o.o_status IN (${o_status_in})</if>-->
+            <!--      <if test="constomerGradeArray!=null and constomerGradeArray.length!=0">-->
+            <!--        　　　　AND a.constomer_grade in-->
+            <!--        　　　　<foreach collection="constomerGradeArray" item="extraId" index="i" open="(" separator="," close=")">-->
+            <!--        　　　　　　#{extraId}-->
+            <!--        　　　　</foreach>-->
+            <!--        　　</if>-->
+        </where>
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ipfs_output
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ipfs_output
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.pmzhongguo.ipfs.entity.IpfsOutput">
+    insert into ipfs_output (id, project_id, output_currency, 
+      capacity, output_date, create_time, capacity_out, output_status
+      )
+    values (#{id,jdbcType=INTEGER}, #{projectId,jdbcType=INTEGER}, #{outputCurrency,jdbcType=VARCHAR}, 
+      #{capacity,jdbcType=DECIMAL}, #{outputDate,jdbcType=VARCHAR}, now(),
+      #{capacityOut,jdbcType=DECIMAL}, #{outputStatus,jdbcType=INTEGER}
+      )
+  </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.pmzhongguo.ipfs.entity.IpfsOutput">
+        update ipfs_output
+        <set>
+            <if test="projectId != null">
+                project_id = #{projectId,jdbcType=INTEGER},
+            </if>
+            <if test="outputCurrency != null">
+                output_currency = #{outputCurrency,jdbcType=VARCHAR},
+            </if>
+            <if test="capacity != null">
+                capacity = #{capacity,jdbcType=DECIMAL},
+            </if>
+            <if test="capacityOut != null">
+                capacity_out = #{capacityOut,jdbcType=DECIMAL},
+            </if>
+            <if test="outputDate != null">
+                output_date = #{outputDate,jdbcType=VARCHAR},
+            </if>
+            <if test="outputStatus != null">
+                output_status = #{outputStatus,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.pmzhongguo.ipfs.entity.IpfsOutput">
+    update ipfs_output
+    set project_id = #{projectId,jdbcType=INTEGER},
+      output_currency = #{outputCurrency,jdbcType=VARCHAR},
+      capacity = #{capacity,jdbcType=DECIMAL},
+      capacity_out = #{capacityOut,jdbcType=DECIMAL},
+      output_status = #{outputStatus,jdbcType=INTEGER},
+      output_date = #{outputDate,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="findByConditionPage"
+            parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ipfs_output
+        <include refid="where_list"/>
+    </select>
+
+    <select id="findByCondition"
+            parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ipfs_output
+        <include refid="where_list"/>
+    </select>
+
+    <!--    <update id="reduceCapacity"-->
+    <!--            parameterType="java.util.Map">-->
+    <!--        UPDATE ipfs_output-->
+    <!--        <set>-->
+    <!--            <if test="capacityOut != null">-->
+    <!--                capacity_out = capacity_out - #{capacityOut,jdbcType=DECIMAL},-->
+    <!--            </if>-->
+    <!--            <if test="outputStatus != null">-->
+    <!--                output_status = #{outputStatus,jdbcType=INTEGER},-->
+    <!--            </if>-->
+    <!--        </set>-->
+    <!--        WHERE id=#{id,jdbcType=INTEGER}-->
+    <!--    </update>-->
+
+    <!--批量多字段更新-->
+    <update id="reduceCapacity" parameterType="java.util.List">
+        update ipfs_output
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="capacity_out =(case" suffix="end),">
+                <foreach collection="list" item="item">
+                    <if test="item.capacityOut != null">
+                        when id = #{item.id} then capacity_out - #{item.capacityOut,jdbcType=DECIMAL}
+                    </if>
+                </foreach>
+            </trim>
+
+            <trim prefix="output_status =(case" suffix="end),">
+                <foreach collection="list" item="item">
+                    <if test="item.outputStatus != null">
+                        when id = #{item.id} then #{item.outputStatus,jdbcType=INTEGER}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        <where>
+            id in
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item.id,jdbcType=INTEGER}
+            </foreach>
+        </where>
+    </update>
+
+<!--    需要什么条件和修改字段自己添加-->
+    <update id="updateIpfsOutput" parameterType="com.pmzhongguo.ipfs.entity.IpfsOutput">
+        update ipfs_output
+        <set>
+            <if test="outputStatus != null">
+                output_status = #{outputStatus,jdbcType=INTEGER},
+            </if>
+        </set>
+        where 1=1
+        <if test="projectId != null">
+            and project_id = #{projectId,jdbcType=INTEGER}
+        </if>
+    </update>
+
+    <select id="queryCapacityDay"
+            parameterType="java.util.Map"
+            resultType="java.math.BigDecimal">
+        select
+        ifnull(sum(capacity),0)
+        from ipfs_output
+        <where> 1=1
+            <if test="projectIdList != null and projectIdList.size > 0">
+                and project_id in
+                <foreach collection="projectIdList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="outputDate != null">
+                and output_date = #{outputDate,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+</mapper>

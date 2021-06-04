@@ -1,0 +1,12 @@
+build/
+dist/
+node_modules/
+# public/charting_library/
+# public/datafeeds/
+# src/charting_library.min.js
+# static/
+dist.zip
+交易所.zip
+.DS_Store
+upload_otc-ip-47.75.218.160-pwd-zzex.pro168.sh
+.idea

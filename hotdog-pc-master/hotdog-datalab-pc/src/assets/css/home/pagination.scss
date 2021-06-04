@@ -1,0 +1,20 @@
+.wrap {
+    display: inline-block;
+    font-size: 12px;
+    color: #333;
+    user-select: none;
+    .pre,
+    .next {
+        color: #196bdf;
+        cursor: pointer;
+    }
+    .next {
+        margin-right: 16px;
+    }
+    .pre {
+        margin-right: 10px;
+    }
+    .disabled {
+        color: #333;
+    }
+}

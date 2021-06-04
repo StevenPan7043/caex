@@ -1,0 +1,79 @@
+/*--------------- menu----------------*/
+
+
+#btn1a {WIDTH:115px; HEIGHT: auto;margin:0 auto;float:left; margin-right:3px;}
+#btn1a A:hover {BACKGROUND: none transparent scroll repeat 0% 0%}
+#btn1a_1 {BACKGROUND: url(../images/cd1.png) no-repeat; WIDTH: 115px; HEIGHT:36px}
+#btn1a_1 A {DISPLAY: block; BACKGROUND: url(../images/cd1.png) no-repeat;  WIDTH: 115px; HEIGHT:36px}
+#btn1a_1 A:hover {DISPLAY: block; BACKGROUND: url(../images/cd1_1.png) no-repeat;  WIDTH: 115px; HEIGHT:36px}
+
+#btn2a {WIDTH:115px; HEIGHT: auto;margin:0 auto;float:left; margin-right:3px;}
+#btn2a A:hover {BACKGROUND: none transparent scroll repeat 0% 0%}
+#btn2a_1 {BACKGROUND: url(../images/cd1_1.png) no-repeat; WIDTH: 115px; HEIGHT:36px}
+#btn2a_1 A {DISPLAY: block; BACKGROUND: url(../images/cd1_1.png) no-repeat;  WIDTH: 115px; HEIGHT:36px}
+#btn2a_1 A:hover {DISPLAY: block; BACKGROUND: url(../images/cd1.png) no-repeat;  WIDTH: 115px; HEIGHT:36px}
+
+
+
+#btn1b {WIDTH:117px; HEIGHT: auto;margin:0 auto;float:left; margin-right:3px;text-align:center}
+#btn1b A:hover {BACKGROUND: none transparent scroll repeat 0% 0%}
+#btn1b_1 {BACKGROUND: url(../images/cd2.png) no-repeat; WIDTH: 117px; HEIGHT:36px}
+#btn1b_1 A {DISPLAY: block; BACKGROUND: url(../images/cd2.png) no-repeat;  WIDTH: 117px; HEIGHT:36px}
+#btn1b_1 A:hover {DISPLAY: block; BACKGROUND: url(../images/cd2_1.png) no-repeat;  WIDTH: 117px; HEIGHT:36px}
+
+#btn2b {WIDTH:115px; HEIGHT: auto;margin:0 auto;float:left; margin-right:3px;text-align:center}
+#btn2b A:hover {BACKGROUND: none transparent scroll repeat 0% 0%}
+#btn2b_1 {BACKGROUND: url(../images/cd2_1.png) no-repeat; WIDTH: 117px; HEIGHT:36px}
+#btn2b_1 A {DISPLAY: block; BACKGROUND: url(../images/cd2_1.png) no-repeat;  WIDTH: 117px; HEIGHT:36px}
+#btn2b_1 A:hover {DISPLAY: block; BACKGROUND: url(../images/cd2.png) no-repeat;  WIDTH: 117px; HEIGHT:36px}
+
+
+.so_box{ width:156px; height:36px; float:left; padding-top:8px; padding-left:4px}
+.so_bg{BACKGROUND: url(../images/soso_bg.png) repeat-x; WIDTH: 112px; height:23px}
+
+a.link_13:link {
+	text-decoration: none;
+	color:#fff;
+	font-size:13px;
+font-family:"Î¢ÈíÑÅºÚ";
+font-weight: bold;
+}
+a.link_13:visited {
+	text-decoration: none;
+	color:#fff;
+	font-size:13px;
+font-family:"Î¢ÈíÑÅºÚ";
+font-weight: bold;
+}
+a.link_13:hover {
+	text-decoration:none;
+	color: #fff;
+	font-size:13px;
+font-family:"Î¢ÈíÑÅºÚ";
+}
+
+a.link_13:active {
+	color:#fff;
+	font-size:13px;
+	font-family:"Î¢ÈíÑÅºÚ";
+}
+
+#demo {
+overflow:hidden;
+width:904px;
+}
+#demo img {
+border: 1px solid #ccc;
+}
+#indemo {
+float: left;
+width: 10000%;
+}
+#demo1 {
+float: left;
+}
+#demo2 {
+float: left;
+}
+
+ul{ list-style:none;}

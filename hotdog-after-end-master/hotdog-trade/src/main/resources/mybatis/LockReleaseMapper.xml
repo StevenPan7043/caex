@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.LockReleaseMapper">
+
+
+
+	<insert id="insert" parameterType="com.pmzhongguo.ex.business.entity.LockRelease">
+		INSERT INTO m_lock_release (
+		  member_id
+		 ,currency
+		 ,create_time
+		 ,release_volume
+		 ,release_time
+		 ,is_release
+		 ,update_time
+		 ,lock_account_detail_id
+		)
+		VALUES (
+		  #{member_id}
+		 ,#{currency}
+		 ,#{create_time}
+		 ,#{release_volume}
+		 ,#{release_time}
+		 ,#{is_release}
+		 ,#{update_time}
+	     ,#{lock_account_detail_id}
+		)
+	</insert>
+
+
+	<select id="findMgrByPage"  resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT * FROM m_lock_release
+		WHERE 1 = 1
+		<if test="member_id != null and member_id != '' ">
+			AND member_id = #{member_id}
+		</if>
+		<if test="currency != null and currency != '' ">
+			AND currency = #{currency}
+		</if>
+	</select>
+
+	<select id="findByIsReleaseAndReleaseTimeGtNow"  resultType="com.pmzhongguo.ex.business.dto.CurrencyLockReleaseDto" parameterType="java.util.Map">
+		SELECT release_volume as releaseVolume,member_id as memberId,id,currency FROM m_lock_release
+		WHERE 1 = 1
+		<if test="is_release != null">
+			AND is_release = #{is_release}
+		</if>
+		<if test="release_time != null and release_time != '' ">
+			<![CDATA[ AND release_time <= #{release_time}  ]]>
+
+		</if>
+	</select>
+	
+	<update id="updateById" parameterType="com.pmzhongguo.ex.business.entity.LockRelease">
+		UPDATE m_lock_release SET update_time = #{update_time}, is_release = #{is_release}
+		 where id = #{id}
+	</update>
+
+	<update id="updateByIdAndIsRelease" parameterType="com.pmzhongguo.ex.business.entity.LockRelease">
+		UPDATE m_lock_release SET update_time = #{update_time}, is_release = #{is_release}
+		where id = #{id} and is_release = 0
+	</update>
+
+
+	<select id="findWaitReleaseByMemberId"  resultType="com.pmzhongguo.ex.business.dto.CurrencyLockReleaseDto" parameterType="java.lang.Integer">
+		SELECT sum(release_volume) as releaseVolume,currency FROM m_lock_release
+		WHERE is_release = 0 AND member_id = #{member_id} group by currency
+	</select>
+
+	<select id="findWaitReleaseByMemberIdAndCurrency"  resultType="com.pmzhongguo.ex.business.dto.CurrencyLockReleaseDto" parameterType="java.util.Map">
+		SELECT id, member_id as memberId,currency,release_volume as releaseVolume FROM m_lock_release
+		WHERE is_release = 0 AND member_id = #{member_id} and currency = #{currency}
+	</select>
+
+
+
+</mapper>

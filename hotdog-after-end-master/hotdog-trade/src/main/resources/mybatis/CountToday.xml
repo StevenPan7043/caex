@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ex.business.mapper.CountMapper">
+
+	<!-- 统计该日的提现 -->
+	<select id="countWithdraw" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		currency,
+		sum(w_amount) amount,
+		sum(w_fee) fee
+		FROM
+		m_coin_withdraw
+		WHERE
+		w_status=1
+		AND <![CDATA[w_create_time >= #{startDate}]]>
+		AND <![CDATA[w_create_time <= #{endDate}]]>
+		GROUP BY currency
+		ORDER BY
+		currency
+	</select>
+
+	<!-- 统计该日的充值 -->
+	<select id="countRecharge" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		currency,
+		sum(r_amount) amount
+		FROM
+		m_coin_recharge
+		WHERE
+		r_status=1
+		AND <![CDATA[r_create_time >= #{startDate}]]>
+		AND <![CDATA[r_create_time <= #{endDate}]]>
+		GROUP BY currency
+		ORDER BY currency
+	</select>
+
+</mapper>

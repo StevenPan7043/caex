@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.LockAccountMapper">
+
+
+
+	<select id="findByMemberIdAndCurrency" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.LockAccount">
+		SELECT id,member_id,currency,lock_num
+		FROM m_lock_account m
+		where  member_id = #{member_id} AND currency = #{currency}
+	</select>
+
+	<select id="findByMemberId" parameterType="java.lang.Integer" resultType="com.pmzhongguo.ex.business.entity.LockAccount">
+		SELECT id,member_id,currency,lock_num
+		FROM m_lock_account m
+		where member_id = #{member_id}
+	</select>
+
+	<select id="findMgrByPage" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT m.*,mm.m_name,tmp.release_volume
+		FROM m_lock_account m
+		LEFT JOIN m_member mm ON m.member_id = mm.id
+		left join (select mlr.member_id,sum(mlr.release_volume) as release_volume,currency
+		from m_lock_release mlr WHERE mlr.is_release = 0 GROUP BY mlr.member_id,mlr.currency) as tmp
+		on tmp.member_id = m.member_id and tmp.currency = m.currency
+		WHERE 1 = 1
+		<if test="member_id != null and member_id != '' ">
+			AND m.member_id = #{member_id}
+		</if>
+		<if test="currency != null and currency != '' ">
+			AND m.currency = #{currency}
+		</if>
+		<if test="m_name != null and m_name != '' ">
+			AND mm.m_name = #{m_name}
+		</if>
+	</select>
+
+
+
+	<insert id="insert" parameterType="com.pmzhongguo.ex.business.entity.LockAccount">
+		INSERT INTO m_lock_account (member_id,currency,lock_num,create_time,update_time)
+		VALUES (#{member_id},#{currency},#{lock_num},#{create_time},#{update_time})
+	</insert>
+
+	<update id="updateById" parameterType="com.pmzhongguo.ex.business.entity.LockAccount">
+		UPDATE  m_lock_account SET lock_num = #{lock_num},update_time = #{update_time}
+		where id = #{id}
+	</update>
+
+
+
+
+
+</mapper>

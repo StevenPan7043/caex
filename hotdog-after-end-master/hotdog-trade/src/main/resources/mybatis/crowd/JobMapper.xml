@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.crowd.dao.JobMapper">
+
+
+
+
+
+
+  <!-- =================================管理后端接口========================================================= -->
+  <select id="findByPage" parameterType="java.util.Map" resultType="com.pmzhongguo.crowd.entity.CrowdJob">
+    SELECT * FROM crowd_job
+  </select>
+
+  <select id="countJobGroupName" parameterType="java.util.Map" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM crowd_job WHERE job_group = #{job_group}
+  </select>
+
+  <select id="countJob" parameterType="java.util.Map" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM crowd_job
+  </select>
+
+  <select id="findById" parameterType="java.lang.Integer" resultType="com.pmzhongguo.crowd.entity.CrowdJob">
+    select  *
+    from crowd_job
+    where id = #{id}
+  </select>
+
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from crowd_job
+    where id = #{id}
+  </delete>
+
+  <update id="update" parameterType="com.pmzhongguo.crowd.entity.CrowdJob">
+    update  crowd_job
+
+      <set>
+        <if test="job_name != null and job_name != ''">
+          job_name = #{job_name},
+        </if>
+        <if test="job_group != null and job_group != ''">
+          job_group = #{job_group},
+        </if>
+        <if test="job_class_name != null and job_class_name != ''">
+          job_class_name = #{job_class_name},
+        </if>
+        <if test="trigger_name != null and trigger_name != ''">
+          trigger_name = #{trigger_name},
+        </if>
+        <if test="trigger_group != null and trigger_group != ''">
+          trigger_group = #{trigger_group},
+        </if>
+        <if test="cron_expression != null and cron_expression != ''">
+          cron_expression = #{cron_expression},
+        </if>
+        <if test="update_time != null and update_time != ''">
+          update_time = #{update_time},
+        </if>
+        <if test="project_id != null and project_id != ''">
+          project_id = #{project_id},
+        </if>
+        <if test="sec_num != null and sec_num != ''">
+          sec_num = #{sec_num},
+        </if>
+        <if test="order_num != null and order_num != ''">
+          order_num = #{order_num},
+        </if>
+        <if test="order_volume != null and order_volume != ''">
+          order_volume = #{order_volume},
+        </if>
+        <if test="start_member_id != null and start_member_id != ''">
+          start_member_id = #{start_member_id},
+        </if>
+      </set>
+
+
+    where id = #{id}
+  </update>
+
+
+  <insert id="add" parameterType="com.pmzhongguo.crowd.entity.CrowdJob">
+    insert into crowd_job (job_name,job_group,job_class_name,trigger_name,trigger_group,cron_expression,create_time,project_id,sec_num,order_num,order_volume,start_member_id)
+    VALUE (#{job_name},#{job_group},#{job_class_name},#{trigger_name},#{trigger_group},#{cron_expression},#{create_time},#{project_id},
+    #{sec_num},#{order_num},#{order_volume},#{start_member_id})
+  </insert>
+
+</mapper>

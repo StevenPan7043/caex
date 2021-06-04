@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.CurrencyIntroduceMapper">
+
+	
+	<insert id="addCurrencyIntroduce" parameterType="java.util.Map">
+   		INSERT INTO currency_introduce(d_currency_id,name,currency,site,introduce_cn,introduce_en,release_amount,release_time,is_show,create_time,update_time,release_price,
+   		circulation_amount,block_search,white_paper,introduce_ko,introduce_jp)
+   		VALUES
+   		(#{d_currency_id},#{name},#{currency},#{site},#{introduce_cn},#{introduce_en},#{release_amount},#{release_time},#{is_show},#{create_time},#{update_time},#{release_price},
+   		#{circulation_amount},#{block_search},#{white_paper},#{introduce_ko},#{introduce_jp})
+   	</insert>
+   	
+	<update id="updateCurrencyIntroduce" parameterType="java.util.Map">
+		UPDATE currency_introduce SET
+		d_currency_id=#{d_currency_id},
+		currency=#{currency},
+		name=#{name},
+		site=#{site},
+		introduce_cn=#{introduce_cn},
+		introduce_en=#{introduce_en},
+		introduce_ko=#{introduce_ko},
+		introduce_jp=#{introduce_jp},
+		release_amount=#{release_amount},
+		release_time=#{release_time},
+		is_show=#{is_show},
+		create_time=#{create_time},
+		update_time=#{update_time},
+		release_price=#{release_price},
+		circulation_amount=#{circulation_amount},
+		block_search=#{block_search},
+		white_paper=#{white_paper}
+		WHERE id=#{id}
+	</update>
+   	
+	<select id="listCurrencyIntroducePage" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.CurrencyIntroduce">
+		SELECT * FROM currency_introduce  where 1 = 1
+
+	</select>
+	
+	
+	<select id="getCurrencyIntroduce" parameterType="java.lang.Integer" resultType="com.pmzhongguo.ex.business.entity.CurrencyIntroduce">
+		SELECT * FROM currency_introduce
+		WHERE id = #{id}
+	</select>
+	<select id="getCurrencyIntroduceByCurrency" parameterType="java.lang.String" resultType="com.pmzhongguo.ex.business.entity.CurrencyIntroduce">
+		SELECT * FROM currency_introduce
+		WHERE currency = #{currency} and is_show = 1
+	</select>
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.LockAccountDetailMapper">
+
+
+
+	<insert id="insert" parameterType="com.pmzhongguo.ex.business.entity.LockAccountDetail">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+				   order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+		INSERT INTO m_lock_account_detail (member_id,currency,oper_num_before,oper_num
+		,create_time
+		,m_type
+		)
+		VALUES (#{member_id},#{currency},#{oper_num_before},#{oper_num},#{create_time},${m_type})
+	</insert>
+
+
+	<select id="findMgrByPage"  resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT * FROM m_lock_account_detail
+		WHERE 1 = 1
+		<if test="member_id != null and member_id != '' ">
+			AND member_id = #{member_id}
+		</if>
+		<if test="currency != null and currency != '' ">
+			AND currency = #{currency}
+		</if>
+	</select>
+
+
+
+
+
+</mapper>

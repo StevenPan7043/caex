@@ -1,0 +1,11 @@
+initnetty:
+  webHost: 192.168.0.109
+  webPort: 10086
+  bossThread: 1
+  workerThread: 2
+  keepAlive: true
+  webSocketPath: /websocket
+  revbuf: 10485760
+  heart: 180
+  maxContext: 65536
+  backlog: 1024

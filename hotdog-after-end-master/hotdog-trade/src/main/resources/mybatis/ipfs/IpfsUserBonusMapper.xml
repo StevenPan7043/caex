@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ipfs.mapper.IpfsUserBonusMapper">
+    <resultMap id="BaseResultMap" type="com.pmzhongguo.ipfs.entity.IpfsUserBonus">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="hashrate_id" jdbcType="INTEGER" property="hashrateId"/>
+        <result column="project_id" jdbcType="INTEGER" property="projectId"/>
+        <result column="project_code" jdbcType="VARCHAR" property="projectCode"/>
+        <result column="member_id" jdbcType="INTEGER" property="memberId"/>
+        <result column="output_currency" jdbcType="VARCHAR" property="outputCurrency"/>
+        <result column="bonus_num" jdbcType="DECIMAL" property="bonusNum"/>
+        <result column="fee" jdbcType="DECIMAL" property="fee"/>
+        <result column="bonus_date" jdbcType="VARCHAR" property="bonusDate"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, hashrate_id, project_id, project_code, member_id, output_currency, bonus_num, fee, bonus_date,
+    create_time
+  </sql>
+    <sql id="Where_List">
+        <where>
+            <!-- 需要的条件自己加 -->
+            <if test="id != null">
+                id = #{id,jdbcType=INTEGER}
+            </if>
+
+            <if test="hashrateId != null and hashrateId != ''">
+                and hashrate_id = #{hashrateId,jdbcType=INTEGER}
+            </if>
+
+            <if test="bonusDate != null and bonusDate != ''">
+                and bonus_date = #{bonusDate,jdbcType=VARCHAR}
+            </if>
+            <if test="startTime !=null and startTime != ''">
+                and DATE_FORMAT(bonus_date,'%Y%m%d')&gt;=DATE_FORMAT(#{startTime,jdbcType=VARCHAR},'%Y%m%d')
+            </if>
+            <if test="endTime !=null and endTime != ''">
+                and DATE_FORMAT(bonus_date,'%Y%m%d')&lt;=DATE_FORMAT(#{endTime,jdbcType=VARCHAR},'%Y%m%d')
+            </if>
+            <if test="projectId != null and projectId != ''">
+                and project_id = #{projectId,jdbcType=INTEGER}
+            </if>
+
+            <if test="memberId != null and memberId != ''">
+                and member_id = #{memberId,jdbcType=INTEGER}
+            </if>
+            <!--      <if test="login_start != null and login_start != ''">-->
+            <!--        <![CDATA[and m.last_login_time >= #{login_start,jdbcType=VARCHAR}]]>-->
+            <!--      </if>-->
+            <!--      <if test="o_status_in != null and o_status_in != ''">and o.o_status IN (${o_status_in})</if>-->
+            <!--      <if test="constomerGradeArray!=null and constomerGradeArray.length!=0">-->
+            <!--        　　　　AND a.constomer_grade in-->
+            <!--        　　　　<foreach collection="constomerGradeArray" item="extraId" index="i" open="(" separator="," close=")">-->
+            <!--        　　　　　　#{extraId}-->
+            <!--        　　　　</foreach>-->
+            <!--        　　</if>-->
+        </where>
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ipfs_user_bonus
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ipfs_user_bonus
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.pmzhongguo.ipfs.entity.IpfsUserBonus">
+    insert into ipfs_user_bonus (id, hashrate_id, project_id, project_code,
+      member_id, output_currency, bonus_num, fee,
+      bonus_date, create_time)
+    values (#{id,jdbcType=INTEGER}, #{hashrateId,jdbcType=INTEGER}, #{projectId,jdbcType=INTEGER}, #{projectCode,jdbcType=VARCHAR},
+      #{memberId,jdbcType=INTEGER}, #{outputCurrency,jdbcType=VARCHAR}, #{bonusNum,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL},
+      #{bonusDate,jdbcType=VARCHAR}, now())
+  </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.pmzhongguo.ipfs.entity.IpfsUserBonus">
+        update ipfs_user_bonus
+        <set>
+            <if test="hashrateId != null">
+                hashrate_id = #{hashrateId,jdbcType=INTEGER},
+            </if>
+            <if test="projectId != null">
+                project_id = #{projectId,jdbcType=INTEGER},
+            </if>
+            <if test="projectCode != null">
+                project_code = #{projectCode,jdbcType=VARCHAR},
+            </if>
+            <if test="memberId != null">
+                member_id = #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="outputCurrency != null">
+                output_currency = #{outputCurrency,jdbcType=VARCHAR},
+            </if>
+            <if test="bonusNum != null">
+                bonus_num = #{bonusNum,jdbcType=DECIMAL},
+            </if>
+            <if test="fee != null">
+                fee = #{fee,jdbcType=DECIMAL},
+            </if>
+            <if test="bonusDate != null">
+                bonus_date = #{bonusDate,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.pmzhongguo.ipfs.entity.IpfsUserBonus">
+    update ipfs_user_bonus
+    set hashrate_id = #{hashrateId,jdbcType=INTEGER},
+      project_id = #{projectId,jdbcType=INTEGER},
+      project_code = #{projectCode,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      output_currency = #{outputCurrency,jdbcType=VARCHAR},
+      bonus_num = #{bonusNum,jdbcType=DECIMAL},
+      fee = #{fee,jdbcType=DECIMAL},
+      bonus_date = #{bonusDate,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="findByConditionPage"
+            parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ipfs_user_bonus
+        <include refid="Where_List"/>
+    </select>
+    <select id="findByCondition"
+            parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ipfs_user_bonus
+        <include refid="Where_List"/>
+    </select>
+    <select id="sumBonus"
+            parameterType="java.util.Map"
+            resultType="java.math.BigDecimal">
+        select ifnull(sum(bonus_num),0)
+        from ipfs_user_bonus
+        <include refid="Where_List"/>
+    </select>
+
+    <select id="sumBonusGroupByType"
+            parameterType="java.util.Map"
+            resultType="java.util.Map">
+        select ifnull(sum(bonus_num),0) as bonus_num,p.type
+        from ipfs_user_bonus ub
+        left join ipfs_project p on ub.project_id = p.id
+        where 1=1
+        <if test="memberId != null">
+            and ub.member_id = #{memberId,jdbcType=INTEGER}
+        </if>
+        group by p.type
+    </select>
+</mapper>

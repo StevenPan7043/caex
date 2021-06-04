@@ -1,0 +1,123 @@
+﻿@charset "utf-8";
+/* CSS Document */
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td{margin:0;padding:0; list-style:none;color:#000000;overflow:hidden;}
+a{color:#000000; text-decoration:none}
+body{ font-size:12px;}
+img { border:0px;}
+
+/*登录页*/
+.manage{ padding:50px 0 0 70px; width:350px; height:30px;}
+.manage h1{ font-size:26px; line-height:30px; font-weight:bolder;}
+.login{ background:url(img/dl_bg.jpg) no-repeat; margin:150px auto; width:500px; height:300px;}
+.login form{ padding:27px 0 0 110px;}
+.user{ background:none; border:0px; width:320px; height:40px; margin:10px 0 0 0; line-height:40px; font-size:16px; font-weight:bold}
+.sub{width:131px; height:33px; overflow: hidden; margin:25px 15px 0 205px}
+.copyright{width:90%; height:33px; overflow: hidden; margin-top:10px; text-align:right;}
+.space{color:#FFFFFF;}
+
+/*公告页*/
+.frame{ width:100%;  margin:0 auto; overflow:hidden; background-color:#2b2b2b}
+.frame_dd{ width:100%; margin:0 auto; overflow:hidden; background-color:#222222}
+.top{ background:url(img/top.jpg) repeat-x; height:75px; overflow:hidden;}
+.title{ padding:0 0 0 20px; line-height:50px; font-size:14px; color:#000000; font-weight:bold}
+.welcome{ float:left; padding:0 0 0 20px; line-height:25px; color:#000000; width:200px;}
+.time{ float:right; width:260px; height:25px; color:#000000; line-height:25px;}
+.time font{ width:150px; float:left; display:inline; font-size:12px}
+.time a{ width:36px; height:16px; display: inline;float:left;margin:5px 5px 0 5px;_margin:5px 2px 0 3px;}
+.time img{ vertical-align:middle; float:left; width:36px; height:16px; }
+.left{ width:250px; float:left; overflow:hidden;}
+.l_top{ width:250px; height:40px; background:url(img/l_top.jpg) no-repeat; overflow:hidden; line-height:40px; text-align:center; color:#000000; font-size:14px; font-weight:bold;}
+.l_main{ width:190px; background: url(img/spit.jpg) right no-repeat; height:652px; overflow:hidden; background-color:#222222}
+.l_main ul{ margin:10px 0 0 0;}
+.l_main ul li{ width:190px; margin:0 0 0 0; height:35px; line-height:35px; color:#ffffff}
+.l_main ul li a{ color:#ffffff}
+.l_main ul li:hover{ line-height:35px; background-color:#F2A928; color:#140e03; padding:0; cursor:pointer;}
+.l_main ul li:hover a{ color:#140e03}
+span.ggtitle{ float:left;  line-height:35px; width:100px; padding:0 0 0 5px; font-weight:bold; font-size:12px;}
+span.ggtime{  float:right; line-height:35px; width:80px; padding:0 5px 0 0; font-size:12px;}
+.main{ float:left; width:100%; height:100%; background:url(img/main_bg.jpg) repeat; overflow:hidden}
+.main ul{ margin:3px 3px 0 6px; width:99%; overflow:hidden;}
+.main ul li{ float:left; width:116px; height:120px; overflow:hidden;}
+.main ul li:hover{ float:left; background:url(img/m_bg.jpg) no-repeat 0px -10px;}
+.setting{ width:90px; height:80px; padding:5px 7px 5px 6px; line-height:30px; text-align:center; font-size:13px; font-weight:bold}
+.setting img{ width:50px; height:50px;}
+.talk{ width:98%; height:145px; left:15px; bottom:0px;}
+textarea.coolscrollbar{ border: 0px; width:98%; float:left; height:100px; overflow-x:hidden; scrollbar-shadow-colo:#545454;scrollbar-arrow-color:#b6b6b6;scrollbar-face-color:#393939; scrollbar-base-color:#343434; background-color:#c1c1c1; color:#000000}
+.say{ border: 0px; width:93%; height:30px; float:left; margin:10px 0 0 0; color:#cacaca; font-weight:bold; font-size:20px; vertical-align:middle; line-height:30px; }
+.sayHightLight{ border: 0px; width:93%; height:30px; float:left; margin:10px 0 0 0; color:#000000; font-weight:bold; font-size:20px; vertical-align:middle; line-height:30px; }
+.enter{ float:left; width:30px;margin:10px 0 0 0;} 
+
+/*栏目管理*/
+.gl_top{ background:url(img/hidden_top.jpg) no-repeat; width:250px; height:35px; overflow:hidden; }
+.gl_top ul li{ float:left; line-height:35px; padding:0 10px 0 45px; width:70px; }
+.gl_main{ width:250px; height:657px; overflow:hidden; background:#222222 url(img/spit.jpg) right no-repeat; }
+.gl_main ul li{ background:url(img/gl_bg.jpg) no-repeat; width:250px; overflow:hidden; line-height:35px;}
+.gl_main ul li img{ margin:10px 5px 5px 15px; float:left}
+.gllm{ height:auto; overflow:hidden}
+dl.gllb{ background:url(img/gllb1.jpg) no-repeat; margin:0 2px 0 4px;}
+dl.gllb:hover{ background:url(img/gllb.jpg) no-repeat;}
+dl.gllb a{ margin-left:40px; line-height:35px;}
+dl.gllb:hover a{color:#140e03}
+
+/*订单管理*/
+.ddgl{ height:30px; background-color:#383838; text-align:center; line-height:30px; font-weight:bold; font-size:14px;}
+.ddtj{ width:100%; height:185px; overflow:hidden; background-color:#2c2c2c; margin:10px;}
+.tjan{ float:right; margin:5px 15px 0 0; }
+.ddlb{ height:25px; background-color:#373737; text-align:center; line-height:25px; font-weight:bold; font-size:13px; width:100%; overflow:hidden}
+.search{ float:right; margin:10px 10px 5px 10px; background:url(img/gcmc.jpg) no-repeat; height:33px; width:240px; line-height:23px; overflow:hidden;}
+input.bd{border:0px; color:#333; width:100%}
+textarea.box{border:0px; background:none; width:100%; height:100%; overflow:hidden;color:#333;}
+
+/*当前任务*/
+.dqlw{ width:100%; margin:5px 0 0 0; }
+.yycl{ float:left; width:264px; background:url(img/yycl.jpg) no-repeat; margin:0 0 0 1%;_margin:0 0 0 0;}
+.yunying{ width:94%; height:62px; overflow:hidden; margin:0 3% 0 3%;}
+.yycl h2{ line-height:25px; font-size:14px; font-weight:bold;}
+.yycl h2 span{ color:#5a942d; font-size:14px; font-weight:bold}
+.yunying ul li{ background:url(img/yyclh.jpg) no-repeat; float:left; width:21px; height:12px; overflow:hidden; text-align:center; line-height:12px; margin:0 3px 5px 0;}
+.kongxian{width:94%; height:45px; overflow:hidden; margin:0 3% 0 3%}
+.kongxian ul li{ background:url(img/kxcl.jpg) no-repeat; float:left; width:21px; height:12px; overflow:hidden; text-align:center; line-height:12px; margin:0 3px 5px 0;}
+.weixiu{width:94%; height:45px; overflow:hidden; margin:0 3% 0 3%}
+.weixiu ul li{ background:url(img/wxcl.jpg) no-repeat; float:left; width:21px; height:12px; overflow:hidden; text-align:center; line-height:12px; margin:0 3px 5px 0;}
+.yihaox{ float:left; background:url(img/xian.jpg) no-repeat; width:329px; height:150px; overflow:hidden; margin:0 0 0 3%}
+.xianlu{ width:300px; height:55px; overflow:hidden; margin:10px 10px 0 10px; line-height:16px;}
+.xianlu h2{ font-size:30px; font-weight:bold; float:left; margin-right:30px; line-height:32px;}
+span.renwu{ color:#f1aa28}
+.wangcl{width:300px; height:40px; overflow:hidden; margin:0 10px 15px 10px; }
+.wangcl ul li{ width:140px; overflow:hidden; float:left;}
+.chel{width:300px; height:20px; overflow:hidden; margin:0 10px 0 10px; font-size:14px; font-weight:bold}
+.chel ul li{ float:left; line-height:20px; margin-right:5px;}
+.chel ul li dl{ background:url(img/yyclh.jpg) no-repeat; float:left; width:21px; height:12px; overflow:hidden; text-align:center; line-height:12px; margin:3px 3px 0 0;}
+.jihuadd{ width:98%;  overflow:hidden; margin:20px 1% 0 1%;}
+.jihuadd ul li{ float:left; background:url(img/dd.jpg) no-repeat; text-align:center; width:101px; height:23px; overflow:hidden; line-height:23px;}
+.jihuadd ul li:hover{ float:left; background:url(img/dd_h.jpg) no-repeat;}
+.gongc{ width:96%; margin:0 2px 0 2px; height:25px;  line-height:25px; overflow:hidden}
+.gongc img{ margin-top:5px;}
+span.gongc1{ float:left;}
+span.gongc2{ float:right;}
+.fangl{ width:75px; height:20px; overflow:hidden; float:left; margin-top:5px;}
+.fl{ margin:0 0 0 4px; line-height:15px; width:71px; height:15px; overflow:hidden; float:left}
+.flt{ float:left; height:5px; overflow:hidden; }
+.fangls{ float:right; line-height:25px; color:#629c06; height:25px; overflow:hidden; width:20px;}
+li.checi{ background:url(img/checi.gif) no-repeat; float:left; width:21px; height:12px; overflow:hidden; text-align:center; line-height:12px; margin:0 0 5px 0;}
+li.yic{ background:url(img/yic.gif) no-repeat; float:left; width:21px; height:12px; overflow:hidden; text-align:center; line-height:12px; margin:0 0 5px 0;}
+td.gc{ color:#7b7b7b}
+
+
+.ul_loginTip{position:absolute;bottom:52px;left:400px;width:378px;height:70px;}
+.ul_loginTip li{line-height:22px;padding:0 0 0 9px;background:url(../images/login/icon_dot_a1.png) no-repeat 0 9px;}
+.ul_loginTip li a{color:#FFFFFF;text-decoration:underline;}
+.ul_loginTip li a:hover{color:#FF0000;text-decoration:none;}
+
+.a_search{display:-moz-inline-stack;display:inline-block;*display:inline;*zoom:1;width:16px;height:16px;margin:0 0 0 2px;text-indent:-999em;overflow:hidden;*text-indent:0;font-size:0em;line-height:0;color:#fff; background:url("resources/js/liger/ligerUI/skins/icons/search2.gif") no-repeat scroll center center rgba(0, 0, 0, 0);}
+
+.div_block .dispatchText{font-size:16px;color:blue;vertical-align:middle;}
+.div_block .dispatchLabel{font-size:14px;color:blue;vertical-align:middle;height:25px;line-height:25px;}
+.div_block .dispatchDiv{font-size:14px;color:blue;line-height:25px;}
+.div_block .dVStationText {font-size:20px;font-weight:bold;cursor:hand;cursor:pointer;}
+.div_block .dVStationSelText {color:blue;}
+.div_block .label_block_dispatch{float:left;width:110px;text-align:right;height:25px;line-height:25px;font-size:13px;vertical-align:middle;}
+.div_block .sel{height:24px;padding:1px 3px;font-size:13px;line-height:1.42857143;color:#000000;background-color:#fff;border:1px solid #CCC;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);box-shadow:inset 0 1px 1px rgba(0,0,0,.075);-webkit-transition:border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}
+.div_block .sel:focus{border-color:#66afe9;outline:0;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
+
+

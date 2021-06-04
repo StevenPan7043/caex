@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.framework.mapper.CommonMapper">
+	<sql id="orderByAndPagin">
+		<if test="sortname != null and sortname !=''"> order by ${sortname} ${sortorder} </if>
+		<if test="pagin == 1">  limit ${_start},${_limit} </if>
+	</sql>
+	
+	<sql id="orderBy">
+		<if test="sortname != null and sortname !=''"> order by ${sortname} ${sortorder} </if>
+	</sql>
+	
+    <select id="getDictionaryDataById" parameterType="string" resultType="java.util.HashMap">
+    	select t.dic_data_code id, t.dic_data_name text from frm_dictionary t where t.dic_code=#{dicId}
+    </select>
+    
+    <select id="getDictionaryDataByName" parameterType="string" resultType="java.util.HashMap">
+    	select t.dic_data_name id, t.dic_data_name text from frm_dictionary t where t.dic_code=#{dicId}
+    </select>
+    
+    <select id="getUserListPage" parameterType="java.util.Map" resultType="java.util.HashMap">
+    	select * from frm_user t where id != 1 and t.is_deleted=0
+            <if test="text != null and text != ''">  
+                AND (user_name like CONCAT('%', #{text}, '%') or user_real_name like CONCAT('%', #{text}, '%'))
+            </if>
+    </select>
+    
+    <select id="getMemberListPage" parameterType="java.util.Map" resultType="java.util.HashMap">
+    	select t.*, (select currency from m_coin_recharge_addr where address = #{text}) currency from m_member t where 1 = 1 
+            <if test="text != null and text != ''">  
+                AND (
+                	id = #{text} 
+                	or 
+                	m_name like CONCAT('%', #{text}, '%') 
+                	or 
+                	m_nick_name like CONCAT('%', #{text}, '%')
+                	or 
+                	exists (select member_id from m_coin_recharge_addr where member_id = t.id and address = #{text})
+                )
+            </if>
+    </select>
+
+    <select id="getFrmBankCard" resultType="java.util.HashMap">
+    	select id, concat(bank_card_no, '|', bank_name, '|', bank_real_name) text from frm_bank_card t where c_status = 1
+    </select>
+    
+    <select id="getCurrencyPair" resultType="java.util.HashMap">
+    	select key_name id, key_name text from d_currency_pair
+    </select>
+    
+    
+    <select id="getOTCOwner" resultType="java.util.HashMap">
+    	select id, o_name text from otc_owner
+    </select>
+    
+    <select id="getCurrency" resultType="java.util.HashMap">
+    	select id id, currency text from d_currency where is_show = 1
+    </select>
+    
+    <select id="isDicCodeExist" parameterType="string" resultType="java.util.HashMap">
+    	select count(1) from frm_dictionary t where t.id = #{_parameter}
+    </select>
+    
+    <select id="getColumnsBySiteId" parameterType="java.util.Map" resultType="java.util.HashMap">
+    	SELECT id, c_name TEXT FROM cms_column 
+    	WHERE site_id = #{siteId} 
+    	AND is_use = 1 
+    	AND parent_id = 0 
+    	AND id != #{excludeId}
+    	ORDER BY c_order
+    </select>
+    
+    <select id="getLeafColumnsBySiteId" parameterType="java.util.Map" resultType="java.util.HashMap">
+    	SELECT id, c_name TEXT FROM cms_column c
+    	WHERE site_id = #{siteId} 
+    	AND is_use = 1 
+    	AND not exists (select 1 from cms_column c_son where c.id = c_son.parent_id )
+    	ORDER BY c_order
+    </select>
+	<select id="getColumnsWithTop"  resultType="java.util.HashMap">
+		SELECT id, c_name as TEXT FROM cms_column
+		WHERE is_use = 1
+		AND parent_id = 0
+		ORDER BY c_order
+	</select>
+</mapper>

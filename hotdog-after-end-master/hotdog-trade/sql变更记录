@@ -1,0 +1,584 @@
+------------------------------------ NO.002 author:李东旭 2020-12-26 -----------------------
+
+INSERT INTO `testhotdog`.`mt_clique_menus`(`id`, `parentid`, `name`, `url`, `status`, `icon`, `sort`, `type`) VALUES (121, 0, '周期交易', 'javaScript:;', 0, '&#xe62e;', 1, 1);
+INSERT INTO `testhotdog`.`mt_clique_menus`(`id`, `parentid`, `name`, `url`, `status`, `icon`, `sort`, `type`) VALUES (122, 121, '跟单订单', '/cycle/showRecordList', 0, NULL, 1, 1);
+INSERT INTO `testhotdog`.`mt_clique_menus`(`id`, `parentid`, `name`, `url`, `status`, `icon`, `sort`, `type`) VALUES (123, 121, '用户收益', '/cycle/showUserBonusList', 0, NULL, 1, 1);
+INSERT INTO `testhotdog`.`mt_clique_menus`(`id`, `parentid`, `name`, `url`, `status`, `icon`, `sort`, `type`) VALUES (124, 121, '团队收益', '/cycle/showTeamBonusList', 0, NULL, 1, 1);
+INSERT INTO `testhotdog`.`mt_clique_menus`(`id`, `parentid`, `name`, `url`, `status`, `icon`, `sort`, `type`) VALUES (125, 121, '跟单明细', '/cycle/showDetailList', 0, NULL, 1, 1);
+
+------------------------------------ NO.002 author:李东旭 2020-12-21 -----------------------
+
+INSERT INTO `testhotdog`.`frm_function_url`(`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES (276, 'GDGL-GDLIST', '/backstage/gd/gd_list', '跟单页面', 0);
+INSERT INTO `testhotdog`.`frm_function_url`(`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES (278, 'GDGL-CXLIST', '/backstage/gd/queryGdList', '查询跟单', 0);
+INSERT INTO `testhotdog`.`frm_function_url`(`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES (280, 'GDGL-ADD', '/backstage/gd/gd_add', '添加跟单页面', 0);
+INSERT INTO `testhotdog`.`frm_function_url`(`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES (281, 'GDGL-ADD-DO', '/backstage/gd/gd_add_do', '添加跟单', 0);
+INSERT INTO `testhotdog`.`frm_function_url`(`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES (282, 'GDGL-EDIT', '/backstage/gd/gd_edit', '修改跟单页面', 0);
+INSERT INTO `testhotdog`.`frm_function_url`(`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES (283, 'GDGL-EDIT-DO', '/backstage/gd/gd_edit_do', '修改跟单', 0);
+
+INSERT INTO `testhotdog`.`frm_function`(`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) VALUES ('GDGL', '0', '周期项目管理', '周期项目管理', NULL, NULL, 0, 0, 1, 0, '1', 1);
+INSERT INTO `testhotdog`.`frm_function`(`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) VALUES ('GDGL-LIST', 'GDGL', '跟单列表', '跟单列表', '/backstage/gd/gd_list', NULL, 0, 0, 1, 0, '1', 1);
+INSERT INTO `testhotdog`.`frm_function`(`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) VALUES ('GDGL-CXLIST', 'GDGL-LIST', '查询跟单', '查询跟单', '/backstage/gd/queryGdList', NULL, 0, 0, 1, 0, '1', 1);
+INSERT INTO `testhotdog`.`frm_function`(`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) VALUES ('GDGL-ADD', 'GDGL-LIST', '添加跟单页面', '添加跟单页面', '/backstage/gd/gd_add', NULL, 0, 0, 1, 0, '1', 1);
+INSERT INTO `testhotdog`.`frm_function`(`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) VALUES ('GDGL-ADD-DO', 'GDGL-ADD', '添加跟单', '添加跟单', '/backstage/gd/gd_add_do', NULL, 0, 0, 1, 0, '1', 1);
+INSERT INTO `testhotdog`.`frm_function`(`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) VALUES ('GDGL-EDIT', 'GDGL-LIST', '修改跟单页面', '修改跟单页面', '/backstage/gd/gd_edit', NULL, 0, 0, 1, 0, '1', 1);
+INSERT INTO `testhotdog`.`frm_function`(`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) VALUES ('GDGL-EDIT-DO', 'GDGL-EDIT', '修改跟单', '修改跟单', '/backstage/gd/gd_edit_do', NULL, 0, 0, 1, 0, '1', 1);
+
+------------------------------------ NO.002 author:李东旭 2020-11-25 -----------------------
+CREATE TABLE `gd_contract_order`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ordercode` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '订单号',
+  `cid` int(11) NOT NULL COMMENT '用户id',
+  `type` int(1) NOT NULL COMMENT '1开多 2开空',
+  `realmoney` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '实际花费金额',
+  `gearing` int(11) NULL DEFAULT 0 COMMENT '杠杆倍数',
+  `money` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '杠杆放大金额',
+  `buyprice` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '买入价 市值',
+  `coin` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '货币类型 见coin表 symbol字段',
+  `coinnum` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '持仓量',
+  `stopprice` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '平仓价 市值',
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '持仓时间',
+  `stoptime` datetime(0) NULL DEFAULT NULL COMMENT '平仓时间',
+  `tax` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '手续费',
+  `rates` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '利息',
+  `status` int(11) NULL DEFAULT 1 COMMENT '1持仓中 2已完成',
+  `automoney` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '自动爆仓价',
+  `settleflag` int(11) NULL DEFAULT -1 COMMENT '-1未结算 1已结算',
+  `outtype` int(1) NULL DEFAULT 1 COMMENT '1手动平仓 2自动爆仓',
+  `stopwin` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '止盈价格',
+  `stopdonat` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '止损价格',
+  `spread` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '点差比例',
+  `spreadmoney` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '点差金额',
+  `remark` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '备注',
+  `ordertype` int(11) NULL DEFAULT 1 COMMENT '1合约订单  2逐仓订单',
+  `run_time` int(11) NULL DEFAULT 0 COMMENT '订单持仓时长 单位s',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `cid`(`cid`) USING BTREE,
+  INDEX `ordercode`(`ordercode`) USING BTREE,
+  INDEX `coin`(`coin`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 154 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = COMPACT;
+
+------------------------------------ NO.003 author:韦鹏飞 2020-11-11 -----------------------
+-- 团队奖励表
+CREATE TABLE `gd_team_bonus` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) DEFAULT NULL COMMENT '用户id',
+  `level` varchar(1) DEFAULT NULL COMMENT '人员等级',
+  `team_bonus` decimal(32,4) DEFAULT NULL COMMENT '获得的团队奖励',
+  `bonus_rate` decimal(10,2) DEFAULT NULL COMMENT '当前等级奖励率',
+  `sub_bonus_base` decimal(32,4) DEFAULT NULL COMMENT '伞下人员日总产量',
+  `bonus_date` varchar(10) DEFAULT NULL COMMENT '分红日期',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `membere_bonus_date` (`member_id`,`bonus_date`)
+) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=utf8 COMMENT '团队奖励表';
+
+-- 跟单明细表
+CREATE TABLE `gd_detail`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `paycode` varchar(100) DEFAULT NULL COMMENT '流水号',
+  `cid` int(11) DEFAULT NULL COMMENT '会员编号',
+  `typeid` int(11) DEFAULT NULL COMMENT '操作类型见枚举类',
+  `isout` int(1) DEFAULT NULL COMMENT '1收入 0支出',
+  `original` decimal(18, 4) DEFAULT 0.0000 COMMENT '上一次值',
+  `cost` decimal(18, 4) DEFAULT 0.0000 COMMENT '本次操作值',
+  `last` decimal(18, 4) DEFAULT 0.0000 COMMENT '最后值',
+  `createtime` datetime(0) DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `updatetime` datetime(0) DEFAULT NULL COMMENT '修改时间 用来做乐观锁',
+  `targetid` int(11) DEFAULT NULL COMMENT '目标用户id',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 183 CHARACTER SET = utf8 COMMENT = '跟单明细表';
+
+-- 跟单日分红
+CREATE TABLE `gd_output` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL COMMENT '项目id',
+  `output_currency` varchar(20) NOT NULL COMMENT '产出币种',
+  `capacity` decimal(32,6) NOT NULL COMMENT '今日产出量',
+  `output_date` varchar(10) NOT NULL COMMENT '产量日期yyyy-MM-dd',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `documentary_output` (`project_id`,`output_date`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COMMENT '跟单日分红';
+
+-- 用户跟单日收益
+CREATE TABLE `gd_user_bonus` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `record_id` int(11) NOT NULL COMMENT '购买表id',
+  `project_id` int(11) NOT NULL COMMENT '跟单id',
+  `member_id` int(11) NOT NULL COMMENT '用户id',
+  `output_currency` varchar(20) NOT NULL COMMENT '产出币种',
+  `bonus_num` decimal(32,6) NOT NULL COMMENT '分红数量',
+  `bonus_date` varchar(10) NOT NULL COMMENT '分红日期yyyy-MM-dd',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `record_bonus_date` (`record_id`,`bonus_date`)
+) ENGINE=InnoDB AUTO_INCREMENT=586 DEFAULT CHARSET=utf8 COMMENT '用户跟单日收益';
+
+-- 用户购买跟单记录
+CREATE TABLE `gd_buy_record` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL COMMENT '跟单id',
+  `member_id` int(11) NOT NULL COMMENT '用户id',
+  `num` int(11) NOT NULL COMMENT '购买的数量',
+  `output_currency` varchar(20) NOT NULL COMMENT '产出币种',
+  `price` decimal(64,4) NOT NULL COMMENT '购买单价',
+  `total` decimal(64,4) NOT NULL COMMENT '购买总价',
+  `status` varchar(1) NOT NULL DEFAULT '1' COMMENT '1有效2无效',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8 COMMENT '用户购买跟单记录';
+
+-- 跟单分类
+CREATE TABLE `gd_project` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `output_currency` varchar(20) NOT NULL COMMENT '算力每日产出的币种',
+  `quote_currency` varchar(20) NOT NULL COMMENT '购买算力的货币',
+  `price` decimal(32,4) NOT NULL COMMENT '跟单价格',
+  `output_floor` decimal(32,2) NOT NULL COMMENT '每日产出下限',
+  `output_upper` decimal(32,2) NOT NULL COMMENT '每日产出上限',
+  `run_status` varchar(1) NOT NULL DEFAULT '1' COMMENT '运行状态 1未开始2启动3停止',
+  `particular` longtext COMMENT '跟单详情描述',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT '跟单分类';
+
+INSERT INTO sys_infos(keyval,vals,remark)
+VALUES('gd_scale','0.7-1.5','跟单日化收益范围');
+
+ALTER TABLE c_wallet
+ADD COLUMN gdbalance decimal(24, 8) DEFAULT 0 COMMENT '跟单金额';
+
+ALTER TABLE c_contract_order
+ADD COLUMN run_time int(11) DEFAULT 0 COMMENT '订单持仓时长 单位s';
+
+ALTER TABLE c_entrust_order
+ADD COLUMN run_time int(11) DEFAULT 0 COMMENT '订单持仓时长 单位s';
+
+------------------------------------ NO.003 author:韦鹏飞 2020-10-23 -----------------------
+ALTER TABLE ipfs_user_bonus MODIFY COLUMN bonus_num DECIMAL ( 32, 6 ) NOT NULL COMMENT '分红数量';
+ALTER TABLE ipfs_user_bonus MODIFY COLUMN fee DECIMAL ( 32, 6 ) NOT NULL DEFAULT 0.000000 COMMENT '分红数量';
+ALTER TABLE ipfs_intro_bonus MODIFY COLUMN bonus_num DECIMAL ( 32, 6 ) NOT NULL COMMENT '分红数量';
+ALTER TABLE ipfs_team_bonus MODIFY COLUMN team_bonus DECIMAL ( 32, 6 ) DEFAULT NULL COMMENT '获得的团队奖励';
+ALTER TABLE ipfs_team_bonus MODIFY COLUMN sub_bonus_base DECIMAL ( 32, 6 ) DEFAULT NULL COMMENT '伞下人员日产量';
+ALTER TABLE ipfs_team_bonus MODIFY COLUMN sub_hashrate_base DECIMAL ( 64, 6 ) DEFAULT NULL COMMENT '伞下人员总业绩（算力租赁总额）';
+
+ALTER TABLE ipfs_output
+ADD COLUMN capacity_out decimal(32,6) DEFAULT 0 COMMENT '未解封产出量',
+ADD COLUMN output_status int(1) DEFAULT 0 COMMENT '产出解封状态：0未全部解封、1全部解封、2项目关闭或结束'
+------------------------------------ NO.003 author:韦鹏飞 2020-09-19 -----------------------
+INSERT INTO frm_function(id,fuc_parent_id,fuc_name,fuc_desc,fuc_url,fuc_icon,fuc_order,is_hidden,
+is_need_auth,is_need_log,is_use,is_display_in_menu)
+VALUES("HYZCGL","0","会员资产管理","会员资产管理",null,null,30,0,1,0,"1",1);
+
+INSERT INTO frm_function_url(id,frm_function_id,fuc_url_url,fuc_url_desc,is_need_log)
+VALUES(272,"HYZCGL-HYZC","/backstage/member/contractBalance","合约资产",0);
+
+INSERT INTO frm_function(id,fuc_parent_id,fuc_name,fuc_desc,fuc_url,fuc_icon,fuc_order,is_hidden,
+is_need_auth,is_need_log,is_use,is_display_in_menu)
+VALUES("HYZCGL-HYZC","HYZCGL","合约资产","合约资产","/backstage/member/member_contract_balance",null,50,0,1,0,"1",1);
+
+INSERT INTO frm_function_url(id,frm_function_id,fuc_url_url,fuc_url_desc,is_need_log)
+VALUES(273,"HYZCGL-HYZC-DC","/backstage/member/contractBalanceExport","合约资产导出",0);
+
+UPDATE frm_function SET id = "HYZCGL-YHZC",fuc_parent_id = "HYZCGL" WHERE id = "HYGL-YHZC";
+UPDATE frm_function_url SET frm_function_id = "HYZCGL-YHZC" WHERE frm_function_id = "HYGL-YHZC";
+UPDATE frm_function_url SET frm_function_id = "HYZCGL-YHZC1" WHERE frm_function_id = "HYGL-YHZC1";
+
+UPDATE frm_function SET id = "HYZCGL-BF",fuc_parent_id = "HYZCGL" WHERE id = "HYGL-BF";
+UPDATE frm_function_url SET frm_function_id = "HYZCGL-BF" WHERE frm_function_id = "HYGL-BF";
+
+UPDATE frm_function SET id = "HYZCGL-OTCZHMX",fuc_parent_id = "HYZCGL" WHERE id = "HYGL-OTCZHMX";
+UPDATE frm_function_url SET frm_function_id = "HYZCGL-OTCZHMX" WHERE frm_function_id = "HYGL-OTCZHMX";
+
+UPDATE frm_function SET id = "HYZCGL-USDTHZ",fuc_parent_id = "HYZCGL" WHERE id = "HYGL-USDTHZ";
+UPDATE frm_function_url SET frm_function_id = "HYZCGL-USDTHZ" WHERE frm_function_id = "HYGL-USDTHZ";
+
+UPDATE frm_function SET id = "HYZCGL-USDTTEAM",fuc_parent_id = "HYZCGL" WHERE id = "HYGL-USDTTEAM";
+UPDATE frm_function_url SET frm_function_id = "HYZCGL-USDTTEAM" WHERE frm_function_id = "HYGL-USDTTEAM";
+
+UPDATE frm_function SET id = "HYZCGL-VM-LIST",fuc_parent_id = "HYZCGL" WHERE id = "HYGL-VM-LIST";
+UPDATE frm_function_url SET frm_function_id = "HYZCGL-VM" WHERE frm_function_id = "HYGL-VM";
+
+UPDATE frm_function SET id = "HYZCGL-YHLSYE",fuc_parent_id = "HYZCGL" WHERE id = "HYGL-YHLSYE";
+UPDATE frm_function_url SET frm_function_id = "HYZCGL-YHLSYE" WHERE frm_function_id = "HYGL-YHLSYE";
+
+UPDATE frm_function SET id = "HYZCGL-YHLSYE-DC",fuc_parent_id = "HYZCGL-YHLSYE" WHERE id = "HYGL-YHLSYE-DC";
+UPDATE frm_function_url SET frm_function_id = "HYZCGL-YHLSYE-DC" WHERE frm_function_id = "HYGL-YHLSYE-DC";
+
+UPDATE frm_function SET id = "HYZCGL-YHOTCZC",fuc_parent_id = "HYZCGL" WHERE id = "HYGL-YHOTCZC";
+UPDATE frm_function_url SET frm_function_id = "HYZCGL-YHOTCZC" WHERE frm_function_id = "HYGL-YHOTCZC";
+
+UPDATE frm_function SET id = "HYZCGL-ZCGL-SZ",fuc_parent_id = "HYZCGL-YHZC" WHERE id = "HYGL-ZCGL-SZ";
+
+UPDATE frm_function SET id = "HYZCGL-ZHMX",fuc_parent_id = "HYZCGL" WHERE id = "HYGL-ZHMX";
+UPDATE frm_function_url SET frm_function_id = "HYZCGL-ZHMX" WHERE frm_function_id = "HYGL-ZHMX";
+
+UPDATE frm_function_url SET frm_function_id = "HYZCGL-YHLSYEMX" WHERE frm_function_id = "HYGL-YHLSYEMX";
+
+UPDATE frm_function SET is_use = "0" WHERE id = "HYZCGL-BF";
+
+------------------------------------ NO.003 author:韦鹏飞 2020-09-17 -----------------------
+ALTER TABLE m_member_oper_log
+ADD COLUMN login_device varchar(40) COMMENT '登录设备'
+
+ALTER TABLE m_member
+ADD COLUMN last_login_device varchar(40) COMMENT '最后登录设备 APP ANDROID IOS PC'
+
+INSERT INTO frm_function_url(id,frm_function_id,fuc_url_url,fuc_url_desc,is_need_log)
+VALUES(271,"HYGL-YHDLJL","/backstage/member/loginHistory","会员登录记录",0);
+
+INSERT INTO frm_function(id,fuc_parent_id,fuc_name,fuc_desc,fuc_url,fuc_icon,fuc_order,is_hidden,
+is_need_auth,is_need_log,is_use,is_display_in_menu)
+VALUES("HYGL-YHDLJL","HYGL","会员登录记录","会员登录记录","/backstage/member/member_login_history",null,50,0,1,0,"1",1);
+
+------------------------------------ NO.003 author:韦鹏飞 2020-09-11 -----------------------
+INSERT INTO frm_function_url(id,frm_function_id,fuc_url_url,fuc_url_desc,is_need_log)
+VALUES(268,"HYGL-YHLSYE","/backstage/member/everyTotalBalance","用户历史余额",0);
+
+INSERT INTO frm_function_url(id,frm_function_id,fuc_url_url,fuc_url_desc,is_need_log)
+VALUES(269,"HYGL-YHLSYEMX","/backstage/member/balanceHistoryDetails","用户历史余额明细",0);
+
+INSERT INTO frm_function_url(id,frm_function_id,fuc_url_url,fuc_url_desc,is_need_log)
+VALUES(270,"HYGL-YHLSYE-DC","/backstage/member/balanceHistoryExport","用户历史余额导出",0);
+
+INSERT INTO frm_function(id,fuc_parent_id,fuc_name,fuc_desc,fuc_url,fuc_icon,fuc_order,is_hidden,
+is_need_auth,is_need_log,is_use,is_display_in_menu)
+VALUES("HYGL-YHLSYE","HYGL","用户历史余额","用户历史余额","/backstage/member/member_balance_history",null,50,0,1,0,"1",1);
+
+INSERT INTO frm_function(id,fuc_parent_id,fuc_name,fuc_desc,fuc_url,fuc_icon,fuc_order,is_hidden,
+is_need_auth,is_need_log,is_use,is_display_in_menu)
+VALUES("HYGL-YHLSYE-DC","HYGL-YHLSYE","用户历史余额导出","用户历史余额导出","/backstage/member/member_balance_history_export",null,1,0,1,0,"1",1);
+
+CREATE TABLE `c_wallet_hitstory` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NOT NULL COMMENT '用户id',
+  `type` varchar(10) NOT NULL COMMENT '钱包类型 见枚举 EOS ETH USDT BTH ',
+  `balance` decimal(24,8) DEFAULT '0.00000000' COMMENT '钱包余额',
+  `zcbalance` decimal(24,8) DEFAULT '0.00000000' COMMENT '逐仓金额',
+  `record_date` date DEFAULT NULL COMMENT '记录的资产日期',
+  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`,`cid`,`type`),
+  UNIQUE KEY `cid_type_date` (`cid`,`type`,`record_date`),
+  KEY `cid` (`cid`) USING BTREE,
+  KEY `type` (`type`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='合约资产历史记录'
+
+CREATE TABLE `m_account_hitstory` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL COMMENT '会员ID',
+  `currency` varchar(20) COLLATE utf8_bin NOT NULL COMMENT '货币类型，关联d_currency表的currency字段',
+  `total_balance` decimal(64,6) NOT NULL DEFAULT '0.000000' COMMENT '总余额，可交易余额 = 总余额 - 冻结余额',
+  `frozen_balance` decimal(64,6) NOT NULL DEFAULT '0.000000' COMMENT '冻结余额，如有挂单未成交，则有冻结余额',
+  `record_date` date DEFAULT NULL COMMENT '记录的资产时间',
+  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_currency_date` (`member_id`,`currency`,`record_date`),
+  KEY `IDX_account_currency` (`currency`) USING BTREE,
+  KEY `IDX_account_member_id` (`member_id`) USING BTREE,
+  KEY `m_account_currency` (`currency`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='币币账户信息历史记录'
+
+CREATE TABLE `o_account_hitstory` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL COMMENT '会员ID',
+  `currency` varchar(20) COLLATE utf8_bin NOT NULL COMMENT '货币类型，关联d_currency表的currency字段',
+  `total_balance` decimal(64,6) NOT NULL DEFAULT '0.000000' COMMENT '总余额，可交易余额 = 总余额 - 冻结余额',
+  `frozen_balance` decimal(64,6) NOT NULL DEFAULT '0.000000' COMMENT '冻结余额，如有挂单未成交，则有冻结余额',
+  `record_date` date DEFAULT NULL COMMENT '记录的资产时间',
+  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_currency_date` (`member_id`,`currency`,`record_date`),
+  KEY `IDX_account_currency` (`currency`) USING BTREE,
+  KEY `IDX_account_member_id` (`member_id`) USING BTREE,
+  KEY `m_account_currency` (`currency`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='法币账户信息历史记录'
+
+------------------------------------ ipfs author:李东旭 2020-08-10 -----------------------
+
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('262','IPFS-HASHRATE','/backstage/ipfs/hashrate_edit','用户算力修改界面','0');
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('263','IPFS-HASHRATE','/backstage/ipfs/hashrate_edit_do','用户算力修改','0');
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('267','IPFS-HASHRATE','/backstage/ipfs/PLHashrate_edit','用户算力批量修改','0');
+------------------------------------ trade author:Daily 2020-08-11 -----------------------
+-- 模拟账号资产修改
+insert into `frm_function` (`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) values
+('HYGL-VM-LIST','HYGL','模拟账号资产','模拟账号资产','/backstage/member/vm_asserts_list',NULL,'50','0','1','0','1','1');
+
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('266','HYGL-VM','/backstage/member/vm_asserts_edit','模拟账号资产修改界面','0');
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('264','HYGL-VM','/backstage/member/vm_asserts_edit_do','模拟账号资产修改','1');
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('265','HYGL-VM','/backstage/member/vm_asserts','模拟账号资产列表','0');
+------------------------------------ ipfs author:Daily 2020-08-08 -----------------------
+-- ipfs_project 添加是否显示发行购买数量的字段
+ALTER TABLE `hotdog`.`ipfs_project`
+  ADD COLUMN `is_display_num` VARCHAR(1) DEFAULT '1'  NULL   COMMENT '是否显示数量０不显示 １ 显示' AFTER `intro_bonus`;
+------------------------------------ ipfs author:Daily 2020-08-06 -----------------------
+insert into `frm_function` (`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) values
+('TEAMDETAILBONUS-LIST','IPFS','团队奖励明细','团队奖励明细','/backstage/ipfs/team_bonus_detail_list',NULL,'87','0','1','0','1','1');
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('261','IPFS-TEAMDETAILBONUS','/backstage/ipfs/teamDetailBonus','团队奖励明细','0');
+------------------------------------ ipfs author:Daily 2020-08-05 -----------------------
+-- 购买算力表
+CREATE TABLE `ipfs_hashrate` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL COMMENT '项目id 可用于统计单期数量',
+  `project_code` varchar(20) NOT NULL COMMENT '项目编码 可用于统计项目数据',
+  `project_name` varchar(100) NOT NULL COMMENT '前端显示的每期的名称（描述）',
+  `member_id` int(11) NOT NULL COMMENT '用户id',
+  `num` int(11) NOT NULL COMMENT '购买的算力数量',
+  `output_currency` varchar(20) NOT NULL COMMENT '产出币种',
+  `quote_currency` varchar(20) NOT NULL COMMENT '认购币种',
+  `price` decimal(64,4) NOT NULL COMMENT '购买单价',
+  `total` decimal(64,4) NOT NULL COMMENT '购买总价',
+  `status` varchar(1) NOT NULL DEFAULT '1' COMMENT '1有效2无效',
+  `type` varchar(1) NOT NULL COMMENT '1 算力 2 矿机',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8
+
+-- 介绍人奖励表
+CREATE TABLE `ipfs_intro_bonus` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL COMMENT '项目id',
+  `project_code` varchar(20) NOT NULL COMMENT '项目编码',
+  `hashrate_id` int(11) NOT NULL COMMENT '算力id',
+  `member_id` int(11) NOT NULL COMMENT '用户id',
+  `intro_id` int(11) NOT NULL COMMENT '推荐人id',
+  `bonus_currency` varchar(20) NOT NULL COMMENT '分红币种',
+  `bonus_num` decimal(32,4) NOT NULL COMMENT '分红数量',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8
+
+-- 日产量表
+CREATE TABLE `ipfs_output` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL COMMENT '项目id',
+  `output_currency` varchar(20) NOT NULL COMMENT '产出币种',
+  `capacity` decimal(32,4) NOT NULL COMMENT '今日产出量',
+  `output_date` varchar(10) NOT NULL COMMENT '产量日期yyyy-MM-dd',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `project_output` (`project_id`,`output_date`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8
+
+-- 项目表
+CREATE TABLE `ipfs_project` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `project_name` varchar(100) NOT NULL COMMENT '前端显示的每期的名称（描述）',
+  `project_name_e` varchar(100) NOT NULL COMMENT '前端显示的每期的名称（描述）',
+  `code` varchar(20) DEFAULT NULL COMMENT '用于统计多期的整个项目数据',
+  `periods` int(11) NOT NULL COMMENT '第几期',
+  `publish_num` int(11) NOT NULL COMMENT '发行数量(算力)   剩余数量=发行数量-已购数量-调整数量',
+  `bought_num` int(11) NOT NULL DEFAULT '0' COMMENT '用户实际已购买数量',
+  `output_currency` varchar(20) NOT NULL COMMENT '算力每日产出的币种',
+  `quote_currency` varchar(20) NOT NULL COMMENT '购买算力的货币',
+  `price` decimal(32,4) NOT NULL COMMENT '每算力价格',
+  `output_floor` decimal(32,2) NOT NULL COMMENT '每日产出下限',
+  `output_upper` decimal(32,2) NOT NULL COMMENT '每日产出上限',
+  `r_output_floor` decimal(32,2) NOT NULL COMMENT '实际每日产出下限',
+  `r_output_upper` decimal(32,2) NOT NULL COMMENT '实际每日产出上限',
+  `fee` decimal(32,4) NOT NULL DEFAULT '0.0000' COMMENT '技术服务费(手续费)',
+  `sale_start_time` datetime NOT NULL COMMENT '认购开始时间',
+  `sale_end_time` datetime NOT NULL COMMENT '认购结束时间',
+  `run_time` datetime NOT NULL COMMENT '预计上线时间',
+  `equity_cycle` int(11) NOT NULL COMMENT '权益周期-算力有效天数',
+  `sale_status` varchar(1) NOT NULL DEFAULT '1' COMMENT '项目销售状态 1待售2销售中3售馨4结束',
+  `run_status` varchar(1) NOT NULL DEFAULT '1' COMMENT '运行状态 1未开始2启动3停止',
+  `intro_bonus` decimal(32,4) NOT NULL DEFAULT '0.0000' COMMENT '推荐人奖励,购买费用的百分比',
+  `type` varchar(20) NOT NULL COMMENT '1 算力  2 矿机',
+  `exchange_rate` decimal(32,4) NOT NULL COMMENT '1个单位兑换多少个算力',
+  `discount` decimal(32,4) NOT NULL DEFAULT '1.0000' COMMENT '折扣率，1就是百分之百',
+  `user_buy_limit` int(11) NOT NULL COMMENT '个人限购数量',
+  `equity_desc` varchar(255) DEFAULT NULL COMMENT '权益描述',
+  `equity_desc_e` varchar(255) DEFAULT NULL COMMENT '权益描述英文',
+  `price_desc` varchar(255) DEFAULT NULL COMMENT '价格描述',
+  `price_desc_e` varchar(255) DEFAULT NULL COMMENT '价格描述英文',
+  `particular` longtext COMMENT '项目详情描述',
+  `particular_e` longtext COMMENT '项目英文详情描述',
+  `allot_desc` longtext COMMENT '产出分配说明',
+  `allot_desc_e` longtext COMMENT '产出英文分配说明',
+  `question` longtext COMMENT '常见问题说明',
+  `question_e` longtext COMMENT '常见问题英文说明',
+  `risk_warning` longtext COMMENT '风险提示',
+  `risk_warning_e` longtext COMMENT '风险英文提示',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8
+
+-- 团队奖励表
+CREATE TABLE `ipfs_team_bonus` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) DEFAULT NULL COMMENT '团队高级人员id',
+  `Level` varchar(1) DEFAULT NULL COMMENT '人员等级',
+  `team_bonus` decimal(32,4) DEFAULT NULL COMMENT '获得的团队奖励',
+  `bonus_rate` decimal(10,2) DEFAULT NULL COMMENT '当前等级奖励率',
+  `sub_bonus_base` decimal(32,4) DEFAULT NULL COMMENT '伞下人员日产量',
+  `sub_hashrate_base` decimal(64,4) DEFAULT NULL COMMENT '伞下人员总业绩（算力租赁总额）',
+  `bonus_date` varchar(10) DEFAULT NULL COMMENT '分红日期',
+  `memo` varchar(500) DEFAULT NULL COMMENT '用于记录分红计算公式',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `membere_bonus_date` (`member_id`,`bonus_date`)
+) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=utf8
+
+-- 团队奖励明细表
+CREATE TABLE `ipfs_team_bonus_detail` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `team_bonus_id` int(11) DEFAULT NULL COMMENT '团队分红表ID',
+  `son_memeber_id` int(11) DEFAULT NULL COMMENT '伞下人员memberId',
+  `son_level` varchar(1) DEFAULT NULL COMMENT '伞下人员等级',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建日期',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=216 DEFAULT CHARSET=utf8
+
+-- 用户奖励表
+CREATE TABLE `ipfs_user_bonus` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `hashrate_id` int(11) NOT NULL COMMENT '算力购买表id',
+  `project_id` int(11) NOT NULL COMMENT '项目id',
+  `project_code` varchar(20) NOT NULL COMMENT '用于统计多期的整个项目数据',
+  `member_id` int(11) NOT NULL COMMENT '用户id',
+  `output_currency` varchar(20) NOT NULL COMMENT '产出币种',
+  `bonus_num` decimal(32,4) NOT NULL COMMENT '分红数量',
+  `fee` decimal(32,4) NOT NULL DEFAULT '0.0000' COMMENT '技术服务费',
+  `bonus_date` varchar(10) NOT NULL COMMENT '分红日期yyyy-MM-dd',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `hashrate_bonus_date` (`hashrate_id`,`bonus_date`)
+) ENGINE=InnoDB AUTO_INCREMENT=586 DEFAULT CHARSET=utf8
+
+-- 添加菜单
+insert into `frm_function` (`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) values
+('IPFS','0','ipfs云算力','ipfs云算力',NULL,NULL,'80','0','1','0','1','1');
+insert into `frm_function` (`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) values
+('IPFS-LIST','IPFS','项目信息','项目信息','/backstage/ipfs/ipfs_list',NULL,'81','0','1','0','1','1');
+insert into `frm_function` (`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) values
+('HASHRATE-LIST','IPFS','用户算力','用户算力','/backstage/ipfs/hashrate_list',NULL,'82','0','1','0','1','1');
+insert into `frm_function` (`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) values
+('USERBONUS-LIST','IPFS','用户分红','用户分红','/backstage/ipfs/user_bonus_list',NULL,'83','0','1','0','1','1');
+insert into `frm_function` (`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) values
+('INTROBONUS-LIST','IPFS','推荐人奖励','推荐人奖励','/backstage/ipfs/intro_bonus_list',NULL,'84','0','1','0','1','1');
+insert into `frm_function` (`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) values
+('OUTPUT-LIST','IPFS','ipfs每日产量','ipfs每日产量','/backstage/ipfs/output_list',NULL,'85','0','1','0','1','1');
+insert into `frm_function` (`id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu`) values
+('TEAMBONUS-LIST','IPFS','团队奖励','团队奖励','/backstage/ipfs/team_bonus_list',NULL,'86','0','1','0','1','1');
+
+-- 添加权限
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('251','IPFS-IPFSGL','/backstage/ipfs/ipfs_add_do','云算力项目增加','1');
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('252','IPFS-IPFSGL','/backstage/ipfs/ipfs_add','云算力项目增加界面','0');
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('253','IPFS-IPFSGL','/backstage/ipfs/ipfs_edit','云算力项目修改界面','0');
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('254','IPFS-IPFSGL','/backstage/ipfs/ipfs_edit_do','云算力项目修改','1');
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('255','IPFS-IPFSGL','/backstage/ipfs/ipfs','云算力项目列表','0');
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('256','IPFS-HASHRATE','/backstage/ipfs/hashrate','用户算力列表','0');
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('257','IPFS-USERBONUS','/backstage/ipfs/userBonus','用户算力列表','0');
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('258','IPFS-USERBONUS','/backstage/ipfs/introBonus','推荐人奖励列表','0');
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('259','IPFS-OUTPUT','/backstage/ipfs/output','ipfs每日产量列表','0');
+INSERT INTO `frm_function_url` (`id`, `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES('260','IPFS-TEAMBONUS','/backstage/ipfs/teamBonus','团队奖励','0');
+
+------------------------------------------author:Daily 2020-07-10 -----------------------
+-- 新增用户关联关系表
+CREATE TABLE `m_introduce_relation` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL COMMENT '用户id',
+  `introduce_m_id` int(11) NOT NULL COMMENT '介绍人id',
+  `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '创建时间',
+  `memo` varchar(20) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `2id` (`member_id`,`introduce_m_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='用户介绍关系表'
+
+------------------------------------------author:Jary 2020-05-28 ------------------------------------------
+-- 用户资产增加权限控制
+INSERT INTO `frm_function` ( `id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu` )
+VALUES
+	( 'HYGL-ZCGL-SZ', 'HYGL-YHZC', '设置', '设置', '/backstage/member/asserts_edit', NULL, 1, 0, 1, 0, '1', 1 );
+
+
+
+ALTER TABLE `d_currency_pair`
+MODIFY COLUMN `ups_downs_limit` decimal(20, 2) NOT NULL DEFAULT 10 COMMENT '最大涨跌幅限制' AFTER `is_ups_downs_limit`;
+------------------------------------------author:Jary 2020-04-20 ------------------------------------------
+-- 添加涨跌幅限制
+ALTER TABLE `d_currency_pair`
+ADD COLUMN `is_ups_downs_limit` int(1) NOT NULL DEFAULT 0 COMMENT '是否开启涨跌幅限制，1为限制，0为不限制' AFTER `fraud_magnitude_bak`,
+ADD COLUMN `ups_downs_limit` int(2) NOT NULL DEFAULT 10 COMMENT '最大涨跌幅限制' AFTER `is_ups_downs_limit`;
+------------------------------------------author:Jary 2020-04-16 ------------------------------------------
+-- 添加子公司usdt划转统计页面
+INSERT INTO `frm_function` ( `id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu` )
+VALUES
+	( 'HYGL-USDTTEAM', 'HYGL', 'USDT划转统计列表', 'USDT划转统计列表', '/backstage/contract/toUsdtTransferTeam', NULL, 50, 0, 1, 0, '1', 1 );
+INSERT INTO `frm_function_url` ( `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log` )
+VALUES
+	( 'HYGL-USDTTEAM', '/backstage/contract/showUsdtTransferTeam', 'USDT划转统计列表', 0 );
+-- 添加usdt划转页面
+INSERT INTO `frm_function` ( `id`, `fuc_parent_id`, `fuc_name`, `fuc_desc`, `fuc_url`, `fuc_icon`, `fuc_order`, `is_hidden`, `is_need_auth`, `is_need_log`, `is_use`, `is_display_in_menu` )
+VALUES
+	( 'HYGL-USDTHZ', 'HYGL', 'USDT划转列表', 'USDT划转列表', '/backstage/contract/toUsdtTransferList', NULL, 50, 0, 1, 0, '1', 1 );
+INSERT INTO `frm_function_url` ( `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log` )
+VALUES
+	( 'HYGL-USDTHZ', '/backstage/contract/showUsdtTransferList', 'USDT划转列表', 0 );
+-- 添加地址校验
+-- date: 2020-03-14
+INSERT INTO frm_function_url( `frm_function_id`, `fuc_url_url`, `fuc_url_desc`, `is_need_log`) VALUES ( 'JYOTC-XNBTX', '/backstage/member/transfer/addrCheck', '提现地址校验', 1);
+-- 合约用户表去除主键自增，添加唯一索引
+ALTER TABLE c_customer MODIFY COLUMN id  int(11) unsigned NOT NULL ;
+alter table `c_customer` add unique index uq_k_id (id);
+
+-- 币种表添加内部划转字段
+ALTER TABLE `d_currency` ADD COLUMN `can_internal_transfer` int(2) DEFAULT 0 COMMENT '提现是否支持内部划转：0否 1是';
+
+-- 邀请码
+ALTER TABLE `m_member` ADD COLUMN `invite_code` int(2) DEFAULT null COMMENT '邀请码';
+alter table `m_member` add unique index uk_inv_code(invite_code);
+
+-- 手续费表
+-- ----------------------------
+-- Table structure for m_account_fee
+-- ----------------------------
+DROP TABLE IF EXISTS `m_account_fee`;
+CREATE TABLE `m_account_fee` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL COMMENT '用户id',
+  `fee_currency` varchar(32) NOT NULL COMMENT '手续费币种',
+  `total_amount` decimal(64,8) NOT NULL COMMENT '总资产',
+  `forzen_amount` decimal(64,8) NOT NULL COMMENT '冻结资产',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=latin1 COMMENT='账户手续费资产表';
+
+-- ----------------------------
+-- Table structure for m_account_fee_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `m_account_fee_detail`;
+CREATE TABLE `m_account_fee_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL COMMENT '用户id',
+  `fee_currency` varchar(32) NOT NULL COMMENT '手续费币种',
+  `type` int(11) NOT NULL COMMENT '资产变动类型',
+  `total_amount` decimal(64,8) NOT NULL COMMENT '资产总量',
+  `flot_amount` decimal(64,8) NOT NULL COMMENT '浮动数量',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8 COMMENT='手续费资产明细表';
+
+-- 钱包
+CREATE TABLE `d_currency_block` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `currency` varchar(10) NOT NULL COMMENT '币种名称，例如：BTC',
+  `current_height` bigint(15) DEFAULT NULL COMMENT '当前块高',
+  `start` int(11) DEFAULT NULL COMMENT '从第几条记录开始扫',
+  `limit` int(11) DEFAULT NULL COMMENT '每次获取多少条记录',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `currency` (`currency`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='币种区块信息表';
+
+INSERT INTO `d_currency_block` VALUES (1, 'ETH', 9047029, NULL, NULL);
+
+ALTER TABLE c_customer MODIFY COLUMN id  int(11) unsigned NOT NULL ;
+
+ALTER TABLE `a_recharge` ADD COLUMN `gjtx_time` varchar(20) DEFAULT null COMMENT '归集时间';

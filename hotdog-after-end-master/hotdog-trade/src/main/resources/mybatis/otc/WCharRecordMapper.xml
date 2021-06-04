@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.otc.dao.WCharRecordMapper">
+	<resultMap id="BaseResultMap"
+		type="com.pmzhongguo.otc.entity.dataobject.WCharRecordDO">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="member_id" jdbcType="INTEGER"
+			property="memberId" />
+		<result column="opposite_id" jdbcType="INTEGER"
+			property="oppositeId" />
+		<result column="char_content" jdbcType="VARCHAR"
+			property="charContent" />
+		<result column="taker" jdbcType="BIT" property="taker" />
+		<result column="is_read" jdbcType="BIT" property="isRead" />
+		<result column="create_time" jdbcType="VARCHAR"
+			property="createTime" />
+		<result column="modify_time" jdbcType="VARCHAR"
+			property="modifyTime" />
+        <result column="trade_id" jdbcType="INTEGER"
+			property="tradeId" />
+		<result column="opposite_t_id" jdbcType="INTEGER"
+			property="oppositeTId" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, member_id, opposite_id, char_content, taker, is_read,
+		create_time,
+		modify_time, trade_id, opposite_t_id
+	</sql>
+	<select id="findById" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from w_char_record
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="findByConditionPage" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		w.*, m1.m_nick_name as nick_name, m2.m_nick_name as oppo_nick_name
+		from w_char_record w
+		left join m_member m1 on m1.id = w.member_id
+		left join m_member m2 on m2.id = w.opposite_id
+		<where>
+			<if test="id != null and id != ''">
+				and w.id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="memberId != null and memberId != ''">
+				and w.member_id = #{memberId,jdbcType=INTEGER}
+			</if>
+			<if test="oppositeId != null and oppositeId != ''">
+				and w.opposite_id = #{oppositeId,jdbcType=INTEGER}
+			</if>
+			<if test="taker != null and taker != ''">
+				and w.taker = #{taker,jdbcType=BIT}
+			</if>
+			<if test="isRead != null and isRead != ''">
+				and w.is_read = #{isRead,jdbcType=BIT}
+			</if>
+
+            <if test="tradeId != null and tradeId != ''">
+				and w.trade_id = #{tradeId,jdbcType=INTEGER}
+			</if>
+            <if test="oppositeTId != null and oppositeTId != ''">
+				and w.opposite_t_id = #{oppositeTId,jdbcType=INTEGER}
+			</if>
+
+		</where>
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		delete from w_char_record
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.WCharRecordDO">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+		insert into w_char_record (id, member_id, opposite_id,
+		char_content,
+		taker, is_read,
+		create_time, modify_time, trade_id, opposite_t_id)
+		values
+		(#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER},
+		#{oppositeId,jdbcType=INTEGER},
+		#{charContent,jdbcType=VARCHAR},
+		#{taker,jdbcType=BIT}, #{isRead,jdbcType=BIT},
+		#{createTime,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{tradeId,jdbcType=INTEGER},
+		#{oppositeTId,jdbcType=INTEGER})
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.WCharRecordDO">
+		update w_char_record
+		set is_read = 1, modify_time = now()
+		<where>
+			<if test="id != null and id != ''">
+				and id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="memberId != null and memberId != ''">
+				and member_id = #{memberId,jdbcType=INTEGER}
+			</if>
+			<if test="oppositeId != null and oppositeId != ''">
+				and opposite_id = #{oppositeId,jdbcType=INTEGER}
+			</if>
+			<if test="taker != null and taker != ''">
+				and taker = #{taker,jdbcType=BIT}
+			</if>
+		</where>
+	</update>
+</mapper>

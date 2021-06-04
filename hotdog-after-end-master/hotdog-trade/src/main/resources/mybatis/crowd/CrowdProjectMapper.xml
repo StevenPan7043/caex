@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.crowd.dao.CrowdProjectMapper">
+
+
+
+  <select id="findByPage" parameterType="java.util.Map" resultType="java.util.Map">
+    select cp.id,cp.name,cpi.project_order,cpi.img_url,cp.currency,cp.rush_price,cp.release_amount,cp.rush_begin_time,cp.rush_end_time,cp.quote_currency,
+    cpi.project_abstract,cpi.project_abstract_en,cpi.white_book,cp.remain_amount,cp.p_precision
+    FROM crowd_project cp join crowd_project_info cpi where cp.id = cpi.id and cp.is_show = 1 order by cpi.project_order asc
+  </select>
+
+  <select id="findById" parameterType="java.lang.Integer" resultType="com.pmzhongguo.crowd.entity.CrowdProject">
+    select *
+    FROM crowd_project cp where cp.id = #{id}
+  </select>
+
+  <select id="findProjectBuyInfoById" parameterType="java.lang.Integer" resultType="java.util.Map">
+    select cp.id,cp.name,cp.currency,
+    cp.rush_price,cp.remain_amount,cp.rush_begin_time,cp.rush_end_time,cp.quote_currency,
+    cp.release_amount,
+    cpi.img_url,
+    cp.c_precision,
+    cp.p_precision,
+    cp.buy_person_count
+     FROM crowd_project cp join crowd_project_info cpi  on cp.id=cpi.id WHERE cp.id = #{id} and is_show = 1
+  </select>
+
+  <select id="findOrderInfoById" parameterType="java.lang.Integer" resultType="com.pmzhongguo.crowd.entity.CrowdProject">
+    select cp.id,cp.currency,cp.is_lock,
+    cp.rush_price,cp.quote_currency,
+    cp.remain_amount,
+    cp.rush_begin_time,
+    cp.rush_end_time,
+    cp.p_precision,
+    cp.c_precision,
+    cp.buy_person_count,
+    cp.buy_upper_limit,
+    cp.buy_lower_limit
+    FROM crowd_project cp WHERE cp.id = #{id} and is_show = 1
+  </select>
+
+  <select id="findCrowdProjectInfoById" parameterType="java.lang.Integer" resultType="com.pmzhongguo.crowd.dto.CrowdProjectDto">
+    select *
+    FROM crowd_project cp join crowd_project_info cpi WHERE cp.id = cpi.id and cp.id = #{id} and cp.is_show = 1
+  </select>
+
+  <select id="findMgrCrowdProjectInfoById" parameterType="java.lang.Integer" resultType="java.util.Map">
+    select *
+    FROM crowd_project cp join crowd_project_info cpi on cp.id = cpi.id where cp.id = #{id}
+  </select>
+
+
+
+  <select id="findMgrByPage" parameterType="java.util.Map" resultType="java.util.Map">
+    select
+    cp.id,cp.name,cpi.project_order,cpi.img_url,cp.currency,cp.rush_price,cp.release_amount,cp.rush_begin_time,cp.rush_end_time,cp.quote_currency
+    ,cp.buy_upper_limit,cp.buy_lower_limit,cp.buy_person_count,cp.remain_amount,cpi.white_book
+    FROM crowd_project cp join crowd_project_info cpi where cp.id = cpi.id
+
+    <if test="currency != null and currency != '' ">
+      and cp.currency = #{currency}
+    </if>
+  </select>
+
+  <delete id="deleteCrowdProjectById" parameterType="java.lang.Integer">
+    delete from crowd_project
+    where id = #{id}
+  </delete>
+  <delete id="deleteCrowdProjectInfoById" parameterType="java.lang.Integer">
+    delete from crowd_project_info
+    where id = #{id}
+  </delete>
+
+  <insert id="insertCrowdProject" parameterType="java.util.Map">
+
+    INSERT INTO crowd_project  (
+    id,
+    rush_price,
+    is_lock,
+    is_show,
+    c_precision,
+    p_precision,
+    name,
+    currency,
+    quote_currency,
+    buy_lower_limit,
+    buy_upper_limit,
+    release_amount,
+    remain_amount,
+    buy_person_count,
+    rush_begin_time,
+    rush_end_time
+    )
+    VALUE (
+    #{id},
+    #{rush_price},
+    #{is_lock},
+    #{is_show},
+    #{c_precision},
+    #{p_precision},
+    #{name},
+    #{currency},
+    #{quote_currency},
+    #{buy_lower_limit},
+    #{buy_upper_limit},
+    #{release_amount},
+    #{release_amount},
+    0,
+    #{rush_begin_time},
+    #{rush_end_time}
+    )
+    <selectKey resultType="java.lang.Integer" keyProperty="id"
+               order="AFTER">
+      SELECT @@IDENTITY
+    </selectKey>
+  </insert>
+
+
+
+  <update id="updateCrowdProject" parameterType="java.util.Map">
+    update crowd_project set
+    name = #{name},
+    is_show = #{is_show},
+    is_lock = #{is_lock},
+    rush_price = #{rush_price},
+    c_precision = #{c_precision},
+    p_precision = #{p_precision},
+    currency = #{currency},
+    release_amount = #{release_amount},
+    quote_currency = #{quote_currency},
+    buy_lower_limit = #{buy_lower_limit},
+    buy_upper_limit = #{buy_upper_limit},
+    rush_begin_time = #{rush_begin_time},
+    rush_end_time = #{rush_end_time}
+    where id = #{id}
+  </update>
+
+  <update id="updateCrowdProjectBuyInfo" parameterType="com.pmzhongguo.crowd.entity.CrowdProject">
+    update crowd_project set remain_amount = #{remain_amount}
+    <if test="buy_person_count != null and buy_person_count != '' ">
+      ,buy_person_count = #{buy_person_count}
+    </if>
+    where id = #{id}
+  </update>
+
+  <select id="findAllProjectIdsAndName" resultType="com.pmzhongguo.crowd.entity.CrowdProject">
+    SELECT id,name FROM crowd_project
+  </select>
+
+  <insert id="insertCrowdProjectInfo" parameterType="java.util.Map">
+    INSERT INTO crowd_project_info(
+    id,
+    currency,
+    project_abstract,
+    project_abstract_en,
+    img_url,
+    project_order,
+    project_introduce,
+    project_introduce_en,
+    base_info,
+    base_info_en,
+    sale_plan_en,
+    sale_plan,
+    currency_allocate,
+    currency_allocate_en,
+    project_overview,
+    project_overview_en,
+    team_member,
+    team_member_en,
+    dev_line,
+    dev_line_en,
+    white_book,
+    create_time,
+    update_time
+    )
+    VALUE (
+      #{id},
+      #{currency},
+      #{project_abstract},
+      #{project_abstract_en},
+      #{img_url},
+      #{project_order},
+      #{project_introduce},
+      #{project_introduce_en},
+      #{base_info},
+      #{base_info_en},
+      #{sale_plan_en},
+      #{sale_plan},
+      #{currency_allocate},
+      #{currency_allocate_en},
+      #{project_overview},
+      #{project_overview_en},
+      #{team_member},
+      #{team_member_en},
+      #{dev_line},
+      #{dev_line_en},
+      #{white_book},
+      #{create_time},
+      #{update_time}
+    )
+  </insert>
+  <update id="updateCrowdProjectInfo" parameterType="java.util.Map">
+    update crowd_project_info set
+    currency = #{currency},
+    project_abstract = #{project_abstract},
+    project_abstract_en = #{project_abstract_en},
+    img_url = #{img_url},
+    project_order = #{project_order},
+    project_introduce = #{project_introduce},
+    project_introduce_en = #{project_introduce_en},
+    base_info = #{base_info},
+    base_info_en = #{base_info_en},
+    sale_plan_en = #{sale_plan_en},
+    sale_plan = #{sale_plan},
+    currency_allocate = #{currency_allocate},
+    currency_allocate_en = #{currency_allocate_en},
+    project_overview = #{project_overview},
+    project_overview_en = #{project_overview_en},
+    team_member = #{team_member},
+    team_member_en = #{team_member_en},
+    dev_line = #{dev_line},
+    dev_line_en = #{dev_line_en},
+    white_book = #{white_book},
+    update_time =  #{update_time}
+    where id = #{id}
+  </update>
+</mapper>

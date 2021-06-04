@@ -1,0 +1,47 @@
+.trade-main {
+    width: 100%;
+    background-color: #f2f6f9;
+    .trade-data {
+        width: 1200px;
+        margin: 0 auto;
+        padding: 20px 0 60px 0;
+
+        .trade-msg {
+            margin-top: 20px;
+            height: 700px;
+            width: 1200px;
+            background-color: #fff;
+        }
+        .shadow-container {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            .trade-pairs {
+                font-size: 12px;
+                margin-right: 78px;
+            }
+            .trade-type {
+                margin-left: 53px;
+                font-size: 12px;
+            }
+            .date-box {
+                margin-left: 34px;
+            }
+            .btn {
+                margin-left: 10px;
+            }
+        }
+        .table-box {
+            transform: translateY(49px);
+            padding: 0 30px;
+            overflow: auto;
+            height: 578px;
+        }
+        .pagination {
+            transform: translateY(89px);
+            display: flex;
+            padding: 0 30px;
+            justify-content: flex-end;
+        }
+    }
+}

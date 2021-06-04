@@ -1,0 +1,43 @@
+spring:
+  redis:
+    host: '127.0.0.1'
+    port: 6379
+    password: '123456'
+    timeout: 5000
+
+
+  #关闭默认模板引擎
+  thymeleaf:
+    cache: false
+    enabled: false
+
+server:
+  port: 8082
+  servlet:
+    jsp:
+      init-parameters:
+        development: true
+    session:
+      timeout: 3600
+
+
+logging:
+  level:
+    com.pmzhongguo: warn
+    org.apache: error
+    springfox: error
+  pattern:
+    console: "[%d{HH:mm:ss:SSS}] [%p] - %pid - %l - %m%n"
+#日志文件外置时打开
+#  config: logback-spring.xml
+
+web:
+  request:
+    urls: "market;"
+    marketSymbol: "BTC_USDT,ETH_USDT,EOS_USDT,LTC_USDT,ETC_USDT,BCH_USDT,XRP_USDT,BSV_USDT,TRX_USDT,ATOM_USDT,EOS_ETH,ETH_BTC,AE_USDT,OMG_USDT,ADA_USDT,LINK_USDT,DASH_USDT,ZEC_USDT,TRX_USDT,ONT_USDT,XMR_USDT,XMR_ETH,HT_USDT,SNT_USDT,BTM_USDT,IOTA_USDT,LTC_ETH,OMG_ETH,AE_ETH"
+
+eos:
+  url:
+    usdt_close: https://otc-api-sz.eiijo.cn/v1/data/trade-market
+    symbol_close: https://api.huobi.pro/market/tickers
+    market: http://recharge.zzexvip.com/market

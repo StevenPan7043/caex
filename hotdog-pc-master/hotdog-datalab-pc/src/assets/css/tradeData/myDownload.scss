@@ -1,0 +1,24 @@
+.my-download {
+    .trade-title {
+        margin-right: 10px;
+        color: #718bab;
+       
+    }
+    .el-dropdown-link {
+        width: 100px;
+        height: 28px;
+        text-align: center;
+        line-height: 28px;
+        display: inline-block;
+        border: solid 1px #d1d9df;
+        margin-right: 10px;
+        i {
+            color: #7f8fa5;
+            margin-left: 20px;
+        }
+    }
+}
+.el-dropdown-menu {
+    overflow: hidden;
+    margin-right: 23px;
+}

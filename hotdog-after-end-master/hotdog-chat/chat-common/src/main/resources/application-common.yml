@@ -1,0 +1,45 @@
+server:
+  port: 8080
+#  servlet:
+#    context-path: /dev
+
+spring:
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+#    username: HOT@OwS3Gwh80GcLg0JhEVvZYw==
+#    password: HOT@VI8l7yMftMlaSjk4rT9qtQ==
+
+  redis:
+    host: localhost
+    port: 6379
+    password: 123456
+    timeout: 0
+    jedis:
+      pool:
+        max-wait: -1
+        max-active: 800
+        max-idle: 800
+        min-idle: 0
+
+datasource:
+  driver-class-name: com.mysql.jdbc.Driver
+  url: jdbc:mysql://8.210.159.242:3306/hotdog?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+  username: epojXdifXZ*yPEfbKrNQWA##
+  password: ZUJEHD8awY67USDVmR9vcC8b2HIhPPwV
+
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES #加密算法
+    password: zytx #加密密钥
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+    property: #加密识别，默认 ENC()
+      prefix: HOT@ #前缀
+      suffix: "" #后缀
+
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+logging:
+  config: classpath:log4j2.xml

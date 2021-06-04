@@ -1,0 +1,50 @@
+
+*.log
+
+HELP.md
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+*.mvn
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+/build/
+
+### VS Code ###
+.vscode/
+
+/bin/
+bin
+out
+log.txt
+settings.xml
+README.md
+
+src/main/webapp/config.js
+src/main/webapp/index.html
+src/main/webapp/favicon.ico
+src/main/webapp/js
+src/main/webapp/img
+src/main/webapp/fonts
+src/main/webapp/datafeeds
+src/main/webapp/css
+src/main/webapp/charting_library

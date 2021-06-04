@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 加载属性文件 -->
+    <!--<context:property-placeholder ignore-unresolvable="true" location="WEB-INF/jdbc.properties"/>-->
+
+    <!-- 自动扫描组件，这里要把controler下面的 controller去除，他们是在spring3-servlet.xml中配置的，如果不去除会影响事务管理的。   -->
+    <context:component-scan base-package="com.pmzhongguo.ex,com.pmzhongguo.otc">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+
+
+    <!--合约的redis配置-->
+    <!-- redis config start -->
+    <!-- 配置JedisPoolConfig实例 -->
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="300" />
+        <property name="maxTotal" value="600" />
+        <property name="maxWaitMillis" value="1000" />
+        <property name="testOnBorrow" value="true" />
+    </bean>
+
+    <!-- 配置JedisConnectionFactory -->
+    <bean id="jedisConnectionFactory"
+          class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="${redis_ip}" />
+        <property name="port" value="${redis_port}" />
+        <property name="password" value="${redis_pwd}" />
+        <property name="database" value="0" />
+        <property name="poolConfig" ref="poolConfig" />
+    </bean>
+
+    <!-- 配置RedisTemplate -->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory" />
+    </bean>
+
+    <bean id="descPropertyResourceConfigure" class="com.pmzhongguo.ex.bean.DescPropertyResourceConfigure">
+        <property name="locations">
+            <list>
+                <value>WEB-INF/jdbc.properties</value>
+                <value>WEB-INF/server.properties</value>
+                <value>classpath:spring/rebate.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 配置RedisCacheManager -->
+    <bean id="redisCacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+        <constructor-arg name="redisOperations" ref="redisTemplate" />
+        <property name="defaultExpiration" value="3000" />
+    </bean>
+
+    <!-- 配置RedisCacheConfig -->
+    <bean id="redisCacheConfig" class="com.contract.service.redis.RedisCacheConfig">
+        <constructor-arg ref="jedisConnectionFactory" />
+        <constructor-arg ref="redisTemplate" />
+        <constructor-arg ref="redisCacheManager" />
+    </bean>
+    <!-- redis config end -->
+
+    <bean name="threadPoolConfig" class="com.contract.service.thead.ThreadPoolConfig">
+        <constructor-arg index="0" value="1"/>
+        <constructor-arg index="1" value="10"/>
+        <constructor-arg index="2" value="2000"/>
+    </bean>
+
+    <bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+        <property name="slowSqlMillis" value="10000" />
+        <property name="logSlowSql" value="true" />
+    </bean>
+    <bean id="log-filter" class="com.alibaba.druid.filter.logging.Log4jFilter">
+        <property name="statementExecutableSqlLogEnable" value="true" />
+        <property name="resultSetLogEnabled" value="false" />
+    </bean>
+    <bean id="wall-filter-config" class="com.alibaba.druid.wall.WallConfig" init-method="init">
+        <!-- 指定配置装载的目录 -->
+        <property name="dir" value="META-INF/druid/wall/mysql" />
+        <property name="truncateAllow" value="false" />
+    </bean>
+
+    <bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
+        <property name="dbType" value="${jdbc.type}" />
+        <property name="logViolation" value="true" />
+        <property name="throwException" value="false"/>
+        <property name="config" ref="wall-filter-config" />
+    </bean>
+
+    <!-- 定义主数据数据源 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="driverClassName" value="${jdbc.driver}"/>
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="10" />
+        <!-- 最小空闲连接数 -->
+        <property name="minIdle" value="10" />
+        <!-- 连接池中允许的最大连接数。缺省值：10; 推荐的公式：((core_count * 2) + effective_spindle_count) -->
+        <property name="maxActive" value="200" />
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name = "maxWait" value = "60000" />
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name = "timeBetweenEvictionRunsMillis" value ="600000" />
+
+        <!-- 一个连接的生命时长（毫秒），超时而且没被使用则被释放（retired）,缺省:30分钟，建议设置比数据库超时时长少30秒，参考MySQL wait_timeout参数（show variables like '%timeout%';） -->
+        <property name = "minEvictableIdleTimeMillis" value ="1800000" />
+
+        <property name = "validationQuery" value = "${jdbc.check}" />
+        <property name = "testWhileIdle" value = "true" />
+        <property name = "testOnBorrow" value = "false" />
+        <property name = "testOnReturn" value = "false" />
+        <!-- 1800 秒，也就是 30 分钟。指定连接建立多长时间就需要被强制关闭 -->
+        <property name = "removeAbandonedTimeout" value ="1800" />
+        <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
+        <property name="proxyFilters">
+            <list>
+                <ref bean="stat-filter" />
+                <ref bean="log-filter" />
+                <ref bean="wall-filter" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 数据会话工厂 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations">
+            <array>
+                <value>/WEB-INF/classes/mybatis/*.xml</value>
+                <value>/WEB-INF/classes/mybatis/otc/*.xml</value>
+                <value>/WEB-INF/classes/mybatis/crowd/*.xml</value>
+                <value>/WEB-INF/classes/mybatis/datalab/*.xml</value>
+                <value>/WEB-INF/classes/mybatis/ipfs/*.xml</value>
+            </array>
+        </property>
+        <property name="plugins">
+            <array>
+                <ref bean="pageInterceptor"/>
+            </array>
+        </property>
+        <!-- Mybatis配置文件 -->
+        <!--<property name="configLocation" value="classpath:mybatis-config.xml"/>-->
+    </bean>
+
+    <bean id="pageInterceptor" class="com.pmzhongguo.ex.core.web.PageInterceptor" />
+
+    <!-- 自动将映射接口转换为bean,多个目录逗号分隔 -->
+    <!-- TODO 新路径添加mapper需要在此配置 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage"
+                  value="com.pmzhongguo.ex.framework.mapper,
+                         com.pmzhongguo.ex.business.mapper,
+                         com.pmzhongguo.ex.transfer.mapper,
+                         com.pmzhongguo.ex.datalab.mapper,
+                         com.pmzhongguo.otc.dao,
+                         com.pmzhongguo.ipfs.mapper,
+                         com.pmzhongguo.crowd.dao,
+                         com.pmzhongguo.gd.mapper" />
+        <!-- 所有的mapper 必须继承 SuperMapper-->
+        <property name="markerInterface" value="com.pmzhongguo.ex.core.mapper.SuperMapper"/>
+    </bean>
+
+    <!-- transaction manager, use DataSourceTransactionManager -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="load*" read-only="true"/>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="*" rollback-for="Exception"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="fooServiceMethods" expression="execution(* *..service*..*(..))"/>
+        <aop:advisor pointcut-ref="fooServiceMethods" advice-ref="txAdvice"/>
+        <!-- 动态数据源切入 -->
+        <!--<aop:aspect id="dataSourceChoose" ref="dataSourceAspect">
+            <aop:around pointcut-ref="fooServiceMethods" method="doAround" arg-names="pjp"/>
+        </aop:aspect>-->
+    </aop:config>
+    <aop:aspectj-autoproxy  proxy-target-class="true"/>
+</beans>

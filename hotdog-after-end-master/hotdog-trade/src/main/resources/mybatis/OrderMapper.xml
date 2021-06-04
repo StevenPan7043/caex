@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.OrderMapper">
+	<insert id="addOrder" parameterType="com.pmzhongguo.ex.business.entity.Order">
+   		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+			SELECT @@IDENTITY
+		</selectKey>
+		INSERT INTO t_order_${table_name}
+		(token_id,member_id,pair_id,base_currency,quote_currency,o_no,o_type,o_price_type,price,volume,frozen,source,create_time,create_time_unix,oper_ip) 
+		VALUES
+		(#{token_id},#{member_id},#{pair_id},#{base_currency},#{quote_currency},#{o_no},#{o_type},#{o_price_type},#{price},#{volume},#{frozen},#{source},#{create_time},#{create_time_unix},#{oper_ip})
+   	</insert>
+   	
+   	
+   	<insert id="addTrade" parameterType="com.pmzhongguo.ex.business.entity.Trade">
+   		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+			SELECT @@IDENTITY
+		</selectKey>
+		INSERT INTO t_trade_${table_name}
+		(token_id,member_id,pair_id,base_currency,quote_currency,t_type,o_id,opposite_o_id,price,volume,done_time,taker,fee,fee_currency)
+		VALUES
+		(#{token_id},#{member_id},#{pair_id},#{base_currency},#{quote_currency},#{t_type},#{o_id},#{opposite_o_id},#{price},#{volume},#{done_time},#{taker},#{fee},#{fee_currency})
+   	</insert>
+
+	<!--在表中建了联合索引，参数判断位置不能改动！！！-->
+	<select id="findUnCountReturnCommiRecordOfDay" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.dto.ReturnCommiCurrAmountDto">
+
+		select sum(fee) as fee_amount,member_id,id,base_currency as currency,fee_currency from ${table_name}
+		WHERE done_time <![CDATA[ >= ]]> #{start_time} and done_time <![CDATA[ <= ]]> #{end_time}
+		and member_id = #{member_id} and fee_currency = #{fee_currency}
+		GROUP BY  member_id
+	</select>
+	<select id="getTradeOrderByTimeLimitOne" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.Trade">
+		select * from t_trade_${table_name} where done_time &gt; #{time} order by done_time desc limit 1
+   	</select>
+	<update id="changeOrder" parameterType="com.pmzhongguo.ex.business.entity.Order">
+		UPDATE t_order_${table_name} SET id=#{id} 
+		<if test="o_status != null and o_status != ''">, o_status = #{o_status} </if>
+		<if test="cur_done_volume != null and cur_done_volume != ''">, done_volume = done_volume + #{cur_done_volume} </if>
+		<if test="cur_unfrozen != null and cur_unfrozen != ''">, unfrozen = unfrozen + #{cur_unfrozen} </if>
+		<if test="cancel_time != null and cancel_time != ''">, cancel_time = #{cancel_time} </if>
+		WHERE id=#{id} 
+	</update>
+	
+	
+	<select id="getOrder" parameterType="com.pmzhongguo.ex.business.entity.Order" resultType="com.pmzhongguo.ex.business.entity.Order">
+		SELECT t.* FROM t_order_${table_name} t
+		WHERE 1 = 1 
+		<if test="id != null and id != ''">and id = #{id} </if>
+		<if test="o_no != null and o_no != ''">and o_no = #{o_no} </if>
+		<if test="member_id != null and member_id != ''">and member_id = #{member_id} </if>
+	</select>
+	<!-- 
+	<select id="getOrderByIdAndTokenid" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.dto.OrderRespDto">
+		SELECT o.id, CONCAT(o.base_currency, o.quote_currency) symbol, o.o_no, o.o_type, o.o_price_type, o.base_currency, o.quote_currency,
+		truncate(o.price, ${price_precision}) price, truncate(o.volume, ${volume_precision}) volume, 
+		o.source, o.create_time, o.cancel_time, o.o_status, 
+		done_volume
+		
+		FROM t_order_${table_name} o WHERE o.id = #{o_id}
+		<if test="member_id != null and member_id != ''">and o.member_id = #{member_id} </if>
+		<if test="token_id != null and token_id != ''">and o.token_id = #{token_id} </if>
+		<if test="o_no != null and o_no != ''">and o.o_no = #{o_no} </if>
+		<if test="o_status_in != null and o_status_in != ''">and o.o_status IN (${o_status_in})</if>  
+		GROUP BY o.id
+	</select>
+	 -->
+	 
+	 <select id="getOrderByIdAndTokenid" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.dto.OrderRespDto">
+		SELECT o.id, CONCAT(o.base_currency, o.quote_currency) symbol, o.o_no, o.o_type, o.o_price_type, o.base_currency, o.quote_currency,
+		truncate(o.price, ${price_precision}) price, truncate(o.volume, ${volume_precision}) volume, 
+		o.source, o.create_time, o.cancel_time, o.o_status, 
+		IFNULL(truncate(SUM(t.volume), ${volume_precision}), 0) done_volume, 
+		IFNULL(truncate(SUM(t.volume * t.price), ${price_precision}), 0) done_amount, 
+		IFNULL(truncate(SUM(t.volume * t.price) / SUM(t.volume), ${price_precision}), 0) done_avg_price, 
+		IFNULL(truncate(SUM(t.fee), 6), 0) done_fee, fee_currency
+		
+		FROM t_order_${table_name} o LEFT JOIN t_trade_${table_name} t ON o.id = t.o_id WHERE 1 = 1
+		<if test="member_id != null and member_id != ''">and o.member_id = #{member_id} </if>
+		<if test="token_id != null and token_id != ''">and o.token_id = #{token_id} </if>
+		<if test="o_no != null and o_no != ''">and o.o_no = #{o_no} </if>
+		<if test="o_id != null and o_id != ''">and o.id = #{o_id} </if>
+		<if test="o_status_in != null and o_status_in != ''">and o.o_status IN (${o_status_in})</if>  
+		GROUP BY o.id
+	</select>
+	
+	<select id="getOrdersPage" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.dto.OrderRespDto">
+		SELECT o.id, CONCAT(o.base_currency, o.quote_currency) symbol, o.o_no, o.o_type, o.o_price_type, o.base_currency, o.quote_currency,
+		truncate(o.price, ${price_precision}) price, truncate(o.volume, ${volume_precision}) volume, 
+		o.source, o.create_time, o.cancel_time, o.o_status, 
+		IFNULL(truncate(SUM(t.volume), ${volume_precision}), 0) done_volume, 
+		IFNULL(truncate(SUM(t.volume * t.price), ${price_precision}), 0) done_amount, 
+		IFNULL(truncate(SUM(t.volume * t.price) / SUM(t.volume), ${price_precision}), 0) done_avg_price, 
+		IFNULL(truncate(SUM(t.fee), 6), 0) done_fee, fee_currency
+		
+		FROM t_order_${table_name} o LEFT JOIN t_trade_${table_name} t ON o.id = t.o_id WHERE 1 = 1
+		<if test="member_id != null and member_id != ''">and o.member_id = #{member_id} </if>
+		<if test="token_id != null and token_id != ''">and o.token_id = #{token_id} </if>
+		<if test="o_no != null and o_no != ''">and o.o_no = #{o_no} </if>
+		<if test="o_id != null and o_id != ''">and o.id = #{o_id} </if>
+		<if test="o_status_in != null and o_status_in != ''">and o.o_status IN (${o_status_in})</if>  
+		GROUP BY o.id
+	</select>
+	<!--分页的时候用于查询记录总数-->
+	<select id="getOrdersPageTotal" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(*) FROM ( SELECT o.id
+		FROM t_order_${table_name} o WHERE 1 = 1
+		<if test="member_id != null and member_id != ''">and o.member_id = #{member_id} </if>
+		<if test="token_id != null and token_id != ''">and o.token_id = #{token_id} </if>
+		<if test="o_no != null and o_no != ''">and o.o_no = #{o_no} </if>
+		<if test="o_id != null and o_id != ''">and o.id = #{o_id} </if>
+		<if test="o_status_in != null and o_status_in != ''">and o.o_status IN (${o_status_in})</if>
+		) as total
+	</select>
+	
+	<select id="getTradesPage" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.dto.TradeRespDto">
+		SELECT CONCAT(t.base_currency, t.quote_currency) symbol, t.o_id, t.t_type, t.done_time, t.taker, truncate(t.fee, 6) fee, t.fee_currency,
+		truncate(t.volume, ${volume_precision}) volume, t.base_currency, t.quote_currency,o.o_no o_no,
+		truncate(t.price, ${price_precision}) price, 
+		truncate(t.volume * t.price, ${price_precision}) amount 
+		FROM t_trade_${table_name} t
+		LEFT  JOIN t_order_${table_name} o ON o.id = t.o_id
+		WHERE 1 = 1
+		<if test="member_id != null and member_id != ''">and t.member_id = #{member_id} </if> 
+		<if test="token_id != null and token_id != ''">and t.token_id = #{token_id} </if> 
+		<if test="o_id != null and o_id != ''">and t.o_id = #{o_id} </if> 
+	</select>
+
+	<select id="getTradeListByPage" parameterType="java.util.Map"
+			resultType="com.pmzhongguo.ex.datalab.entity.dto.TradeDto">
+		SELECT t.id,t.member_id uid, INSERT (mm.m_name, 4, 4, '****') mName,t.t_type tType,t.done_time,
+		truncate(t.volume, 4) volume,
+		truncate(t.price, 4) price,
+		truncate(t.volume * t.price, 4) amount
+		FROM t_trade_${table_name} t
+		LEFT JOIN m_member mm ON mm.id = t.member_id
+		WHERE 1 = 1
+		<if test="uid != null and uid != ''">
+			and t.member_id = #{uid}
+		</if>
+		<if test="tType != null and tType != ''">
+			and t.t_type = #{tType}
+		</if>
+		<if test="baseCurrency != null and baseCurrency != ''">
+			and t.base_currency = #{baseCurrency}
+		</if>
+		<if test="quoteCurrency != null and quoteCurrency != ''">
+			and t.quote_currency = #{quoteCurrency}
+		</if>
+		<if test="o_id != null and o_id != ''">
+			and t.o_id = #{o_id}
+		</if>
+		<if test="null != startTime and  startTime !=''">
+			AND t.done_time >= #{startTime}
+		</if>
+		<if test="null != endDate and  endDate !=''">
+			<![CDATA[
+    			 AND t.done_time < #{endTime}
+    		]]>
+		</if>
+	</select>
+	<select id="getTrades" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.Trade">
+		SELECT id,member_id,base_currency,quote_currency,t_type,taker,o_id,opposite_o_id
+		, done_time
+		, truncate(t.fee, 6) fee, fee_currency
+		, volume
+		, price
+		FROM t_trade_${table_name} t WHERE 1 = 1
+		<if test="member_id != null and member_id != ''">and t.member_id = #{member_id}</if>
+		<if test="o_id != null and o_id != ''">and t.o_id = #{o_id}</if>
+		ORDER BY done_time DESC
+	</select>
+
+	<select id="findOppositeTrades" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.Trade">
+		SELECT id,member_id,base_currency,quote_currency,t_type,taker,o_id,opposite_o_id
+		, done_time
+		, truncate(t.fee, 6) fee, fee_currency
+		, volume
+		, price
+		FROM t_trade_${table_name} t WHERE opposite_o_id = #{o_id} and taker = #{taker}
+
+
+	</select>
+
+	<select id="getTradeDetail" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.Trade">
+		SELECT id,member_id,base_currency,quote_currency,t_type,taker
+		, done_time
+		, truncate(t.fee, 6) fee, fee_currency
+		, volume
+		, price
+		FROM t_trade_${table_name} t WHERE t.taker = #{taker} and t.o_id = #{o_id}
+	</select>
+
+	<select id="listMemberOrder" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT count(1)
+		FROM t_order_${table_name} o, m_member m
+		where o.member_id = m.id
+		<if test="null != m_name and  m_name !=''">
+			AND m_name = #{m_name}
+		</if>
+		<if test="null != o_status and  o_status !=''">
+			AND o_status = #{o_status}
+		</if>
+		<if test="null != o_type and  o_type !=''">
+			AND o_type = #{o_type}
+		</if>
+		<if test="null != startDate and  startDate !=''">
+			AND done_time >= #{startDate}
+		</if>
+		<if test="null != endDate and  endDate !=''">
+			<![CDATA[
+    			 AND done_time < #{endDate}
+    		]]>
+		</if>
+	</select>
+	<select id="getPlatformFlows" resultType="java.math.BigDecimal" parameterType="java.util.Map">
+		select sum(tor.done_volume)
+		from t_order_${table_name} tor
+		where  1=1
+		and tor.base_currency = #{baseCurrency}
+		and tor.done_volume > 0
+	</select>
+	<select id="getTradeFeeList" resultType="com.pmzhongguo.ex.business.dto.ReturnCommiCurrAmountDto" parameterType="java.util.Map">
+		SELECT
+		tte.pair_id,
+		tte.t_type tType,
+		tte.fee_currency,
+		sum(tte.fee) AS fee_amount,
+		#{createTime} searchDate
+		FROM
+		t_trade_${table_name} tte
+		WHERE
+		1=1
+		<if test="null != createTime and  createTime !=''">
+			AND tte.done_time LIKE #{createTime}
+		</if>
+		GROUP BY
+		tte.pair_id,tte.fee_currency,tte.t_type
+	</select>
+</mapper>

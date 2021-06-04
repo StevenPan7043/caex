@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ex.transfer.mapper.ThirdPartyMapper">
+    <resultMap id="BaseResultMap" type="com.pmzhongguo.ex.transfer.entity.ThirdPartyInfo">
+        <constructor>
+            <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="s_apiKey" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="s_secretKey" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="c_ip" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="c_flag" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="c_appKey" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="c_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="c_code" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="whiteIp" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="can_deposit_currency" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="can_withdraw_currency" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="ext" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="create_time" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="update_time" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="c_name_type" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id as id,
+    s_apiKey as s_apiKey,
+    s_secretKey as s_secretKey,
+    c_ip as c_ip,
+    c_flag as c_flag,
+    c_appKey as c_appKey,
+    c_name as c_name,
+    c_name_type as c_name_type,
+    c_code as c_code,
+    whiteIp as whiteIp,
+    can_deposit_currency as can_deposit_currency,
+    can_withdraw_currency as can_withdraw_currency,
+    ext as ext,
+    create_time as create_time,
+    update_time as update_time
+  </sql>
+    <select id="selectByPrimaryKey" resultType="com.pmzhongguo.ex.transfer.entity.ThirdPartyInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from m_payment_info
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey">
+    delete from m_payment_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.pmzhongguo.ex.transfer.entity.ThirdPartyInfo">
+    insert into m_payment_info (id, s_apiKey, s_secretKey,
+      c_ip, c_flag, c_appKey, 
+      c_name, c_code, whiteIp, can_deposit_currency, can_withdraw_currency, ext, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{s_apiKey,jdbcType=VARCHAR}, #{s_secretKey,jdbcType=VARCHAR}, 
+      #{c_ip,jdbcType=VARCHAR}, #{c_flag,jdbcType=INTEGER}, #{c_appKey,jdbcType=VARCHAR}, 
+      #{c_name,jdbcType=VARCHAR}, #{c_code,jdbcType=VARCHAR}, #{whiteIp,jdbcType=VARCHAR},
+      #{can_deposit_currency,jdbcType=VARCHAR}, #{can_withdraw_currency,jdbcType=VARCHAR}, #{ext,jdbcType=VARCHAR},
+      #{create_time,jdbcType=VARCHAR}, #{update_time,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.pmzhongguo.ex.transfer.entity.ThirdPartyInfo">
+        insert into m_payment_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                id,
+            </if>
+            <if test="s_apiKey != null and s_apiKey != ''">
+                s_apiKey,
+            </if>
+            <if test="s_secretKey != null and s_secretKey != ''">
+                s_secretKey,
+            </if>
+            <if test="c_ip != null and c_ip != ''">
+                c_ip,
+            </if>
+            <if test="c_flag != null and c_flag != ''">
+                c_flag,
+            </if>
+            <if test="c_appKey != null and c_appKey != ''">
+                c_appKey,
+            </if>
+            <if test="c_name != null and c_name != ''">
+                c_name,
+            </if>
+            <if test="c_code != null and c_code != ''">
+                c_code,
+            </if>
+            <if test="whiteIp != null and whiteIp != ''">
+                whiteIp,
+            </if>
+            <if test="can_deposit_currency != null and can_deposit_currency != ''">
+                can_deposit_currency,
+            </if>
+            <if test="can_withdraw_currency != null and can_withdraw_currency != ''">
+                can_withdraw_currency,
+            </if>
+            <if test="ext != null and ext != ''">
+                ext,
+            </if>
+            <if test="create_time != null and create_time != ''">
+                create_time,
+            </if>
+            <if test="update_time != null and update_time != ''">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="s_apiKey != null and s_apiKey != ''">
+                #{s_apiKey,jdbcType=INTEGER},
+            </if>
+            <if test="s_secretKey != null and s_secretKey != ''">
+                #{s_secretKey,jdbcType=VARCHAR},
+            </if>
+            <if test="c_ip != null and c_ip != ''">
+                #{c_ip,jdbcType=VARCHAR},
+            </if>
+            <if test="c_flag != null and c_flag != ''">
+                #{c_flag,jdbcType=INTEGER},
+            </if>
+            <if test="c_appKey != null and c_appKey != ''">
+                #{c_appKey,jdbcType=VARCHAR},
+            </if>
+            <if test="c_name != null and c_name != ''">
+                #{c_name,jdbcType=VARCHAR},
+            </if>
+            <if test="c_code != null and c_code != ''">
+                #{c_code,jdbcType=VARCHAR},
+            </if>
+            <if test="whiteIp != null and whiteIp != ''">
+                #{whiteIp,jdbcType=VARCHAR},
+            </if>
+            <if test="can_deposit_currency != null and can_deposit_currency != ''">
+                #{can_deposit_currency,jdbcType=VARCHAR},
+            </if>
+            <if test="can_withdraw_currency != null and can_withdraw_currency != ''">
+                #{can_withdraw_currency,jdbcType=VARCHAR},
+            </if>
+            <if test="ext != null and ext != ''">
+                #{ext,jdbcType=VARCHAR},
+            </if>
+            <if test="create_time != null and create_time != ''">
+                #{create_time,jdbcType=VARCHAR},
+            </if>
+            <if test="update_time != null and update_time != ''">
+                #{update_time,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.pmzhongguo.ex.transfer.entity.ThirdPartyInfo">
+        update m_payment_info
+        <set>
+            <if test="c_ip != null and c_ip != ''">
+                c_ip = #{c_ip,jdbcType=VARCHAR},
+            </if>
+            <if test="c_flag != null ">
+                c_flag = #{c_flag,jdbcType=INTEGER},
+            </if>
+            <if test="c_appKey != null and c_appKey != ''">
+                c_appKey = #{c_appKey,jdbcType=VARCHAR},
+            </if>
+            <if test="c_name != null and c_name != ''">
+                c_name = #{c_name,jdbcType=VARCHAR},
+            </if>
+            <if test="c_code != null and c_code != ''">
+                c_code = #{c_code,jdbcType=VARCHAR},
+            </if>
+            <if test="whiteIp != null and whiteIp != ''">
+                whiteIp = #{whiteIp,jdbcType=VARCHAR},
+            </if>
+            <if test="can_deposit_currency != null and can_deposit_currency != ''">
+                can_deposit_currency = #{can_deposit_currency,jdbcType=VARCHAR},
+            </if>
+            <if test="can_withdraw_currency != null and can_withdraw_currency != ''">
+                can_withdraw_currency = #{can_withdraw_currency,jdbcType=VARCHAR},
+            </if>
+            <if test="ext != null and ext != ''">
+                ext = #{ext,jdbcType=VARCHAR},
+            </if>
+            <if test="create_time != null and create_time != ''">
+                create_time = #{create_time,jdbcType=VARCHAR},
+            </if>
+            <if test="update_time != null and update_time != ''">
+                update_time = #{update_time,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.pmzhongguo.ex.transfer.entity.ThirdPartyInfo">
+    update m_payment_info
+    set s_apiKey = #{s_apiKey,jdbcType=INTEGER},
+      s_secretKey = #{s_secretKey,jdbcType=VARCHAR},
+      c_ip = #{c_ip,jdbcType=VARCHAR},
+      c_flag = #{c_flag,jdbcType=INTEGER},
+      c_appKey = #{c_appKey,jdbcType=VARCHAR},
+      c_name = #{c_name,jdbcType=VARCHAR},
+      c_code = #{c_code,jdbcType=VARCHAR},
+      whiteIp = #{whiteIp,jdbcType=VARCHAR},
+      can_deposit_currency = #{can_deposit_currency,jdbcType=VARCHAR},
+      can_withdraw_currency = #{can_withdraw_currency,jdbcType=VARCHAR},
+      ext = #{ext,jdbcType=VARCHAR},
+      create_time = #{create_time,jdbcType=VARCHAR},
+      update_time = #{update_time,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="findList" parameterType="com.pmzhongguo.ex.transfer.entity.ThirdPartyInfo"
+            resultType="com.pmzhongguo.ex.transfer.entity.ThirdPartyInfo">
+        select
+        <include refid="Base_Column_List"/>
+        from m_payment_info
+        where 1 = 1
+        <if test="s_apiKey != null and s_apiKey != ''">
+            and s_apiKey = #{s_apiKey}
+        </if>
+        <if test="s_secretKey != null and s_secretKey != ''">
+            and s_secretKey = #{s_secretKey}
+        </if>
+        <if test="c_ip != null and c_ip != ''">
+            and c_ip = #{c_ip}
+        </if>
+        <if test="c_flag != null and c_flag != ''">
+            and c_flag = #{c_flag}
+        </if>
+        <if test="c_appKey != null and c_appKey != ''">
+            and c_appKey = #{c_appKey}
+        </if>
+        <if test="c_name != null and c_name != ''">
+            and c_name = #{c_name}
+        </if>
+        <if test="c_code != null and c_code != ''">
+            and c_code = #{c_code}
+        </if>
+        <if test="whiteIp != null and whiteIp != ''">
+            and whiteIp = #{whiteIp}
+        </if>
+        <if test="can_deposit_currency != null and can_deposit_currency != ''">
+            and can_deposit_currency = #{can_deposit_currency}
+        </if>
+        <if test="can_withdraw_currency != null and can_withdraw_currency != ''">
+            and can_withdraw_currency = #{can_withdraw_currency}
+        </if>
+        <if test="ext != null and ext != ''">
+            and ext = #{ext}
+        </if>
+        <if test="create_time != null and create_time != ''">
+            and create_time = #{create_time}
+        </if>
+        <if test="update_time != null and update_time != ''">
+            and update_time = #{update_time}
+        </if>
+    </select>
+
+    <select id="getAllThirdPartyPage" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.transfer.entity.ThirdPartyInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM m_payment_info
+        where 1 = 1
+        <if test="s_apiKey != null and s_apiKey != ''">
+            and s_apiKey = #{s_apiKey}
+        </if>
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="s_secretKey != null and s_secretKey != ''">
+            and s_secretKey = #{s_secretKey}
+        </if>
+        <if test="c_ip != null and c_ip != ''">
+            and c_ip = #{c_ip}
+        </if>
+        <if test="c_flag != null and c_flag != ''">
+            and c_flag = #{c_flag}
+        </if>
+        <if test="c_appKey != null and c_appKey != ''">
+            and c_appKey = #{c_appKey}
+        </if>
+        <if test="c_name_type != null">
+            and c_name_type = #{c_name_type}
+        </if>
+        <if test="c_name != null and c_name != ''">
+            and c_name = #{c_name}
+        </if>
+        <if test="c_code != null and c_code != ''">
+            and c_code = #{c_code}
+        </if>
+        <if test="whiteIp != null and whiteIp != ''">
+            and whiteIp = #{whiteIp}
+        </if>
+        <if test="can_deposit_currency != null and can_deposit_currency != ''">
+            and can_deposit_currency = #{can_deposit_currency}
+        </if>
+        <if test="can_withdraw_currency != null and can_withdraw_currency != ''">
+            and can_withdraw_currency  like CONCAT('%', #{can_withdraw_currency}, '%')
+        </if>
+        <if test="ext != null and ext != ''">
+            and ext = #{ext}
+        </if>
+        <if test="create_time != null and create_time != ''">
+            and create_time = #{create_time}
+        </if>
+        <if test="update_time != null and update_time != ''">
+            and update_time = #{update_time}
+        </if>
+    </select>
+
+    <select id="findMgrByPage" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT * FROM m_operlog_${c_name} WHERE 1 = 1
+        <if test="m_name != null and m_name != ''">
+            and m_name = #{m_name}
+        </if>
+        <if test="currency != null and currency != ''">
+            and currency = #{currency}
+        </if>
+        <if test="tradeID != null and tradeID != ''">
+            and tradeID = #{tradeID}
+        </if>
+        <if test="startDate != null and startDate != ''">
+            AND <![CDATA[transferTime >= #{startDate}]]>
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND <![CDATA[transferTime < #{endDate}]]>
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.CurrencyVerticalMapper">
+
+    <resultMap id="baseResultMap" type="com.pmzhongguo.ex.business.dto.CurrencyVerticalDto">
+        <id column="id" property="id"/>
+        <result column="currency_id" property="currencyId"/>
+        <result column="column" property="column"/>
+        <result column="category_key" property="categoryKey"/>
+        <result column="value" property="value"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="extend1" property="extend1"/>
+        <result column="extend2" property="extend2"/>
+    </resultMap>
+    <insert id="insert">
+        insert into d_currency_vertical(currency_id,`column`,category_key,`value`,remark,create_time,update_time,extend1,extend2)
+        values (#{currencyId},#{column},#{categoryKey},#{value},#{remark},#{createTime},#{updateTime},#{extend1},#{extend2})
+    </insert>
+
+    <select id="getCurrencyVerticalList" parameterType="com.pmzhongguo.ex.business.dto.CurrencyVerticalDto"
+            resultMap="baseResultMap">
+        select * from d_currency_vertical
+        where 1=1
+        <if test="currencyId != null">
+            and currency_id = #{currencyId}
+        </if>
+        <if test="column != null and column != '' ">
+            and `column` = #{column}
+        </if>
+        <if test="columns != null and columns != '' ">
+            and `column` in #{columns}
+        </if>
+        <if test="categoryKey != null and categoryKey != '' ">
+            and category_key = #{categoryKey}
+        </if>
+        <if test="value != null and value != '' ">
+            and `value` = #{value}
+        </if>
+        <if test="remark != null and remark != '' ">
+            and remark = #{remark}
+        </if>
+    </select>
+    <update id="updateById" parameterType="com.pmzhongguo.ex.business.dto.CurrencyVerticalDto">
+        update d_currency_vertical
+        <set>
+            <if test="column != null and column != '' ">
+                `column` = #{column},
+            </if>
+            <if test="categoryKey != null and categoryKey != '' ">
+                category_key = #{categoryKey},
+            </if>
+            <if test="value != null">
+                `value` = #{value},
+            </if>
+            <if test="updateTime != null and updateTime != '' ">
+                update_time = #{updateTime},
+            </if>
+            <if test="currencyId != null and currencyId != ''">
+                currency_id = #{currencyId},
+            </if>
+        </set>
+        where id =#{id}
+    </update>
+</mapper>

@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pmzhongguo.ipfs.mapper.IpfsProjectMapper">
+    <resultMap id="BaseResultMap" type="com.pmzhongguo.ipfs.entity.IpfsProject">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="project_name" property="projectName" jdbcType="VARCHAR"/>
+        <result column="project_name_e" property="projectNameE" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="periods" property="periods" jdbcType="INTEGER"/>
+        <result column="publish_num" property="publishNum" jdbcType="INTEGER"/>
+        <result column="bought_num" property="boughtNum" jdbcType="INTEGER"/>
+        <result column="output_currency" property="outputCurrency" jdbcType="VARCHAR"/>
+        <result column="quote_currency" property="quoteCurrency" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="output_floor" property="outputFloor" jdbcType="DECIMAL"/>
+        <result column="output_upper" property="outputUpper" jdbcType="DECIMAL"/>
+        <result column="r_output_floor" property="rOutputFloor" jdbcType="DECIMAL"/>
+        <result column="r_output_upper" property="rOutputUpper" jdbcType="DECIMAL"/>
+        <result column="fee" property="fee" jdbcType="DECIMAL"/>
+        <result column="sale_start_time" property="saleStartTime" jdbcType="TIMESTAMP"/>
+        <result column="sale_end_time" property="saleEndTime" jdbcType="TIMESTAMP"/>
+        <result column="run_time" property="runTime" jdbcType="TIMESTAMP"/>
+        <result column="equity_cycle" property="equityCycle" jdbcType="INTEGER"/>
+        <result column="sale_status" property="saleStatus" jdbcType="VARCHAR"/>
+        <result column="run_status" property="runStatus" jdbcType="VARCHAR"/>
+        <result column="intro_bonus" property="introBonus" jdbcType="DECIMAL"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="is_display_num" property="isDisplayNum" jdbcType="VARCHAR"/>
+        <result column="exchange_rate" property="exchangeRate" jdbcType="DECIMAL"/>
+        <result column="discount" property="discount" jdbcType="DECIMAL"/>
+        <result column="user_buy_limit" property="userBuyLimit" jdbcType="INTEGER"/>
+        <result column="equity_desc" property="equityDesc" jdbcType="VARCHAR"/>
+        <result column="equity_desc_e" property="equityDescE" jdbcType="VARCHAR"/>
+        <result column="price_desc" property="priceDesc" jdbcType="VARCHAR"/>
+        <result column="price_desc_e" property="priceDescE" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.pmzhongguo.ipfs.entity.IpfsProjectWithBLOBs" extends="BaseResultMap">
+        <result column="particular" property="particular" jdbcType="LONGVARCHAR"/>
+        <result column="particular_e" property="particularE" jdbcType="LONGVARCHAR"/>
+        <result column="allot_desc" property="allotDesc" jdbcType="LONGVARCHAR"/>
+        <result column="allot_desc_e" property="allotDescE" jdbcType="LONGVARCHAR"/>
+        <result column="question" property="question" jdbcType="LONGVARCHAR"/>
+        <result column="question_e" property="questionE" jdbcType="LONGVARCHAR"/>
+        <result column="risk_warning" property="riskWarning" jdbcType="LONGVARCHAR"/>
+        <result column="risk_warning_e" property="riskWarningE" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, project_name, project_name_e, code, periods, publish_num, bought_num, output_currency,
+    quote_currency, price, output_floor, output_upper, r_output_floor, r_output_upper,
+    fee, sale_start_time, sale_end_time, run_time, equity_cycle, sale_status, run_status,
+    intro_bonus, type, is_display_num, exchange_rate, discount, user_buy_limit, equity_desc, equity_desc_e,
+    price_desc, price_desc_e, create_time, modify_time
+  </sql>
+    <sql id="Blob_Column_List">
+    particular, particular_e, allot_desc, allot_desc_e, question, question_e, risk_warning,
+    risk_warning_e
+  </sql>
+    <sql id="Where_List">
+        <where>
+            <!-- 需要的条件自己加 -->
+            <if test="id != null">
+                id = #{id,jdbcType=INTEGER}
+            </if>
+
+            <if test="saleStatus != null and saleStatus != ''">
+                and sale_status = #{saleStatus,jdbcType=VARCHAR}
+            </if>
+
+            <!--      <if test="login_start != null and login_start != ''">-->
+            <!--        <![CDATA[and m.last_login_time >= #{login_start,jdbcType=VARCHAR}]]>-->
+            <!--      </if>-->
+            <!--      <if test="o_status_in != null and o_status_in != ''">and o.o_status IN (${o_status_in})</if>-->
+            <!--      <if test="constomerGradeArray!=null and constomerGradeArray.length!=0">-->
+            <!--        　　　　AND a.constomer_grade in-->
+            <!--        　　　　<foreach collection="constomerGradeArray" item="extraId" index="i" open="(" separator="," close=")">-->
+            <!--        　　　　　　#{extraId}-->
+            <!--        　　　　</foreach>-->
+            <!--        　　</if>-->
+        </where>
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from ipfs_project
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ipfs_project
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.pmzhongguo.ipfs.entity.IpfsProjectWithBLOBs">
+    insert into ipfs_project (id, project_name, project_name_e,
+      code, periods, publish_num,
+      bought_num, output_currency, quote_currency,
+      price, output_floor, output_upper,
+      r_output_floor, r_output_upper, fee,
+      sale_start_time, sale_end_time, run_time,
+      equity_cycle, sale_status, run_status,
+      intro_bonus, type, exchange_rate,
+      discount, user_buy_limit, equity_desc,
+      equity_desc_e, price_desc, price_desc_e,
+      create_time, modify_time, particular,
+      particular_e, allot_desc, allot_desc_e,
+      question, question_e, risk_warning,
+      risk_warning_e, is_display_num)
+    values (#{id,jdbcType=INTEGER}, #{projectName,jdbcType=VARCHAR}, #{projectNameE,jdbcType=VARCHAR},
+      #{code,jdbcType=VARCHAR}, #{periods,jdbcType=INTEGER}, #{publishNum,jdbcType=INTEGER},
+      #{boughtNum,jdbcType=INTEGER}, #{outputCurrency,jdbcType=VARCHAR}, #{quoteCurrency,jdbcType=VARCHAR},
+      #{price,jdbcType=DECIMAL}, #{outputFloor,jdbcType=DECIMAL}, #{outputUpper,jdbcType=DECIMAL},
+      #{rOutputFloor,jdbcType=DECIMAL}, #{rOutputUpper,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL},
+      #{saleStartTime,jdbcType=TIMESTAMP}, #{saleEndTime,jdbcType=TIMESTAMP}, #{runTime,jdbcType=TIMESTAMP},
+      #{equityCycle,jdbcType=INTEGER}, #{saleStatus,jdbcType=VARCHAR}, #{runStatus,jdbcType=VARCHAR},
+      #{introBonus,jdbcType=DECIMAL}, #{type,jdbcType=VARCHAR}, #{exchangeRate,jdbcType=DECIMAL},
+      #{discount,jdbcType=DECIMAL}, #{userBuyLimit,jdbcType=INTEGER}, #{equityDesc,jdbcType=VARCHAR},
+      #{equityDescE,jdbcType=VARCHAR}, #{priceDesc,jdbcType=VARCHAR}, #{priceDescE,jdbcType=VARCHAR},
+      now(), now(), #{particular,jdbcType=LONGVARCHAR},
+      #{particularE,jdbcType=LONGVARCHAR}, #{allotDesc,jdbcType=LONGVARCHAR}, #{allotDescE,jdbcType=LONGVARCHAR},
+      #{question,jdbcType=LONGVARCHAR}, #{questionE,jdbcType=LONGVARCHAR}, #{riskWarning,jdbcType=LONGVARCHAR},
+      #{riskWarningE,jdbcType=LONGVARCHAR}, #{isDisplayNum,jdbcType=VARCHAR})
+  </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.pmzhongguo.ipfs.entity.IpfsProjectWithBLOBs">
+        update ipfs_project
+        <set>
+            <if test="projectName != null">
+                project_name = #{projectName,jdbcType=VARCHAR},
+            </if>
+            <if test="projectNameE != null">
+                project_name_e = #{projectNameE,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="periods != null">
+                periods = #{periods,jdbcType=INTEGER},
+            </if>
+            <if test="publishNum != null">
+                publish_num = #{publishNum,jdbcType=INTEGER},
+            </if>
+            <if test="boughtNum != null">
+                bought_num = #{boughtNum,jdbcType=INTEGER},
+            </if>
+            <if test="outputCurrency != null">
+                output_currency = #{outputCurrency,jdbcType=VARCHAR},
+            </if>
+            <if test="quoteCurrency != null">
+                quote_currency = #{quoteCurrency,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="outputFloor != null">
+                output_floor = #{outputFloor,jdbcType=DECIMAL},
+            </if>
+            <if test="outputUpper != null">
+                output_upper = #{outputUpper,jdbcType=DECIMAL},
+            </if>
+            <if test="rOutputFloor != null">
+                r_output_floor = #{rOutputFloor,jdbcType=DECIMAL},
+            </if>
+            <if test="rOutputUpper != null">
+                r_output_upper = #{rOutputUpper,jdbcType=DECIMAL},
+            </if>
+            <if test="fee != null">
+                fee = #{fee,jdbcType=DECIMAL},
+            </if>
+            <if test="saleStartTime != null">
+                sale_start_time = #{saleStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="saleEndTime != null">
+                sale_end_time = #{saleEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="runTime != null">
+                run_time = #{runTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="equityCycle != null">
+                equity_cycle = #{equityCycle,jdbcType=INTEGER},
+            </if>
+            <if test="saleStatus != null">
+                sale_status = #{saleStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="runStatus != null">
+                run_status = #{runStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="introBonus != null">
+                intro_bonus = #{introBonus,jdbcType=DECIMAL},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="isDisplayNum != null">
+                is_display_num = #{isDisplayNum,jdbcType=VARCHAR},
+            </if>
+            <if test="exchangeRate != null">
+                exchange_rate = #{exchangeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="discount != null">
+                discount = #{discount,jdbcType=DECIMAL},
+            </if>
+            <if test="userBuyLimit != null">
+                user_buy_limit = #{userBuyLimit,jdbcType=INTEGER},
+            </if>
+            <if test="equityDesc != null">
+                equity_desc = #{equityDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="equityDescE != null">
+                equity_desc_e = #{equityDescE,jdbcType=VARCHAR},
+            </if>
+            <if test="priceDesc != null">
+                price_desc = #{priceDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="priceDescE != null">
+                price_desc_e = #{priceDescE,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="particular != null">
+                particular = #{particular,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="particularE != null">
+                particular_e = #{particularE,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="allotDesc != null">
+                allot_desc = #{allotDesc,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="allotDescE != null">
+                allot_desc_e = #{allotDescE,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="question != null">
+                question = #{question,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="questionE != null">
+                question_e = #{questionE,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="riskWarning != null">
+                risk_warning = #{riskWarning,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="riskWarningE != null">
+                risk_warning_e = #{riskWarningE,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.pmzhongguo.ipfs.entity.IpfsProjectWithBLOBs">
+    update ipfs_project
+    set project_name = #{projectName,jdbcType=VARCHAR},
+      project_name_e = #{projectNameE,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      periods = #{periods,jdbcType=INTEGER},
+      publish_num = #{publishNum,jdbcType=INTEGER},
+      bought_num = #{boughtNum,jdbcType=INTEGER},
+      output_currency = #{outputCurrency,jdbcType=VARCHAR},
+      quote_currency = #{quoteCurrency,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      output_floor = #{outputFloor,jdbcType=DECIMAL},
+      output_upper = #{outputUpper,jdbcType=DECIMAL},
+      r_output_floor = #{rOutputFloor,jdbcType=DECIMAL},
+      r_output_upper = #{rOutputUpper,jdbcType=DECIMAL},
+      fee = #{fee,jdbcType=DECIMAL},
+      sale_start_time = #{saleStartTime,jdbcType=TIMESTAMP},
+      sale_end_time = #{saleEndTime,jdbcType=TIMESTAMP},
+      run_time = #{runTime,jdbcType=TIMESTAMP},
+      equity_cycle = #{equityCycle,jdbcType=INTEGER},
+      sale_status = #{saleStatus,jdbcType=VARCHAR},
+      run_status = #{runStatus,jdbcType=VARCHAR},
+      intro_bonus = #{introBonus,jdbcType=DECIMAL},
+      type = #{type,jdbcType=VARCHAR},
+      is_display_num = #{isDisplayNum,jdbcType=VARCHAR},
+      exchange_rate = #{exchangeRate,jdbcType=DECIMAL},
+      discount = #{discount,jdbcType=DECIMAL},
+      user_buy_limit = #{userBuyLimit,jdbcType=INTEGER},
+      equity_desc = #{equityDesc,jdbcType=VARCHAR},
+      equity_desc_e = #{equityDescE,jdbcType=VARCHAR},
+      price_desc = #{priceDesc,jdbcType=VARCHAR},
+      price_desc_e = #{priceDescE,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      particular = #{particular,jdbcType=LONGVARCHAR},
+      particular_e = #{particularE,jdbcType=LONGVARCHAR},
+      allot_desc = #{allotDesc,jdbcType=LONGVARCHAR},
+      allot_desc_e = #{allotDescE,jdbcType=LONGVARCHAR},
+      question = #{question,jdbcType=LONGVARCHAR},
+      question_e = #{questionE,jdbcType=LONGVARCHAR},
+      risk_warning = #{riskWarning,jdbcType=LONGVARCHAR},
+      risk_warning_e = #{riskWarningE,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.pmzhongguo.ipfs.entity.IpfsProject">
+    update ipfs_project
+    set project_name = #{projectName,jdbcType=VARCHAR},
+      project_name_e = #{projectNameE,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      periods = #{periods,jdbcType=INTEGER},
+      publish_num = #{publishNum,jdbcType=INTEGER},
+      bought_num = #{boughtNum,jdbcType=INTEGER},
+      output_currency = #{outputCurrency,jdbcType=VARCHAR},
+      quote_currency = #{quoteCurrency,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      output_floor = #{outputFloor,jdbcType=DECIMAL},
+      output_upper = #{outputUpper,jdbcType=DECIMAL},
+      r_output_floor = #{rOutputFloor,jdbcType=DECIMAL},
+      r_output_upper = #{rOutputUpper,jdbcType=DECIMAL},
+      fee = #{fee,jdbcType=DECIMAL},
+      sale_start_time = #{saleStartTime,jdbcType=TIMESTAMP},
+      sale_end_time = #{saleEndTime,jdbcType=TIMESTAMP},
+      run_time = #{runTime,jdbcType=TIMESTAMP},
+      equity_cycle = #{equityCycle,jdbcType=INTEGER},
+      sale_status = #{saleStatus,jdbcType=VARCHAR},
+      run_status = #{runStatus,jdbcType=VARCHAR},
+      intro_bonus = #{introBonus,jdbcType=DECIMAL},
+      type = #{type,jdbcType=VARCHAR},
+      is_display_num = #{isDisplayNum,jdbcType=VARCHAR},
+      exchange_rate = #{exchangeRate,jdbcType=DECIMAL},
+      discount = #{discount,jdbcType=DECIMAL},
+      user_buy_limit = #{userBuyLimit,jdbcType=INTEGER},
+      equity_desc = #{equityDesc,jdbcType=VARCHAR},
+      equity_desc_e = #{equityDescE,jdbcType=VARCHAR},
+      price_desc = #{priceDesc,jdbcType=VARCHAR},
+      price_desc_e = #{priceDescE,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="findByConditionPage"
+            parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ipfs_project
+        <include refid="Where_List"/>
+    </select>
+    <select id="findWithBLOBsByConditionPage"
+            parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from ipfs_project
+        <include refid="Where_List"/>
+    </select>
+
+    <select id="findIpfsProject" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ipfs_project
+        <where> 1=1
+            <if test="idList != null and idList.size > 0">
+                and id in
+                <foreach collection="idList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="saleStatus != null">
+                and sale_status = #{saleStatus,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+</mapper>

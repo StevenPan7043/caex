@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.otc.dao.MerchantLogMapper">
+    <resultMap id="BaseResultMap"
+               type="com.pmzhongguo.otc.entity.dataobject.MerchantLogDO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="member_id" jdbcType="INTEGER"
+                property="memberId" />
+        <result column="deposit_currency" jdbcType="VARCHAR" property="depositCurrency" />
+        <result column="deposit_volume" jdbcType="DECIMAL" property="depositVolume" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="create_time" jdbcType="VARCHAR"
+                property="createTime" />
+        <result column="modify_time" jdbcType="VARCHAR"
+                property="modifyTime" />
+        <result column="memo" jdbcType="VARCHAR" property="memo" />
+        <result column="is_deposit" jdbcType="TINYINT" property="isDeposit" />
+    </resultMap>
+    <insert id="insert"
+            parameterType="com.pmzhongguo.otc.entity.dataobject.MerchantDO">
+        <selectKey resultType="java.lang.Integer" keyProperty="id"
+                   order="AFTER">
+            SELECT @@IDENTITY
+        </selectKey>
+        insert into o_merchant_log
+        (id, member_id, deposit_currency, deposit_volume,`status`, create_time,modify_time, memo, is_deposit)
+        values
+        (#{id,jdbcType=INTEGER},
+        #{memberId,jdbcType=INTEGER},
+        #{depositCurrency,jdbcType=VARCHAR},
+        #{depositVolume,jdbcType=DECIMAL},
+        #{status,jdbcType=TINYINT},
+        now(),
+        now(),
+        #{memo,jdbcType=VARCHAR},
+        #{isDeposit,jdbcType=TINYINT}
+        )
+    </insert>
+    <select id="getCancelBusPage" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select o.*, m.m_name as mName, m.last_login_time as last_login_time
+        from o_merchant_log o
+        left join m_member m on  o.member_id = m.id
+        <where>
+            <if test="id != null">
+                o.id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="depositCurrency != null and depositCurrency != ''">
+                and o.deposit_currency = #{depositCurrency,jdbcType=VARCHAR}
+            </if>
+            <if test="depositVolume != null and depositVolume != ''">
+                and o.deposit_volume = #{depositVolume,jdbcType=DECIMAL}
+            </if>
+            <if test="status != null and status != ''">
+                and o.`status` = #{status,jdbcType=TINYINT}
+            </if>
+            <if test="memberId != null and memberId != ''">
+                and o.member_id = #{memberId,jdbcType=INTEGER}
+            </if>
+            <if test="isDeposit != null">
+                and o.is_deposit = #{isDeposit,jdbcType=TINYINT}
+            </if>
+            <if test="m_name != null and m_name != ''">and m.m_name = #{m_name} </if>
+            <if test="login_start != null and login_start != ''">
+                <![CDATA[and m.last_login_time >= #{login_start,jdbcType=VARCHAR}]]>
+            </if>
+            <if test="login_end != null and login_end != ''">
+                <![CDATA[and m.last_login_time <= #{login_end,jdbcType=VARCHAR}]]>
+            </if>
+        </where>
+    </select>
+</mapper>

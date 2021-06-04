@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ex.transfer.mapper.ThirdPartyFlowMapper">
+    <resultMap id="BaseResultMap" type="com.pmzhongguo.ex.transfer.entity.ThirdPartyFlow">
+        <id column="id" property="id"/>
+        <result column="flow_type" property="flowType"/>
+        <result column="pro_flow_id" property="proFlowId"/>
+        <result column="user_flow_id" property="userFlowId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.pmzhongguo.ex.transfer.entity.ThirdPartyFlow">
+       insert into third_party_flow(flow_type,pro_flow_id,user_flow_id,create_time,remark)
+       values (#{flowType},#{proFlowId},#{userFlowId},#{createTime},#{remark})
+   </insert>
+</mapper>

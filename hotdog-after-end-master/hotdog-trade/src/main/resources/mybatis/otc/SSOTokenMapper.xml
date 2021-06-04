@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.otc.dao.SSOTokenMapper">
+  <resultMap id="BaseResultMap" type="com.pmzhongguo.otc.entity.dataobject.SSOTokenDO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="api_key" jdbcType="VARCHAR" property="apiKey" />
+    <result column="api_secret" jdbcType="VARCHAR" property="apiSecret" />
+    <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+    <result column="modify_time" jdbcType="VARCHAR" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, member_id, api_key, api_secret, create_time, modify_time
+  </sql>
+  <select id="findBycondision" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from m_sso_token
+    <where>
+        <if test="id != null and id != ''">
+			and id = #{id,jdbcType=INTEGER}
+		</if>
+        <if test="memberId != null and memberId != ''">
+			and member_id = #{memberId,jdbcType=INTEGER}
+		</if>
+        <if test="apiKey != null and apiKey != '' ">
+			and api_key = #{apiKey,jdbcType=VARCHAR}
+		</if>
+    </where>
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from m_sso_token
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pmzhongguo.otc.entity.dataobject.SSOTokenDO">
+        <selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+    insert into m_sso_token (id, member_id, api_key, 
+      api_secret, create_time, modify_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{apiKey,jdbcType=VARCHAR}, 
+      #{apiSecret,jdbcType=VARCHAR}, now(), now()
+      )
+  </insert>
+  <update id="updateByIdOrMemberId" parameterType="com.pmzhongguo.otc.entity.dataobject.SSOTokenDO">
+    update m_sso_token set  api_secret = #{apiSecret,jdbcType=VARCHAR}, api_key = #{apiKey,jdbcType=VARCHAR}, modify_time = now()
+    <where>
+        <if test="id != null and id != ''">
+			and id = #{id,jdbcType=INTEGER}
+		</if>
+        <if test="memberId != null and memberId != ''">
+			and member_id = #{memberId,jdbcType=INTEGER}
+		</if>
+    </where>
+  </update>
+</mapper>

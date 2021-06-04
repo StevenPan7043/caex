@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.gd.mapper.GdProjectMapper">
+  <resultMap id="BaseResultMap" type="com.pmzhongguo.gd.entity.GdProject">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="output_currency" jdbcType="VARCHAR" property="outputCurrency" />
+    <result column="quote_currency" jdbcType="VARCHAR" property="quoteCurrency" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="output_floor" jdbcType="DECIMAL" property="outputFloor" />
+    <result column="output_upper" jdbcType="DECIMAL" property="outputUpper" />
+    <result column="run_status" jdbcType="VARCHAR" property="runStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.pmzhongguo.gd.entity.GdProject">
+    <result column="particular" jdbcType="LONGVARCHAR" property="particular" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, output_currency, quote_currency, price, output_floor, output_upper, run_status, 
+    create_time, modify_time
+  </sql>
+  <sql id="Base_Column_List_Page">
+    id, output_currency as outputCurrency, quote_currency as quoteCurrency, price, output_floor as outputFloor, output_upper as outputUpper, run_status as runStatus,
+    create_time as createTime, modify_time as modifyTime
+  </sql>
+  <sql id="Blob_Column_List">
+    particular
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.pmzhongguo.gd.entity.GdProjectExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from gd_project
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart != null and limitSize >= 0">
+      limit #{limitStart} , #{limitSize}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.pmzhongguo.gd.entity.GdProjectExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from gd_project
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart != null and limitSize >= 0">
+      limit #{limitStart} , #{limitSize}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from gd_project
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from gd_project
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.pmzhongguo.gd.entity.GdProjectExample">
+    delete from gd_project
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.pmzhongguo.gd.entity.GdProject">
+    insert into gd_project (id, output_currency, quote_currency, 
+      price, output_floor, output_upper, 
+      run_status, create_time, modify_time, 
+      particular)
+    values (#{id,jdbcType=INTEGER}, #{outputCurrency,jdbcType=VARCHAR}, #{quoteCurrency,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DECIMAL}, #{outputFloor,jdbcType=DECIMAL}, #{outputUpper,jdbcType=DECIMAL}, 
+      #{runStatus,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{particular,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pmzhongguo.gd.entity.GdProject">
+    insert into gd_project
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="outputCurrency != null">
+        output_currency,
+      </if>
+      <if test="quoteCurrency != null">
+        quote_currency,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="outputFloor != null">
+        output_floor,
+      </if>
+      <if test="outputUpper != null">
+        output_upper,
+      </if>
+      <if test="runStatus != null">
+        run_status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="particular != null">
+        particular,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="outputCurrency != null">
+        #{outputCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="quoteCurrency != null">
+        #{quoteCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="outputFloor != null">
+        #{outputFloor,jdbcType=DECIMAL},
+      </if>
+      <if test="outputUpper != null">
+        #{outputUpper,jdbcType=DECIMAL},
+      </if>
+      <if test="runStatus != null">
+        #{runStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="particular != null">
+        #{particular,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.pmzhongguo.gd.entity.GdProjectExample" resultType="java.lang.Long">
+    select count(*) from gd_project
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update gd_project
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.outputCurrency != null">
+        output_currency = #{record.outputCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="record.quoteCurrency != null">
+        quote_currency = #{record.quoteCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="record.price != null">
+        price = #{record.price,jdbcType=DECIMAL},
+      </if>
+      <if test="record.outputFloor != null">
+        output_floor = #{record.outputFloor,jdbcType=DECIMAL},
+      </if>
+      <if test="record.outputUpper != null">
+        output_upper = #{record.outputUpper,jdbcType=DECIMAL},
+      </if>
+      <if test="record.runStatus != null">
+        run_status = #{record.runStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifyTime != null">
+        modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.particular != null">
+        particular = #{record.particular,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update gd_project
+    set id = #{record.id,jdbcType=INTEGER},
+      output_currency = #{record.outputCurrency,jdbcType=VARCHAR},
+      quote_currency = #{record.quoteCurrency,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=DECIMAL},
+      output_floor = #{record.outputFloor,jdbcType=DECIMAL},
+      output_upper = #{record.outputUpper,jdbcType=DECIMAL},
+      run_status = #{record.runStatus,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      particular = #{record.particular,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update gd_project
+    set id = #{record.id,jdbcType=INTEGER},
+      output_currency = #{record.outputCurrency,jdbcType=VARCHAR},
+      quote_currency = #{record.quoteCurrency,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=DECIMAL},
+      output_floor = #{record.outputFloor,jdbcType=DECIMAL},
+      output_upper = #{record.outputUpper,jdbcType=DECIMAL},
+      run_status = #{record.runStatus,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pmzhongguo.gd.entity.GdProject">
+    update gd_project
+    <set>
+      <if test="outputCurrency != null">
+        output_currency = #{outputCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="quoteCurrency != null">
+        quote_currency = #{quoteCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="outputFloor != null">
+        output_floor = #{outputFloor,jdbcType=DECIMAL},
+      </if>
+      <if test="outputUpper != null">
+        output_upper = #{outputUpper,jdbcType=DECIMAL},
+      </if>
+      <if test="runStatus != null">
+        run_status = #{runStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="particular != null">
+        particular = #{particular,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.pmzhongguo.gd.entity.GdProject">
+    update gd_project
+    set output_currency = #{outputCurrency,jdbcType=VARCHAR},
+      quote_currency = #{quoteCurrency,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      output_floor = #{outputFloor,jdbcType=DECIMAL},
+      output_upper = #{outputUpper,jdbcType=DECIMAL},
+      run_status = #{runStatus,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      particular = #{particular,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pmzhongguo.gd.entity.GdProject">
+    update gd_project
+    set output_currency = #{outputCurrency,jdbcType=VARCHAR},
+      quote_currency = #{quoteCurrency,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      output_floor = #{outputFloor,jdbcType=DECIMAL},
+      output_upper = #{outputUpper,jdbcType=DECIMAL},
+      run_status = #{runStatus,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryGdListPage" parameterType="java.util.Map" resultType="com.pmzhongguo.gd.entity.GdProject">
+    select <include refid="Base_Column_List_Page"/>,<include refid="Blob_Column_List"/> from gd_project
+    where 1=1
+    <if test="id != null and id != ''">
+        id = #{id,jdbcType=INTEGER}
+    </if>
+  </select>
+</mapper>

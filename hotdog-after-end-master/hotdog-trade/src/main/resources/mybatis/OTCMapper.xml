@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.OTCMapper">
+	<select id="listOTCOwnerPage" parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT * FROM otc_owner c
+	</select>
+
+	<select id="loadOTCOwnerById" parameterType="int" resultType="com.pmzhongguo.ex.business.entity.OTCOwner">
+		SELECT * FROM otc_owner
+		WHERE id = #{_parameter}
+	</select>
+
+	<insert id="addOTCOwner" parameterType="com.pmzhongguo.ex.business.entity.OTCOwner">
+		INSERT INTO otc_owner(o_name,last_time,avg_time,bank_info,alipay_info,wxpay_info)
+		VALUES(#{o_name},#{last_time},#{avg_time},#{bank_info},#{alipay_info},#{wxpay_info})
+	</insert>
+
+	<update id="updateOTCOwner" parameterType="com.pmzhongguo.ex.business.entity.OTCOwner">
+		UPDATE otc_owner SET
+		o_name=#{o_name},bank_info=#{bank_info},alipay_info=#{alipay_info},wxpay_info=#{wxpay_info},last_time=#{last_time},avg_time=#{avg_time}
+		where id = #{id}
+	</update>
+
+	<delete id="delOTCOwner" parameterType="int">
+		DELETE FROM otc_owner WHERE id =#{_parameter}
+	</delete>
+
+
+
+	<select id="listOTCAdsPage" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.OTCAds">
+		SELECT a.*, o.o_name, o.bank_info, o.alipay_info, o.wxpay_info, o.avg_time, o.last_time FROM otc_ads a, otc_owner o where a.owner_id = o.id
+		<if test="c_status != null and c_status != ''"> and c_status = #{c_status} </if>
+		<if test="owner_id != null and owner_id != ''"> and owner_id = #{owner_id} </if>
+		<if test="quote_currency != null and quote_currency != ''"> and quote_currency = #{quote_currency} </if>
+		<if test="base_currency != null and base_currency != ''"> and base_currency = #{base_currency} </if>
+	</select>
+
+	<select id="loadOTCAdsById" parameterType="int" resultType="com.pmzhongguo.ex.business.entity.OTCAds">
+		SELECT a.*, o.o_name, o.bank_info, o.alipay_info, o.wxpay_info FROM otc_ads a, otc_owner o where a.owner_id = o.id
+		and a.id =
+		#{_parameter}
+	</select>
+
+	<insert id="addOTCAds" parameterType="com.pmzhongguo.ex.business.entity.OTCAds">
+		INSERT INTO otc_ads(owner_id,ad_type,base_currency,quote_currency,price,min_quote,max_quote,total_volume,total_amount,c_status,a_order)
+		VALUES(#{owner_id},#{ad_type},#{base_currency},#{quote_currency},#{price},#{min_quote},#{max_quote},#{total_volume},#{total_amount},#{c_status},#{a_order})
+	</insert>
+
+	<update id="updateOTCAds" parameterType="com.pmzhongguo.ex.business.entity.OTCAds">
+		UPDATE otc_ads SET owner_id=#{owner_id},ad_type=#{ad_type},base_currency=#{base_currency},
+		quote_currency=#{quote_currency},price=#{price},min_quote=#{min_quote},max_quote=#{max_quote},
+		total_volume=#{total_volume},
+		total_amount=#{total_amount},c_status=#{c_status},a_order=#{a_order}
+		where
+		id = #{id}
+	</update>
+
+
+	<select id="findBuyOrderPage" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.resp.OTCOrder">
+		SELECT id, 1 ad_type, otc_price price, r_amount volume, otc_money amount, r_status status,
+		r_create_time create_time, otc_owner_name owner_name, otc_ads_id ad_id, currency base_currency,
+		otc_oppsite_currency quote_currency
+		FROM m_coin_recharge where otc_ads_id > 0 AND
+		member_id = #{member_id}
+
+		<if test="base_currency != null and base_currency != ''"> and currency = #{base_currency} </if>
+		<if test="quote_currency != null and quote_currency != ''"> and otc_oppsite_currency = #{quote_currency} </if>
+		<if test="status != null and status != ''"> and r_status ${status} </if>
+	</select>
+
+	<select id="findSellOrderPage" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.resp.OTCOrder">
+		SELECT id, 2 ad_type, otc_price price, otc_volume volume, w_amount amount, w_status status,
+		w_create_time create_time, otc_owner_name owner_name, otc_ads_id ad_id, currency quote_currency,
+		otc_oppsite_currency base_currency
+		FROM m_coin_withdraw where otc_ads_id > 0 
+		AND member_id = #{member_id}
+
+		<if test="base_currency != null and base_currency != ''"> and otc_oppsite_currency = #{base_currency} </if>
+		<if test="quote_currency != null and quote_currency != ''"> and currency = #{quote_currency} </if>
+		<if test="status != null and status != ''"> and w_status ${status} </if>
+	</select>
+
+	<!-- 更具id查询 商户基本信息 -->
+	<select id="getOwnerInfo" parameterType="java.lang.Integer" resultType="java.util.HashMap">
+		SELECT id,o_name oname,bank_info bankInfo,alipay_info alipayInfo,wxpay_info wxpayInfo,last_time lastTime,avg_time avgTime
+		FROM otc_owner where id=#{id}
+	</select>
+
+	<!-- 更具id查询 商户广告信息 -->
+	<select id="getOwnerList" parameterType="java.lang.Integer" resultType="java.util.HashMap">
+		SELECT base_currency currency,max_quote max,total_volume volume
+		FROM otc_ads where owner_id=#{id} GROUP BY base_currency
+	</select>
+
+	<!-- 取消订单返还广告交易额度 -->
+	<update id="updateOtcAds" parameterType="java.util.Map">
+		UPDATE otc_ads SET
+		<if test="maxQuote != null and maxQuote != ''">
+			max_quote=max_quote-#{maxQuote},
+		</if>
+		<if test="volume != null and volume != ''">
+			total_volume=total_volume-#{volume},
+		</if>
+		<if test="amount != null and amount != ''">
+			total_amount=total_amount-#{amount},
+		</if>
+		c_status=#{status}
+		WHERE id=#{id}
+	</update>
+
+	<!-- 更新广告是否展示状态 -->
+	<update id="updateStatus4Ads" parameterType="java.util.Map">
+		UPDATE otc_ads SET c_status=#{status} WHERE id=#{id}
+	</update>
+
+
+
+</mapper>

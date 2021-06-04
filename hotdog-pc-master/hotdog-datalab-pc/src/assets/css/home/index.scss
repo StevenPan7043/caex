@@ -1,0 +1,59 @@
+.view-content {
+    width: 100%;
+    background-color: #f2f6f9;
+    .wrap-holdings {
+        width: 1200px;
+        margin: 0 auto;
+        padding: 20px 0 60px 0;
+        .lab-msg {
+            margin-top: 20px;
+            height: 140px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .hold-msg {
+            margin-top: 20px;
+            width: 1200px;
+            height: 560px;
+            background-color: #fff;
+            position: relative;
+            .shadow-content {
+                height: 50px;
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                .left {
+                    height: 50px;
+                    line-height: 50px;
+                    font-size: 14px;
+                    color: #1c242c;
+                }
+                .right {
+                    display: flex;
+                    align-items: center;
+                    .id-search {
+                        margin-right: 17px;
+                    }
+                }
+            }
+            .table-box {
+               transform: translateY(49px);
+                padding: 0 30px;
+                box-sizing: border-box;
+                height: 456px;
+                // position: relative;
+                // border: 1px solid black;
+                // overflow: auto;  
+            }
+            .pagination {
+                padding: 0 30px;
+                transform: translateY(50px);
+                height: 50px;
+                display: flex;
+                align-items: center;
+               justify-content: flex-end;
+                // border: 1px solid black;
+            }
+        }
+    }
+}

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.otc.dao.AccountMapper">
+	<resultMap id="BaseResultMap"
+		type="com.pmzhongguo.otc.entity.dataobject.AccountDO">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="member_id" jdbcType="INTEGER"
+			property="memberId" />
+		<result column="currency" jdbcType="VARCHAR"
+			property="currency" />
+		<result column="total_balance" jdbcType="DECIMAL"
+			property="totalBalance" />
+		<result column="frozen_balance" jdbcType="DECIMAL"
+			property="frozenBalance" />
+		<result column="create_time" jdbcType="VARCHAR"
+			property="createTime" />
+		<result column="modify_time" jdbcType="VARCHAR"
+			property="modifyTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, member_id, currency, total_balance, frozen_balance,
+		create_time, modify_time
+	</sql>
+	<select id="findBymemberIdAndCurrency"
+		parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from o_account
+		where currency = #{currency} and member_id =
+		#{memberId}
+	</select>
+	<select id="findById" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from o_account
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="findByConditionPage" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from o_account
+		<where>
+			<if test="id != null and id != ''">
+				id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="memberId != null and memberId != ''">
+				and member_id = #{memberId,jdbcType=INTEGER}
+			</if>
+			<if test="currency != null and currency != ''">
+				and currency = #{currency,jdbcType=VARCHAR}
+			</if>
+			<if test="totalBalance != null and totalBalance != ''">
+				and total_balance = #{totalBalance,jdbcType=DECIMAL}
+			</if>
+			<if test="frozenBalance != null and frozenBalance != ''">
+				and frozen_balance = #{frozenBalance,jdbcType=DECIMAL}
+			</if>
+		</where>
+	</select>
+
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from o_account
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.AccountDO">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+		insert into o_account (id, member_id, currency,
+		total_balance,
+		frozen_balance, create_time, modify_time
+		)
+		values (#{id,jdbcType=INTEGER},
+		#{memberId,jdbcType=INTEGER},
+		#{currency,jdbcType=VARCHAR},
+		#{totalBalance,jdbcType=DECIMAL}, #{frozenBalance,jdbcType=DECIMAL},
+		now(), now()
+		)
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.AccountDO">
+		update o_account
+		<set>
+			modify_time = now(),
+			<if test="memberId != null and memberId != ''">
+				member_id = #{memberId,jdbcType=INTEGER},
+			</if>
+			<if test="currency != null and currency != ''">
+				currency = #{currency,jdbcType=VARCHAR},
+			</if>
+			<if test="totalBalance != null and totalBalance != ''">
+				total_balance = #{totalBalance,jdbcType=DECIMAL},
+			</if>
+			<if test="frozenBalance != null and frozenBalance != ''">
+				frozen_balance = #{frozenBalance,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 交易相关的四个sql -->
+	<update id="addTotalBalance"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.AccountDO">
+		UPDATE o_account SET modify_time = now(),
+		total_balance = total_balance +
+		#{totalBalance}
+		WHERE id=#{id}
+	</update>
+	<update id="addFrozenBalance"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.AccountDO">
+		UPDATE o_account SET modify_time = now(),
+		frozen_balance = frozen_balance +
+		#{frozenBalance}
+		WHERE id=#{id}
+	</update>
+	<update id="returnFrozenBalance"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.AccountDO">
+		UPDATE o_account SET modify_time = now(),
+		frozen_balance = frozen_balance -
+		#{frozenBalance}
+		WHERE id=#{id}
+	</update>
+	<update id="reduceFrozenBalance"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.AccountDO">
+		UPDATE o_account SET modify_time = now(),
+		total_balance = total_balance -
+		#{frozenBalance},
+		frozen_balance = frozen_balance - #{frozenBalance}
+		WHERE id=#{id}
+	</update>
+	<!-- 交易相关的四个sql -->
+</mapper>

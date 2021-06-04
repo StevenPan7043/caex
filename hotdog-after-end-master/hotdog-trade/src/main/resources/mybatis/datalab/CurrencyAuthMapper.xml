@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ex.datalab.mapper.CurrencyAuthMapper">
+
+    <resultMap id="baseResultMap" type="com.pmzhongguo.ex.datalab.entity.dto.CurrencyAuthDto">
+        <id column="id" property="id"/>
+        <result column="member_id" property="memberId"/>
+        <result column="m_name" property="mName"/>
+        <result column="currency_pair_id" property="currencyPairId"/>
+        <result column="fee_scale" property="feeScale"/>
+        <result column="authority" property="authority"/>
+        <result column="base_w_quota" property="baseWQuota"/>
+        <result column="valuation_w_quota" property="valuationWQuota"/>
+        <result column="is_free" property="isFree"/>
+        <result column="create_time" property="createTime"/>
+        <result column="remark" property="remark"/>
+        <result column="extend_1" property="extend1"/>
+        <result column="extend_2" property="extend2"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="symbol" property="symbol"/>
+        <result column="currencyPair" property="currencyPair"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.pmzhongguo.ex.datalab.entity.CurrencyAuth">
+		insert into m_currency_auth(member_id,m_name,currency_pair_id,fee_scale,authority,
+		base_w_quota,valuation_w_quota,is_free,create_time,update_time,remark,extend_1,extend_2)
+		values (#{memberId},#{mName},#{currencyPairId},#{feeScale},#{authority},
+		#{baseWQuota},#{valuationWQuota},#{isFree},#{createTime},#{updateTime},#{remark},#{extend1},#{extend2})
+	</insert>
+
+    <update id="updateById" parameterType="com.pmzhongguo.ex.datalab.entity.CurrencyAuth">
+        UPDATE m_currency_auth
+        <set>
+            <if test='null != memberId'>member_id = #{memberId},</if>
+            <if test="null != mName and '' != mName">m_name = #{mName},</if>
+            <if test="null != currencyPairId and '' != currencyPairId">currency_pair_id = #{currencyPairId},</if>
+            <if test="null != feeScale and '' != feeScale">fee_scale = #{feeScale},</if>
+            <if test="null != authority">authority = #{authority},</if>
+            <if test="null != baseWQuota and '' != baseWQuota">base_w_quota = #{baseWQuota},</if>
+            <if test="null != valuationWQuota and '' != valuationWQuota">valuation_w_quota = #{valuationWQuota},</if>
+            <if test="null != isFree">is_free = #{isFree},</if>
+            <if test='null != remark'>remark = #{remark},</if>
+            <if test="null != createTime and '' != createTime">create_time = #{createTime},</if>
+            <if test="null != updateTime and '' != updateTime">update_time = #{updateTime},</if>
+            <if test='null != extend1'>extend_1 = #{extend1},</if>
+            <if test='null != extend2'>extend_2 = #{extend2}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="getAllCurrencyAuthByPage" resultMap="baseResultMap" parameterType="java.util.Map">
+        select ca.*,mp.key_name symbol from m_currency_auth ca
+        left join d_currency_pair mp on mp.id = ca.currency_pair_id
+        where 1=1
+        <if test="id !='' and id != null">
+            and ca.id = #{id}
+        </if>
+        <if test="notInId !='' and notInId != null">
+            and ca.id != #{notInId}
+        </if>
+        <if test="memberId !='' and memberId != null">
+            and ca.member_id = #{memberId}
+        </if>
+        <if test="mName !='' and mName != null">
+            and ca.m_name = #{mName}
+        </if>
+        <if test="currencyPairId !='' and currencyPairId != null">
+            and ca.currency_pair_id = #{currencyPairId}
+        </if>
+        <if test="symbol !='' and symbol != null">
+            and mp.key_name like #{symbol}
+        </if>
+        <if test="feeScale !='' and feeScale != null">
+            and ca.fee_scale = #{feeScale}
+        </if>
+        <if test="authority !='' and authority != null">
+            and ca.authority = #{authority}
+        </if>
+        <if test="isFree != null">
+            and ca.is_free = #{isFree}
+        </if>
+    </select>
+    <select id="getCurrencyAuthMap"  parameterType="java.util.Map" resultMap="baseResultMap">
+        select ca.*,mp.dsp_name currencyPair,mp.key_name symbol from m_currency_auth ca
+        left join d_currency_pair mp on mp.id = ca.currency_pair_id
+        where 1=1
+        <if test="memberId !='' and memberId != null">
+            and ca.member_id = #{memberId}
+        </if>
+        <if test="mName !='' and mName != null">
+            and ca.m_name = #{mName}
+        </if>
+        <if test="currencyPairId !='' and currencyPairId != null">
+            and ca.currency_pair_id = #{currencyPairId}
+        </if>
+        <if test="symbol !='' and symbol != null">
+            and mp.key_name = #{symbol}
+        </if>
+        <if test="feeScale !='' and feeScale != null">
+            and ca.fee_scale = #{feeScale}
+        </if>
+        <if test="authority !='' and authority != null">
+            and ca.authority = #{authority}
+        </if>
+        <if test="isFree != null">
+            and ca.is_free = #{isFree}
+        </if>
+    </select>
+    <select id="getAllSymbol" resultType="java.lang.String">
+        select distinct mp.key_name symbol from m_currency_auth ca
+        left join d_currency_pair mp on mp.id = ca.currency_pair_id
+        where 1=1
+        <if test="memberId !='' and memberId != null">
+            and ca.member_id = #{memberId}
+        </if>
+        <if test="mName !='' and mName != null">
+            and ca.m_name = #{mName}
+        </if>
+        <if test="currencyPairId !='' and currencyPairId != null">
+            and ca.currency_pair_id = #{currencyPairId}
+        </if>
+        <if test="symbol !='' and symbol != null">
+            and mp.key_name like #{symbol}
+        </if>
+        <if test="feeScale !='' and feeScale != null">
+            and ca.fee_scale = #{feeScale}
+        </if>
+        <if test="authority !='' and authority != null">
+            and ca.authority = #{authority}
+        </if>
+        <if test="isFree != null">
+            and ca.is_free = #{isFree}
+        </if>
+    </select>
+</mapper>

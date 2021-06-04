@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ex.datalab.mapper.AccountFeeDetailMapper">
+	<resultMap id="BaseResultMap" type="com.pmzhongguo.ex.datalab.entity.AccountFeeDetail" >
+		<result column="id" property="id" />
+		<result column="member_id" property="memberId" />
+		<result column="fee_currency" property="feeCurrency" />
+		<result column="type" property="type" />
+		<result column="total_amount" property="totalAmount" />
+		<result column="flot_amount" property="flotAmount" />
+		<result column="create_time" property="createTime" />
+		<result column="remark" property="remark" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+                id,
+                member_id,
+                fee_currency,
+                type,
+                total_amount,
+                flot_amount,
+                create_time,
+                remark
+    </sql>
+
+	<insert id="insert" parameterType="com.pmzhongguo.ex.datalab.entity.AccountFeeDetail">
+		INSERT INTO m_account_fee_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test ='null != memberId'>
+				member_id,
+			</if>
+			<if test ='null != feeCurrency'>
+				fee_currency,
+			</if>
+			<if test ='null != type'>
+				type,
+			</if>
+			<if test ='null != totalAmount'>
+				total_amount,
+			</if>
+			<if test ='null != flotAmount'>
+				flot_amount,
+			</if>
+			<if test ='null != createTime'>
+				create_time,
+			</if>
+			<if test ='null != remark'>
+				remark
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test ='null != memberId'>
+				#{memberId},
+			</if>
+			<if test ='null != feeCurrency'>
+				#{feeCurrency},
+			</if>
+			<if test ='null != type'>
+				#{type},
+			</if>
+			<if test ='null != totalAmount'>
+				#{totalAmount},
+			</if>
+			<if test ='null != flotAmount'>
+				#{flotAmount},
+			</if>
+			<if test ='null != createTime'>
+				#{createTime},
+			</if>
+			<if test ='null != remark'>
+				#{remark}
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateById" parameterType="com.pmzhongguo.ex.datalab.entity.AccountFeeDetail">
+		UPDATE m_account_fee_detail
+		<set>
+			<if test ='null != memberId'>member_id = #{memberId},</if>
+			<if test ='null != feeCurrency'>fee_currency = #{feeCurrency},</if>
+			<if test ='null != type'>type = #{type},</if>
+			<if test ='null != totalAmount'>total_amount = #{totalAmount},</if>
+			<if test ='null != flotAmount'>flot_amount = #{flotAmount},</if>
+			<if test ='null != createTime'>create_time = #{createTime},</if>
+			<if test ='null != remark'>remark = #{remark}</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+</mapper>

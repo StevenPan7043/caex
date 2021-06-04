@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ex.business.mapper.IntroduceRelationMapper">
+  <resultMap id="BaseResultMap" type="com.pmzhongguo.ex.business.entity.IntroduceRelation">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="introduce_m_id" jdbcType="INTEGER" property="introduceMId" />
+    <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, member_id, introduce_m_id, create_time, memo
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from m_introduce_relation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByCondition" parameterType="com.pmzhongguo.ex.business.entity.IntroduceRelation" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from m_introduce_relation
+    <where>
+      <if test="id != null">
+         and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="memberId != null">
+        and member_id =  #{memberId,jdbcType=INTEGER}
+      </if>
+      <if test="introduceMId != null">
+        and introduce_m_id = #{introduceMId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime,jdbcType=VARCHAR}
+      </if>
+      <if test="memo != null">
+        and memo = #{memo,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from m_introduce_relation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pmzhongguo.ex.business.entity.IntroduceRelation">
+    insert into m_introduce_relation (id, member_id, introduce_m_id, 
+      create_time, memo)
+    values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{introduceMId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pmzhongguo.ex.business.entity.IntroduceRelation">
+    insert into m_introduce_relation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <!--<if test="id != null">
+        id,
+      </if>-->
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="introduceMId != null">
+        introduce_m_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="memo != null">
+        memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+     <!-- <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>-->
+      <if test="memberId != null">
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="introduceMId != null">
+        #{introduceMId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pmzhongguo.ex.business.entity.IntroduceRelation">
+    update m_introduce_relation
+    <set>
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="introduceMId != null">
+        introduce_m_id = #{introduceMId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pmzhongguo.ex.business.entity.IntroduceRelation">
+    update m_introduce_relation
+    set member_id = #{memberId,jdbcType=INTEGER},
+      introduce_m_id = #{introduceMId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

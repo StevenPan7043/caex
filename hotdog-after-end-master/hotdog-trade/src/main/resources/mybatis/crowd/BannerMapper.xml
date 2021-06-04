@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.crowd.dao.BannerMapper">
+
+
+
+  <select id="findByScene" parameterType="java.lang.String" resultType="java.util.Map">
+    select  banner_url,banner_order,scene,name
+    from cms_banner
+    where scene = #{scene} order by banner_order asc
+  </select>
+
+
+
+  <!-- =================================管理后端接口========================================================= -->
+  <select id="findMgrBannerByPage" parameterType="java.util.Map" resultType="com.pmzhongguo.crowd.entity.Banner">
+    SELECT * FROM cms_banner
+    <where>
+      <if test="type != null and type != ''">
+        and type = #{type}
+      </if>
+    </where>
+  </select>
+
+  <select id="findById" parameterType="java.lang.Integer" resultType="com.pmzhongguo.crowd.entity.Banner">
+    select  banner_url,banner_order,scene,id,name
+    from cms_banner
+    where id = #{id}
+  </select>
+
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from cms_banner
+    where id = #{id}
+  </delete>
+
+  <update id="updateBanner" parameterType="java.util.Map">
+    update  cms_banner set scene = #{scene},name = #{name},
+    banner_url = #{banner_url},banner_order = #{banner_order},update_time = #{update_time}
+
+    where id = #{id}
+  </update>
+
+  <insert id="addBanner" parameterType="java.util.Map">
+    insert into cms_banner (scene,name,banner_url,banner_order,create_time,update_time)
+    VALUE (#{scene},#{name},#{banner_url},#{banner_order},#{create_time},#{update_time})
+  </insert>
+
+  <!--<insert id="insert" parameterType="com.pmzhongguo.otc.entity.dataobject.SSOTokenDO">-->
+        <!--<selectKey resultType="java.lang.Integer" keyProperty="id"-->
+			<!--order="AFTER">-->
+			<!--SELECT @@IDENTITY-->
+		<!--</selectKey>-->
+    <!--insert into m_sso_token (id, member_id, api_key, -->
+      <!--api_secret, create_time, modify_time-->
+      <!--)-->
+    <!--values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{apiKey,jdbcType=VARCHAR}, -->
+      <!--#{apiSecret,jdbcType=VARCHAR}, now(), now()-->
+      <!--)-->
+  <!--</insert>-->
+  <!--<update id="updateByIdOrMemberId" parameterType="com.pmzhongguo.otc.entity.dataobject.SSOTokenDO">-->
+    <!--update m_sso_token set  api_secret = #{apiSecret,jdbcType=VARCHAR}, api_key = #{apiKey,jdbcType=VARCHAR}, modify_time = now()-->
+    <!--<where>-->
+        <!--<if test="id != null and id != ''">-->
+			<!--and id = #{id,jdbcType=INTEGER}-->
+		<!--</if>-->
+        <!--<if test="memberId != null and memberId != ''">-->
+			<!--and member_id = #{memberId,jdbcType=INTEGER}-->
+		<!--</if>-->
+    <!--</where>-->
+  <!--</update>-->
+</mapper>

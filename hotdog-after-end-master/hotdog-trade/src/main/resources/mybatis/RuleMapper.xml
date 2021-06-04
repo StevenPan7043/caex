@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同，源代码没有去看，猜测应该是通过"这里的namespace.下边方法的id"来定位方法的 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.RuleMapper">
+    <resultMap id="baseResultMap" type="com.pmzhongguo.ex.business.entity.Rule">
+        <id column="id" property="id"/>
+        <result column="rule_release_scale" property="ruleReleaseScale"/>
+        <result column="rule_type" property="ruleType"/>
+        <result column="rule_detail" property="ruleDetail"/>
+        <result column="enable" property="enable"/>
+        <result column="currency" property="currency"/>
+        <result column="lock_release_time" property="lockReleaseTime"/>
+        <result column="rule_time_type" property="ruleTimeType"/>
+    </resultMap>
+
+    <insert id="addRule"  parameterType="com.pmzhongguo.ex.business.entity.Rule">
+		  insert into m_rule
+		  (currency,rule_release_scale,rule_type,rule_detail,enable,rule_time_type)
+		  values
+		  (#{currency},#{ruleReleaseScale},#{ruleType},#{ruleDetail},#{enable},#{ruleTimeType})
+	</insert>
+
+    <insert id="addTradeLockToRule" parameterType="com.pmzhongguo.ex.business.entity.Rule">
+            insert into m_rule
+            (currency,rule_release_scale,rule_type,rule_detail,enable,lock_release_time,rule_time_type)
+             values
+		  (#{currency},#{ruleReleaseScale},#{ruleType},#{ruleDetail},#{enable},#{lockReleaseTime},#{ruleTimeType})
+    </insert>
+
+    <update id="updateRule" parameterType="com.pmzhongguo.ex.business.entity.Rule">
+        update m_rule
+        <set>
+            <if test="ruleReleaseScale != null and ruleReleaseScale != ''">
+                rule_release_scale = #{ruleReleaseScale},
+            </if>
+            <if test="ruleType != null and ruleType != ''">
+                rule_type = #{ruleType},
+            </if>
+            <if test="ruleDetail != null and ruleDetail != ''">
+                rule_detail = #{ruleDetail},
+            </if>
+            <if test="enable != null">
+                enable = #{enable},
+            </if>
+            <if test="ruleTimeType != null and ruleTimeType != ''">
+                rule_time_type = #{ruleTimeType},
+            </if>
+        </set>
+        where id =#{id}
+    </update>
+
+    <update id="updateRuleByparams">
+        update m_rule
+        <set>
+            <if test="lock_release_percent != null and lock_release_percent != ''">
+                rule_release_scale = #{lock_release_percent},
+            </if>
+            <if test="lock_release_percent != null and lock_release_percent != ''">
+                rule_detail = #{lock_release_percent},
+            </if>
+            <if test="lock_release_time != null and lock_release_time != ''">
+                lock_release_time = #{lock_release_time},
+            </if>
+            <if test="is_lock != null and is_lock != ''">
+                enable = #{is_lock},
+            </if>
+            <if test="currency != null and currency != ''">
+                currency = #{currency},
+            </if>
+            <if test="ruleTimeType != null and ruleTimeType != ''">
+                rule_time_type = #{ruleTimeType},
+            </if>
+        </set>
+        where currency = #{currency};
+    </update>
+
+    <select id="getRuleMap" resultMap="baseResultMap">
+        select * from m_rule
+        where 1=1
+        <if test="currency != null and currency != ''">
+            and currency=#{currency}
+        </if>
+        <if test="ruleReleaseScale != null and ruleReleaseScale != ''">
+            and rule_release_scale=#{ruleReleaseScale}
+        </if>
+        <if test="ruleType != null and ruleType != ''">
+            and rule_type=#{ruleType}
+        </if>
+        <if test="ruleDetail != null and ruleDetail != ''">
+            and rule_detail=#{ruleDetail}
+        </if>
+        <if test="enable != null">
+            and enable=#{enable}
+        </if>
+        <if test="id != null and id != ''">
+            and id=#{id}
+        </if>
+    </select>
+    <select id="getRuleList" resultMap="baseResultMap">
+        select * from m_rule
+        where 1=1
+        <if test="currency != null and currency != ''">
+            and currency=#{currency}
+        </if>
+        <if test="ruleReleaseScale != null and ruleReleaseScale != ''">
+            and rule_release_scale=#{ruleReleaseScale}
+        </if>
+        <if test="ruleType != null and ruleType != ''">
+            and rule_type=#{ruleType}
+        </if>
+        <if test="ruleDetail != null and ruleDetail != ''">
+            and rule_detail=#{ruleDetail}
+        </if>
+        <if test="enable != null">
+            and enable=#{enable}
+        </if>
+        <if test="id != null and id != ''">
+            and id=#{id}
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,527 @@
+-- -------------------合约菜单添加USDT划转列表----------------------------
+-- auth -- Jary --
+INSERT INTO `mt_clique_menus` ( `id`, `parentid`, `name`, `url`, `status`, `icon`, `sort`, `type` )
+VALUES
+	( 115, 11, 'USDT划转列表', '/customer/showUsdtTransferList', 0, NULL, 1, 1 );
+# 项目sql，有更新的sql，从后面追加
+
+-- -------------------原始sql开始----------------------------
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for c_cash_usdt_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `c_cash_usdt_logs`;
+CREATE TABLE `c_cash_usdt_logs`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NULL DEFAULT NULL,
+  `fromaddr` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '提供者地址',
+  `money` decimal(18, 6) NULL DEFAULT 0.000000 COMMENT '提币数量',
+  `tax` decimal(18, 6) NULL DEFAULT 0.000000 COMMENT '手续费',
+  `realmoney` decimal(18, 6) NULL DEFAULT 0.000000 COMMENT '实际到账',
+  `toaddr` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '接收者',
+  `status` int(11) NULL DEFAULT 1 COMMENT '1待审核 2已通过 3已驳回',
+  `hashcode` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '交易单号',
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP,
+  `checktime` datetime(0) NULL DEFAULT NULL COMMENT '审核时间',
+  `checkid` int(11) NULL DEFAULT NULL COMMENT '审核人',
+  `dztime` datetime(0) NULL DEFAULT NULL COMMENT '对账时间',
+  `dzstatus` int(1) NULL DEFAULT -1 COMMENT '-1未对账  0正常交易，1需要重审',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for c_contract_order
+-- ----------------------------
+DROP TABLE IF EXISTS `c_contract_order`;
+CREATE TABLE `c_contract_order`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ordercode` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '订单号',
+  `cid` int(11) NOT NULL COMMENT '用户id',
+  `type` int(1) NOT NULL COMMENT '1开多 2开空',
+  `realmoney` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '实际花费金额',
+  `gearing` int(11) NULL DEFAULT 0 COMMENT '杠杆倍数',
+  `money` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '杠杆放大金额',
+  `buyprice` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '买入价 市值',
+  `coin` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '货币类型 见coin表 symbol字段',
+  `coinnum` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '持仓量',
+  `stopprice` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '平仓价 市值',
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '持仓时间',
+  `stoptime` datetime(0) NULL DEFAULT NULL COMMENT '平仓时间',
+  `tax` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '手续费',
+  `rates` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '利息',
+  `status` int(11) NULL DEFAULT 1 COMMENT '1持仓中 2已完成',
+  `automoney` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '自动爆仓价',
+  `settleflag` int(11) NULL DEFAULT -1 COMMENT '-1未结算 1已结算',
+  `outtype` int(1) NULL DEFAULT 1 COMMENT '1手动平仓 2自动爆仓',
+  `stopwin` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '止盈价格',
+  `stopdonat` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '止损价格',
+  `spread` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '点差比例',
+  `spreadmoney` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '点差金额',
+  `remark` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '备注',
+  `ordertype` int(11) NULL DEFAULT 1 COMMENT '1合约订单  2逐仓订单',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `cid`(`cid`) USING BTREE,
+  INDEX `ordercode`(`ordercode`) USING BTREE,
+  INDEX `coin`(`coin`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for c_customer
+-- ----------------------------
+DROP TABLE IF EXISTS `c_customer`;
+CREATE TABLE `c_customer`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `phone` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '手机号',
+  `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `payword` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '交易密码',
+  `invitationcode` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '邀请码',
+  `realname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '真实名称',
+  `idcard` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '身份证',
+  `cardurls` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '身份证图片',
+  `levelid` int(2) NULL DEFAULT 1 COMMENT '等级id',
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` int(1) NULL DEFAULT 0 COMMENT '0有效 -1无效',
+  `parentid` int(11) NULL DEFAULT NULL COMMENT '推荐人',
+  `lastid` int(11) NULL DEFAULT NULL COMMENT '接点人',
+  `layer` int(11) NULL DEFAULT 1 COMMENT '推荐代数',
+  `pushgenes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '推荐节点网',
+  `qrurl` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '分享二维码',
+  `isvalid` int(11) NULL DEFAULT -1 COMMENT '-1未激活  0激活',
+  `authflag` int(1) NULL DEFAULT 1 COMMENT '1未认证 2审核中 3审核通过',
+  `userid` int(11) NULL DEFAULT NULL COMMENT '操作员id',
+  `salesman` int(11) NULL DEFAULT NULL COMMENT '业务员id',
+  `cancash` int(11) NULL DEFAULT 0 COMMENT '是否可以提现 0可以 -1不行',
+  `salesflag` int(11) NULL DEFAULT -1 COMMENT '0是业务员 -1不是业务员',
+  `identity` int(11) NULL DEFAULT 1 COMMENT '1会员 2业务员 3模拟账号',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `phone`(`phone`) USING BTREE,
+  INDEX `invitationcode`(`invitationcode`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会员信息表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for c_entrust_order
+-- ----------------------------
+DROP TABLE IF EXISTS `c_entrust_order`;
+CREATE TABLE `c_entrust_order`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ordercode` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '订单号',
+  `cid` int(11) NOT NULL COMMENT '用户id',
+  `type` int(1) NOT NULL COMMENT '1开多 2开空',
+  `realmoney` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '实际花费金额',
+  `gearing` int(11) NULL DEFAULT 0 COMMENT '杠杆倍数',
+  `money` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '杠杆放大金额',
+  `price` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '委托单价',
+  `tax` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '手续费',
+  `coin` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '货币类型 见coin表',
+  `coinnum` decimal(20, 4) NULL DEFAULT 0.0000 COMMENT '持仓量',
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '委托时间',
+  `status` int(11) NULL DEFAULT 1 COMMENT '1委托中 2委托成功 3已取消',
+  `successtime` datetime(0) NULL DEFAULT NULL COMMENT '成功时间',
+  `canceltime` datetime(0) NULL DEFAULT NULL COMMENT '取消时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `ordercode`(`ordercode`) USING BTREE,
+  INDEX `cid`(`cid`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for c_pay_channel
+-- ----------------------------
+DROP TABLE IF EXISTS `c_pay_channel`;
+CREATE TABLE `c_pay_channel`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NULL DEFAULT NULL,
+  `type` int(11) NULL DEFAULT NULL COMMENT '类型 1支付宝 2微信 3银行卡',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '姓名',
+  `account` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '账号、银行卡号',
+  `payqr` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '支付收款码',
+  `bankname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '开户行名称',
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for c_usdt_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `c_usdt_detail`;
+CREATE TABLE `c_usdt_detail`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `paycode` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '流水号',
+  `cid` int(11) NULL DEFAULT NULL COMMENT '会员编号',
+  `typeid` int(11) NULL DEFAULT NULL COMMENT '操作类型见枚举类',
+  `isout` int(1) NULL DEFAULT NULL COMMENT '1收入 0支出',
+  `original` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '上一次值',
+  `cost` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '本次操作值',
+  `last` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '最后值',
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updatetime` datetime(0) NULL DEFAULT NULL COMMENT '修改时间 用来做乐观锁',
+  `targetid` int(11) NULL DEFAULT NULL COMMENT '目标用户id',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `cid`(`cid`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'Usdt资金明细记录表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for c_wallet
+-- ----------------------------
+DROP TABLE IF EXISTS `c_wallet`;
+CREATE TABLE `c_wallet`  (
+  `cid` int(11) NOT NULL,
+  `type` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '钱包类型 见枚举 EOS ETH USDT BTH ',
+  `addr` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '钱包地址',
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件路径 ecr20的钱包路径',
+  `label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '标签 修改为ecr20的钱包地址',
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `pubkey` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '公钥',
+  `prikey` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '私钥',
+  `balance` decimal(24, 8) NULL DEFAULT 0.00000000 COMMENT '钱包余额',
+  `zcbalance` decimal(24, 8) NULL DEFAULT 0.00000000 COMMENT '逐仓金额',
+  `nodeid` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '1' COMMENT '节点编号',
+  `qrurl` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '二维码',
+  `ecrqr` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'erc20协议二维码',
+  `version` int(11) NULL DEFAULT 1 COMMENT '版本号',
+  PRIMARY KEY (`cid`, `type`) USING BTREE,
+  INDEX `cid`(`cid`) USING BTREE,
+  INDEX `type`(`type`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会员钱包信息' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for c_zc_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `c_zc_detail`;
+CREATE TABLE `c_zc_detail`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `paycode` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '流水号',
+  `cid` int(11) NULL DEFAULT NULL COMMENT '会员编号',
+  `typeid` int(11) NULL DEFAULT NULL COMMENT '操作类型见枚举类',
+  `isout` int(1) NULL DEFAULT NULL COMMENT '1收入 0支出',
+  `original` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '上一次值',
+  `cost` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '本次操作值',
+  `last` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '最后值',
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updatetime` datetime(0) NULL DEFAULT NULL COMMENT '修改时间 用来做乐观锁',
+  `targetid` int(11) NULL DEFAULT NULL COMMENT '目标用户id',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '逐仓明细表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for c_zc_order
+-- ----------------------------
+DROP TABLE IF EXISTS `c_zc_order`;
+CREATE TABLE `c_zc_order`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NULL DEFAULT NULL COMMENT '用户id',
+  `ordercode` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '订单号',
+  `type` int(1) NULL DEFAULT 1 COMMENT '1开多 2开空',
+  `capital` decimal(18, 6) NULL DEFAULT 0.000000 COMMENT '投入本金',
+  `tax` decimal(18, 6) NULL DEFAULT 0.000000 COMMENT '手续费',
+  `buyprice` decimal(18, 6) NULL DEFAULT 0.000000 COMMENT '买入价',
+  `stopprice` decimal(18, 6) NULL DEFAULT 0.000000 COMMENT '平仓价',
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '开仓时间',
+  `coin` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '货币对应coins表symbol字段',
+  `stoptime` datetime(0) NULL DEFAULT NULL COMMENT '平仓时间',
+  `reward` decimal(18, 6) NULL DEFAULT 0.000000 COMMENT '实际收益 可以是负数 包含本金',
+  `zcprice` decimal(18, 4) NULL DEFAULT NULL COMMENT '逐仓理论爆仓金额',
+  `zcscale` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '逐仓理论奖励倍数',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '描述',
+  `stopwin` decimal(18, 6) NULL DEFAULT 0.000000 COMMENT '止盈',
+  `stopfail` decimal(18, 6) NULL DEFAULT 0.000000 COMMENT '止损',
+  `status` int(1) NULL DEFAULT 1 COMMENT '1逐仓中 2已平仓',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for coins
+-- ----------------------------
+DROP TABLE IF EXISTS `coins`;
+CREATE TABLE `coins`  (
+  `coin` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '货币名称',
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '名称',
+  `symbol` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '市场id，交易对',
+  `zbdepth` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '中币合并深度',
+  `openval` decimal(20, 8) NULL DEFAULT 0.00000000 COMMENT '上一次开盘价',
+  `updatetime` datetime(0) NULL DEFAULT NULL,
+  `beginspread` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '开始点差比例',
+  `stopspread` decimal(18, 4) NULL DEFAULT 0.0000 COMMENT '截止点差比例',
+  `sort` int(11) NULL DEFAULT 1,
+  `type` int(11) NULL DEFAULT 0 COMMENT '-1未开启逐仓 0开启逐仓',
+  `zcstopscale` decimal(18, 4) NULL DEFAULT 30.0000 COMMENT '逐仓自动平仓usdt金额',
+  `zcscale` decimal(18, 4) NULL DEFAULT 1.0000 COMMENT '逐仓奖励倍数',
+  `zctax` decimal(18, 5) NULL DEFAULT 0.10000 COMMENT '逐仓开仓手续费',
+  PRIMARY KEY (`coin`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of coins
+-- ----------------------------
+INSERT INTO `coins` VALUES ('BCH', 'BCH/USDT', 'bch_usdt', '0.0001', 205.95000000, '2019-12-13 00:01:01', 0.0010, 0.0015, 2, -1, 30.0000, 1.0000, 0.10000);
+INSERT INTO `coins` VALUES ('BTC', 'BTC/USDT', 'btc_usdt', '0.01', 7191.03000000, '2019-12-13 00:01:00', 0.0000, 0.0000, 1, 0, 30.0000, 1.0000, 0.10000);
+INSERT INTO `coins` VALUES ('EOS', 'EOS/USDT', 'eos_usdt', '0.0001', 2.55220000, '2019-12-13 00:01:02', 0.0010, 0.0015, 2, -1, 30.0000, 1.0000, 0.10000);
+INSERT INTO `coins` VALUES ('ETC', 'ETC/USDT', 'etc_usdt', '0.0001', 3.79550000, '2019-12-13 00:01:07', 0.0010, 0.0015, 6, -1, 30.0000, 1.0000, 0.10000);
+INSERT INTO `coins` VALUES ('ETH', 'ETH/USDT', 'eth_usdt', '0.01', 143.87000000, '2019-12-13 00:01:03', 0.0010, 0.0015, 3, -1, 30.0000, 1.0000, 0.10000);
+INSERT INTO `coins` VALUES ('LTC', 'LTC/USDT', 'ltc_usdt', '0.001', 43.37000000, '2019-12-13 00:01:04', 0.0010, 0.0015, 4, -1, 30.0000, 1.0000, 0.10000);
+INSERT INTO `coins` VALUES ('TRX', 'TRX/USDT', 'trx_usdt', '0.0001', 0.01369300, '2019-12-13 00:01:08', 0.0010, 0.0015, 7, -1, 30.0000, 1.0000, 0.10000);
+INSERT INTO `coins` VALUES ('XRP', 'XRP/USDT', 'xrp_usdt', '0.0001', 0.21980000, '2019-12-13 00:01:06', 0.0010, 0.0015, 5, -1, 30.0000, 1.0000, 0.10000);
+
+-- ----------------------------
+-- Table structure for mail_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `mail_logs`;
+CREATE TABLE `mail_logs`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '发送方',
+  `params` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '参数',
+  `type` int(11) NULL DEFAULT 1 COMMENT '1验证码 2推广邮件',
+  `content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `status` int(11) NULL DEFAULT 0 COMMENT '0未使用 1已使用 2已过期',
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of mail_logs
+-- ----------------------------
+INSERT INTO `mail_logs` VALUES (1, '18617296801', '614966', 1, NULL, 0, '2019-12-13 16:41:45');
+INSERT INTO `mail_logs` VALUES (2, '18617296801', '481885', 1, NULL, 0, '2019-12-13 16:43:51');
+
+-- ----------------------------
+-- Table structure for mt_clique_menus
+-- ----------------------------
+DROP TABLE IF EXISTS `mt_clique_menus`;
+CREATE TABLE `mt_clique_menus`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parentid` int(11) NULL DEFAULT NULL COMMENT '父级id  0表示父级',
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '菜单名称',
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '菜单url',
+  `status` smallint(1) NULL DEFAULT 0 COMMENT '0有效  -1无效',
+  `icon` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图标',
+  `sort` int(11) NULL DEFAULT 1 COMMENT '排序  从大到小降序',
+  `type` int(1) NULL DEFAULT 1 COMMENT '1菜单  2操作按钮',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 115 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '集团菜单表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of mt_clique_menus
+-- ----------------------------
+INSERT INTO `mt_clique_menus` VALUES (1, 0, '权限管理', 'javaScript:;', 0, '&#xe62e;', 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (3, 1, '角色管理', '/role/showRoleList', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (4, 1, '操作员管理', '/role/showUserList', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (5, 1, '密码修改', '/base/showEditPassword', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (6, 1, '新增/编辑角色', '/role/showEditRole', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (7, 1, '开启/关闭角色', '/role/updateRolestatus', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (8, 1, '开启/关闭操作员', '/role/updateUserstatus', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (9, 1, '重置操作员密码', '/role/restUserPwd', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (10, 1, '新增/编辑操作员', '/role/showEditUser', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (11, 0, '会员管理', 'javaScript:;', 0, '&#xe62e;', 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (12, 11, '会员列表', '/customer/showCustomerList', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (13, 11, '冻结会员', '/customer/updateCusStatus', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (14, 11, '重置密码', '/customer/resetPwd', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (16, 11, '充值/扣除', '/customer/showRecharge', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (18, 0, '资讯/协议', 'javaScript:;', 0, '&#xe62e;', 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (19, 18, '资讯管理', '/news/showNotices', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (20, 0, 'Banner管理', 'javaScript:;', 0, '&#xe62e;', 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (21, 20, 'Banner设置', '/banner/showBanners', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (22, 20, '删除Banner', '/banner/deleteBanner', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (23, 20, '新增/编辑Banner', '/banner/showBannerEdit', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (24, 0, '参数配置', 'javaScript:;', 0, '&#xe62e;', 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (25, 24, '系统参数', '/params/showParams', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (26, 24, '编辑系统参数', '/params/showEditparam', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (29, 18, '删除资讯', '/news/deleteNew', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (30, 18, '新增/编辑资讯', '/news/showNewEdit', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (31, 0, '提币管理', 'javaScript:;', 0, '&#xe62e;', 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (43, 24, '平台提币', '/plat/cashplat', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (51, 11, '编辑资料', '/customer/showEditcus', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (52, 11, '会员钱包', '/customer/showWallet', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (54, 11, '实名审核', '/customer/updateCusAuthflag', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (55, 11, 'USDT充值记录', '/customer/showUsdtRechargeList', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (56, 11, 'USDT账单', '/customer/showMoneyList', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (57, 24, '货币列表', '/params/showCoins', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (58, 24, '编辑货币', '/params/showEditCoin', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (59, 0, '合约交易', 'javaScript:;', 0, '&#xe62e;', 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (60, 59, '合约列表', '/order/showOrderList', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (61, 11, '添加业务员', '/customer/showSalesman', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (62, 59, '合约报表', '/order/showReport', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (63, 11, '会员报表', '/customer/showCusReport', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (64, 59, '委托订单', '/order/showEntrustList', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (65, 11, '业务员伞下业绩', '/customer/showUnder', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (66, 59, '逐仓列表', '/order/showZcList', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (67, 11, 'ETH代币充值记录', '/customer/showECR20Logs', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (111, 31, 'USDT提币列表', '/cash/showCashUsdtlist', 0, NULL, 1, 1);
+INSERT INTO `mt_clique_menus` VALUES (112, 31, 'USDT驳回', '/cash/handlerefundUsdtCash', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (113, 31, 'USDT审核', '/cash/showUsdtCheck', 0, NULL, 1, 2);
+INSERT INTO `mt_clique_menus` VALUES (114, 31, 'USDT标记提币正常', '/cash/dzUsdtSuccess', 0, NULL, 1, 2);
+
+-- ----------------------------
+-- Table structure for mt_clique_roles
+-- ----------------------------
+DROP TABLE IF EXISTS `mt_clique_roles`;
+CREATE TABLE `mt_clique_roles`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '角色名称',
+  `menuids` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '角色菜单权限逗号分隔字符串',
+  `status` smallint(1) NULL DEFAULT 0 COMMENT '0有效 -1无效',
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `type` int(1) NULL DEFAULT 1 COMMENT '1总平台 2国家区域  3地区分公司 4国家',
+  `targetid` int(11) NULL DEFAULT NULL COMMENT '目标id',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '集团角色表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of mt_clique_roles
+-- ----------------------------
+INSERT INTO `mt_clique_roles` VALUES (1, '系统管理员', '67,66,65,64,63,111,112,113,114,51,52,10,54,11,55,12,56,13,57,14,58,59,16,18,19,1,3,4,5,6,7,8,9,60,61,62,20,21,22,23,24,25,26,29,30,31,43', 0, '2018-03-06 16:47:07', 1, NULL);
+INSERT INTO `mt_clique_roles` VALUES (13, '子公司', '66,67,111,52,31,54,11,55,12,56,59,16,1,5,60,61,63,64,65', 0, '2019-07-17 18:36:45', 1, NULL);
+
+-- ----------------------------
+-- Table structure for mt_clique_user
+-- ----------------------------
+DROP TABLE IF EXISTS `mt_clique_user`;
+CREATE TABLE `mt_clique_user`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `login` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '登录',
+  `targetid` int(11) NULL DEFAULT NULL COMMENT '目标id',
+  `type` int(11) NULL DEFAULT 1 COMMENT '1总平台 2国家区域  3地区分公司 4国家',
+  `password` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '名称',
+  `phone` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系电话',
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `roleid` int(11) NULL DEFAULT NULL,
+  `headurl` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '头像',
+  `status` int(2) NULL DEFAULT 0 COMMENT '0有效 -1无效',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '集团操作员表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of mt_clique_user
+-- ----------------------------
+INSERT INTO `mt_clique_user` VALUES (1, 'admin', NULL, 1, 'f59bd65f7edafb087a81d4dca06c4910', '系统管理员', '18684608012', '2018-05-16 10:48:06', 1, '/images/head_default.png', 0);
+
+-- ----------------------------
+-- Table structure for sys_banner
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_banner`;
+CREATE TABLE `sys_banner`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `imgurl` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图片',
+  `noticeid` int(11) NULL DEFAULT NULL COMMENT '新闻id',
+  `position` int(1) NULL DEFAULT 1 COMMENT '1.banner  2中层',
+  `type` int(11) NULL DEFAULT 1 COMMENT '1APP 2PC',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_banner
+-- ----------------------------
+INSERT INTO `sys_banner` VALUES (2, 'http://img.sanxininfo.com:8999//files/banner/20191110/1132210.png', 1, 2, 1);
+INSERT INTO `sys_banner` VALUES (6, 'http://img.sanxininfo.com:8999//files/banner/20191110/1133153.png', NULL, 1, 1);
+INSERT INTO `sys_banner` VALUES (7, 'http://img.sanxininfo.com:8999//files/banner/20191110/11342462.png', NULL, 1, 1);
+INSERT INTO `sys_banner` VALUES (8, 'http://img.sanxininfo.com:8999//files/banner/20191110/11353812.png', NULL, 1, 1);
+
+-- ----------------------------
+-- Table structure for sys_infos
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_infos`;
+CREATE TABLE `sys_infos`  (
+  `keyval` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `vals` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`keyval`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统配置' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_infos
+-- ----------------------------
+INSERT INTO `sys_infos` VALUES ('about_us', 'G币coin隶属于GB Grout旗下，于2018年4月在新加坡创立，是全球著名的数字资产金融服务平台，面向全球提供24小时专业数字资产交易服务。截至目前，累计注册用户超58万，全球成交额占有率达7.18%。G币拥有世界一流的金融团队，团队成员包括来自国际顶级密码学、金融投资、社交媒体及电子游戏等各领域专家优秀人才，旨在打造国际最专业化、最安全的新型交易所。', '关于我们');
+INSERT INTO `sys_infos` VALUES ('android_url', 'https://fir.vip/d/5yre5', '安卓下载地址');
+INSERT INTO `sys_infos` VALUES ('appdownload_url', 'http://gbapp.ykjfhk.cn/downLoad', 'APP下载地址');
+INSERT INTO `sys_infos` VALUES ('app_host', 'http://gbapp.ykjfhk.cn/', 'APP域名');
+INSERT INTO `sys_infos` VALUES ('app_version', '1.0.9', 'APP版本号');
+INSERT INTO `sys_infos` VALUES ('contract_auto_out', '0.7', '自动爆仓比例');
+INSERT INTO `sys_infos` VALUES ('contract_down', '0.0008', '合约开空手续费比例');
+INSERT INTO `sys_infos` VALUES ('contract_up', '0.0008', '合约开多手续费比例');
+INSERT INTO `sys_infos` VALUES ('desc_val', '版本更新', 'APP提示');
+INSERT INTO `sys_infos` VALUES ('ios_url', 'https://fir.vip/d/5yt95', 'IOS下载地址');
+INSERT INTO `sys_infos` VALUES ('open_push', '1', '是否开启推荐奖励0开启，-1关闭');
+INSERT INTO `sys_infos` VALUES ('out_scale', '0.0008', '平仓手续费');
+INSERT INTO `sys_infos` VALUES ('push_scale', '0.01', '推荐奖励比例');
+INSERT INTO `sys_infos` VALUES ('service_phone', 'GBcoin@126.com', '联系客服');
+INSERT INTO `sys_infos` VALUES ('usdt_cash_max', '50000', 'USDT最高提币数量');
+INSERT INTO `sys_infos` VALUES ('usdt_cash_min', '200', 'USDT最低提现数量');
+INSERT INTO `sys_infos` VALUES ('usdt_cash_scale', '10', 'USDT提币手续费数量');
+INSERT INTO `sys_infos` VALUES ('zc_tax', '0.1', '逐仓手续费');
+
+-- ----------------------------
+-- Table structure for sys_notice
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_notice`;
+CREATE TABLE `sys_notice`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `descval` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `imgurl` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '封面',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP,
+  `type` int(11) NULL DEFAULT 1 COMMENT '1主页显示公告 ，2关于我们',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of sys_notice
+-- ----------------------------
+INSERT INTO `sys_notice` VALUES (11, 'G币全球数字资产交易平台', 'G币coin隶属于GB Grout旗下，于2018年4月在新加坡创立，是全球著名的数字资产金融服务平台，面向全球提供24小时专业数字资产交易服务。截至目前，累计注册用户超58万，全球成交额占有率达7.18%。G币拥有世界一流的金融团队，团队成员包括来自国际顶级密码学、金融投资、社交媒体及电子游戏等各领域专家优秀人才，旨在打造国际最专业化、最安全的新型交易所。', 'http://img.sanxininfo.com:8999//files/notice/20191114/43916169.png', '<p><span style=\"font-size:12px\">资本支持</span></p><p><span style=\"font-size:12px\">共识实验室&nbsp;&nbsp;&nbsp; 科银资本（CollinStar） CoinNess</span></p><p><span style=\"font-size:12px\">安全防护</span></p><p><span style=\"font-size:12px\">安全底层架构（多层防御系统、银行级别SSL安全链接）</span></p><p><span style=\"font-size:12px\">多维安全风控（与数家顶级第三方安全机构达成战略合作）</span></p><p><span style=\"font-size:12px\">资产实时监控（内置DPI主动防御系统 自主研发钱包警报器）</span></p><p><span style=\"font-size:12px\">交易深度</span></p><p><span style=\"font-size:12px\">海量优质币种</span></p><p><span style=\"font-size:12px\">百万级撮单引擎</span></p><p><span style=\"font-size:12px\">BTC正向合约24H成交额高达14.8亿</span></p><p><span style=\"font-size:12px\">多元化交易产品</span></p><p><span style=\"font-size:12px\">逐仓交易&nbsp; 全仓交易&nbsp; </span></p><p><span style=\"font-size:12px\">全方位客户服务</span></p><p><span style=\"font-size:12px\">极速充提币</span></p><p><span style=\"font-size:12px\">全球战略布局</span></p><p><span style=\"font-size:12px\">2019年初，G币coin开启全球战略化布局，现已成立北美站及韩国站运营中心，未来将持续深耕全球化用户拓展与服务，旨在为全球用户提供无差别优质金融服务。</span></p><p><span style=\"font-size:12px\">资深数字金融基因</span></p><p><span style=\"font-size:12px\">数字资产金融创新是我们的制胜基因，G币coin汇聚了金融领域资深背景的投资专家、风控专家、投研专家，其核心金融团队从业经历平均超过10年以上，拥有行业独一无二的数字资产金融评估，风控管理与运营体系。</span></p><p><span style=\"font-size:12px\">全球数字资产运营</span></p><p><span style=\"font-size:12px\">基于新一代数字资产交易平台，为用户提供全球海量的数字资产交易服务，包含比特币、以太币、莱特币及丰富的数字资产，同时G币coin还将为用户提供创新的数字资产价值管理和金融增值服务。</span></p><p><span style=\"font-size:12px\">顶级数字技术引擎</span></p><p><span style=\"font-size:12px\">G币coin拥有数字金融领域一流的多元化研发团队，以“金融+技术+安全”构成的三角研发体系支持打造出了数字资产领域独特的GBCOIN FTSD区块链技术驱动引擎。在为用户提供顶级技术及产品体验的同时，G币coin成为了行业少数以区块链技术、数字资产金融创新驱动的企业之一。</span></p><p style=\"line-height: normal; font-size: 13px; margin-top: 0px; margin-bottom: 0px; font-stretch: normal;\" helvetica=\"\"><br/></p>', '2019-11-14 16:29:58', 1);
+INSERT INTO `sys_notice` VALUES (12, 'G币全球数字资产交易平台交易规则', 'G币全球数字资产交易平台交易规则', 'http://img.sanxininfo.com:8999//files/notice/20191114/43956229.png', '<p>G币coin数字资产交易平台交易规则</p><p>交易币种</p><p>BTC</p><p>ETH</p><p>BCH</p><p>LTC</p><p>ETC</p><p>EOS</p><p>XRP</p><p>交易单位</p><p>1BTC/手</p><p>50ETH/手</p><p>50BCH/手</p><p>50LTC/手</p><p>500ETC/手</p><p>500EOS/手</p><p>5000XRP/手</p><p>交易杠杆</p><p>100倍</p><p>每手保证金+手续费</p><p>0.01BTC+Maker0.08% Taker0.08%</p><p>0.5ETH+M0.08%&nbsp; T0.08%</p><p>0.5BCH +M0.08%&nbsp; T0.08%</p><p>0.5LTC +M0.08%&nbsp; T0.08%</p><p>5ETC +M0.08%&nbsp; T0.08%</p><p>5EOS +M0.08%&nbsp; T0.08%</p><p>50XRP +M0.08%&nbsp; T0.08% &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p><p><span style=\"display: inline !important; float: none; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; word-spacing: 0px;\"> 逐仓的收费标准：保证金的10% &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span></p><p><span style=\"background-color: rgb(255, 255, 255);\">逐仓<span style=\"text-align: left; color: rgb(0, 0, 0); text-transform: none; text-indent: 0px; letter-spacing: normal; font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; text-decoration: none; word-spacing: 0px; display: inline !important; orphans: 2; float: none; -webkit-text-stroke-width: 0px;\">交易规则：30美金止盈止损</span></span></p><p><span style=\"background-color: rgb(255, 255, 255);\"></span><span style=\"background-color: rgb(255, 255, 255);\"></span>点差&nbsp; 除开BTC没有差点，其他币种点差万分之十<br/></p><p>占用保证金</p><p>占用保证金=每手保证金X手数</p><p>计价单位</p><p>USDT</p><p>交易机制</p><p>T+0双向交易</p><p>交易时间</p><p>7X24小时</p><p>充提币种</p><p>USDT(OMNI)，USDT(ERC20)。</p><p>强平规则</p><p>风险率低于30%系统会强行平仓，风险率=账户净值/占用保证金。</p><p>提币规则</p><p>提币时间为周一到周日9点到24点，单笔限额200USDT—5万USDT。 &nbsp; &nbsp; &nbsp;</p><p><br/></p>', '2019-11-14 16:30:38', 1);
+INSERT INTO `sys_notice` VALUES (13, 'G币coin于新加坡时间11月27日进行临时系统维护', '', NULL, '<p>G币coin于新加坡时间11月27日进行临时系统维护</p><p>尊敬的用户：</p><p>为了提升服务质量，进一步优化您的交易体验，G币coin于新加坡时间2019年11月27日11:00进行临时系统维护（预估时间60分钟）。维护期间，用户的下单，撤单等交易功能可能会受到影响。维护范围包括WEB、APP、PC客户端及M站。</p><p>维护期间，您可以正常访问G币coin且您的资产安全不受影响。请您耐心等待。</p><p>注意：系统维护完成的预估时间可能会提前或延迟，我们将在维护完成后第一时间发布公告通知。您也可以通过所在社群，咨询在线客服关注最新进展。</p><p>给您带来的不便，敬请谅解！感谢您的支持和理解！</p><p>G币coin<br/>2019年11月27日</p><p><br/></p>', '2019-11-27 11:43:06', 1);
+INSERT INTO `sys_notice` VALUES (14, 'G币coin ERC20提币维护通知', 'G币coin ERC20提币维护通知', NULL, '<p style=\"color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; margin-bottom: 5px; margin-left: 0px; margin-right: 0px; margin-top: 5px; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;\">G币coin ERC20提币维护通知</p><p style=\"color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; margin-bottom: 5px; margin-left: 0px; margin-right: 0px; margin-top: 5px; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;\">尊敬的用户：</p><p style=\"color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; margin-bottom: 5px; margin-left: 0px; margin-right: 0px; margin-top: 5px; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;\"><span style=\"display: inline !important; float: none; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; word-spacing: 0px;\">G币coin<font style=\"background-color: transparent;\">近期ERC20提币维护，暂时只支持omni提币,充值不受维护影响！</font></span></p><p style=\"color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; margin-bottom: 5px; margin-left: 0px; margin-right: 0px; margin-top: 5px; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;\"><span style=\"display: inline !important; float: none; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; word-spacing: 0px;\"><font style=\"background-color: transparent;\">给</font></span>您带来的不便，敬请谅解！感谢您的支持和理解！</p><p style=\"color: rgb(0, 0, 0); font-family: sans-serif; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; margin-bottom: 5px; margin-left: 0px; margin-right: 0px; margin-top: 5px; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;\">G币coin<br/>2019年11月30日</p><p><br/></p>', '2019-11-30 00:39:44', 1);
+
+-- ----------------------------
+-- Table structure for tx_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `tx_logs`;
+CREATE TABLE `tx_logs`  (
+  `hash` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `cid` int(11) NULL DEFAULT NULL,
+  `blocknumber` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `timestamp` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `nonce` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `blockhash` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `fromaddr` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `contractaddress` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `toaddr` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `valuecoin` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `tokenname` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `tokensymbol` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `tokendecimal` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `gaslimit` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `gasprice` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `gasused` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `status` int(11) NULL DEFAULT -1,
+  `tarhash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`hash`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for usdt_recharge_log
+-- ----------------------------
+DROP TABLE IF EXISTS `usdt_recharge_log`;
+CREATE TABLE `usdt_recharge_log`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NULL DEFAULT NULL,
+  `hash` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'hash单号',
+  `timestamp` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '时间戳',
+  `fromaddr` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '交易发起方地址',
+  `toaddr` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '交易收款方地址',
+  `valuecoin` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `gasused` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `status` int(1) NULL DEFAULT -1 COMMENT '-1未处理 0已处理',
+  `tarhash` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '处理转入到总平台单号',
+  `createtime` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `hash`(`hash`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- -------------------原始sql结束----------------------------

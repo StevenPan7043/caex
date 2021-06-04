@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper
+        namespace="com.pmzhongguo.ex.business.mapper.AccountHistoryMapper">
+    <select id="queryCWallentHistory" parameterType="java.util.Map"
+            resultType="com.pmzhongguo.ex.business.dto.AccountHistoryDto">
+        select m.id as member_id,m.m_name,m.m_nick_name as real_name,c.type as
+        currency,c.balance,c.zcbalance,c.record_date
+        from c_wallet_hitstory c
+        left join m_member m on c.cid = m.id
+        where 1=1
+        <if test="m_name != null and m_name != ''">
+            and m.m_name = #{m_name,jdbcType=VARCHAR}
+        </if>
+        <if test="currency != null and currency != ''">
+            and c.type = #{currency,jdbcType=VARCHAR}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and DATE_FORMAT(c.record_date,'%Y%m%d')&gt;=DATE_FORMAT(#{startTime,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and DATE_FORMAT(c.record_date,'%Y%m%d')&lt;=DATE_FORMAT(#{endTime,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="limit != null">
+            order by c.record_date desc
+            limit 0,#{limit,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="queryMAccountHistory" parameterType="java.util.Map"
+            resultType="com.pmzhongguo.ex.business.dto.AccountHistoryDto">
+        select m.id as member_id,m.m_name,m.m_nick_name as
+        real_name,o.currency,o.total_balance,o.frozen_balance,o.record_date
+        from m_account_hitstory o
+        left join m_member m on o.member_id = m.id
+        where 1=1
+        <if test="m_name != null and m_name != ''">
+            and m.m_name = #{m_name,jdbcType=VARCHAR}
+        </if>
+        <if test="currency != null and currency != ''">
+            and o.currency = #{currency,jdbcType=VARCHAR}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and DATE_FORMAT(o.record_date,'%Y%m%d')&gt;=DATE_FORMAT(#{startTime,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and DATE_FORMAT(o.record_date,'%Y%m%d')&lt;=DATE_FORMAT(#{endTime,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="limit != null">
+            order by o.record_date desc
+            limit 0,#{limit,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="queryOAccountHistory" parameterType="java.util.Map"
+            resultType="com.pmzhongguo.ex.business.dto.AccountHistoryDto">
+        select m.id as member_id,m.m_name,m.m_nick_name as
+        real_name,o.currency,o.total_balance,o.frozen_balance,o.record_date
+        from o_account_hitstory o
+        left join m_member m on o.member_id = m.id
+        where 1=1
+        <if test="m_name != null and m_name != ''">
+            and m.m_name = #{m_name,jdbcType=VARCHAR}
+        </if>
+        <if test="currency != null and currency != ''">
+            and o.currency = #{currency,jdbcType=VARCHAR}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and DATE_FORMAT(o.record_date,'%Y%m%d')&gt;=DATE_FORMAT(#{startTime,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and DATE_FORMAT(o.record_date,'%Y%m%d')&lt;=DATE_FORMAT(#{endTime,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="limit != null">
+            order by o.record_date desc
+            limit 0,#{limit,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="queryAllHistoryPage" parameterType="java.util.Map"
+            resultType="com.pmzhongguo.ex.business.dto.AccountHistoryDto">
+        SELECT member_id,m_name,real_name,currency,
+        ifnull(sum(balance+zcbalance+total_balance),0) as totalMoney,record_date
+        from(
+        select m.id as member_id,m.m_name,m.m_nick_name as real_name,c.type as currency,c.balance,c.zcbalance, cast(0 as
+        decimal(64,6))
+        total_balance,
+        cast(0 as decimal(64,6)) frozen_balance,c.record_date
+        from c_wallet_hitstory c
+        left join m_member m on c.cid = m.id
+        where 1=1
+        <if test="member_id != null and member_id != ''">
+            and m.id = #{member_id,jdbcType=INTEGER}
+        </if>
+        <if test="m_name != null and m_name != ''">
+            and m.m_name = #{m_name,jdbcType=VARCHAR}
+        </if>
+        <if test="currency != null and currency != ''">
+            and c.type = #{currency,jdbcType=VARCHAR}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and DATE_FORMAT(c.record_date,'%Y%m%d')&gt;=DATE_FORMAT(#{startTime,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and DATE_FORMAT(c.record_date,'%Y%m%d')&lt;=DATE_FORMAT(#{endTime,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        UNION ALL
+        select m.id as member_id,m.m_name,m.m_nick_name as real_name,o.currency, cast(0 as decimal(64,6)) balance,
+        cast(0 as decimal(64,6)) zcbalance,o.total_balance,o.frozen_balance,o.record_date
+        from m_account_hitstory o
+        left join m_member m on o.member_id = m.id
+        where 1=1
+        <if test="member_id != null and member_id != ''">
+            and m.id = #{member_id,jdbcType=INTEGER}
+        </if>
+        <if test="m_name != null and m_name != ''">
+            and m.m_name = #{m_name,jdbcType=VARCHAR}
+        </if>
+        <if test="currency != null and currency != ''">
+            and o.currency = #{currency,jdbcType=VARCHAR}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and DATE_FORMAT(o.record_date,'%Y%m%d')&gt;=DATE_FORMAT(#{startTime,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and DATE_FORMAT(o.record_date,'%Y%m%d')&lt;=DATE_FORMAT(#{endTime,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        UNION ALL
+        select m.id as member_id,m.m_name,m.m_nick_name as real_name,o.currency, cast(0 as decimal(64,6)) balance,
+        cast(0 as decimal(64,6)) zcbalance,o.total_balance,o.frozen_balance,o.record_date
+        from o_account_hitstory o
+        left join m_member m on o.member_id = m.id
+        where 1=1
+        <if test="member_id != null and member_id != ''">
+            and m.id = #{member_id,jdbcType=INTEGER}
+        </if>
+        <if test="m_name != null and m_name != ''">
+            and m.m_name = #{m_name,jdbcType=VARCHAR}
+        </if>
+        <if test="currency != null and currency != ''">
+            and o.currency = #{currency,jdbcType=VARCHAR}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and DATE_FORMAT(o.record_date,'%Y%m%d')&gt;=DATE_FORMAT(#{startTime,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and DATE_FORMAT(o.record_date,'%Y%m%d')&lt;=DATE_FORMAT(#{endTime,jdbcType=VARCHAR},'%Y%m%d')
+        </if>
+        ) as t
+        group by t.record_date,t.currency,t.member_id
+    </select>
+</mapper>

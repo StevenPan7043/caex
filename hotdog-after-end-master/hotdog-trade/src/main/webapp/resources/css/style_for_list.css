@@ -1,0 +1,143 @@
+﻿@charset "utf-8";
+body{font-size:12px;color:#111;background:#fff;font-family:Arial, "宋体", Verdana, Tahoma, Arial, Helvetica, sans-serif;text-align:left;}
+input,textarea,select{font-family:inherit;font-weight:inherit;font-size:1em;padding:0;margin:0;background:#fff;}
+select{border:1px solid #CCC;}
+.txt_readonly{background:#E0E0E0;}
+
+.dispatchLabel{font-size:15px;color:blue;vertical-align:middle;height:22px;line-height:22px;}
+
+.div_block .txt_choose{background:url(../images/inputmark.png) no-repeat 100% -500px;}
+.txt_choose{background:url(../images/inputmark.png) no-repeat 100% -500px;}
+.div_block .txt_readonly{background:#E0E0E0;}
+/* searchBox */
+.searchDiv,#searchDiv{
+	height: auto;
+	min-height: 32px;
+	padding: 2px;
+	margin: 2px;
+	background-color: #EFF5FE;
+	border: 1px solid #D6D6D6;
+	border-radius: 1px;
+}
+.searchField {
+    display: inline;
+    white-space: nowrap;
+    height: 32px;
+    line-height: 32px;
+    margin: 2px;
+}
+.searchField .searchFieldLbl {
+    display: inline;
+    padding-left: 3px;
+}
+.searchField .searchFieldCtr {
+    display: inline;
+    padding-right: 3px;
+    height: 32px;
+    line-height: 32px;
+}
+.searchField .searchFieldCtr input {
+    width: 120px;
+    height: 19px;
+    line-height: 19px;
+    border-radius: 1px;
+}
+
+.searchField .searchFieldCtr select {
+    height: 23px;
+    line-height: 23px;
+    border-radius: 1px;
+}
+.searchDiv .sel, .searchDiv .txt,.searchDiv .btn_a{vertical-align:middle;}
+.searchDiv .txt, .searchDiv .sel, #sBox2 .txt, #sBox2 .sel{height:20px;padding:1px 3px;font-size:13px;line-height:20px;color:#000000;background-color:#fff;border:1px solid #CCC;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);box-shadow:inset 0 1px 1px rgba(0,0,0,.075);-webkit-transition:border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}
+.searchDiv .txt_cal,.searchBox .txt_date,#sBox2 .txt_date,.searchBox .txt_datetime,#sBox2 .txt_datetime,.searchDiv .txt_datetime,.searchDiv .txt_date{width:93px;background:url(../images/inputmark.png) no-repeat 100% 0;}
+.div_block .txt_date,.div_block .txt_datetime,.searchDiv .txt_date,.searchDiv .txt_datetime{width:100px;background:url(../images/inputmark.png) no-repeat 100% 0;}
+.div_block .txt_datetime, .searchDiv .txt_datetime {width:120px;}
+	
+.div_block{padding:4px 0;overflow:hidden;zoom:1;}
+.div_block .label_block{float:left;width:110px;text-align:right;margin:0 0 0 0;font-size:13px;}
+.div_block .p_block{float:left;width:33%;line-height:19px;}
+
+.div_block .p_block_200{float:left;width:200px;line-height:19px;}
+.div_block .p_block_220{float:left;width:220px;line-height:19px;}
+.div_block .p_block_450{float:left;width:450px;line-height:19px;}
+.div_block .p_block_600{float:left;width:600px;line-height:19px;}
+
+.staticsInfo{position:relative;height:22px;padding:5px;margin:0;z-index:5;text-align:left; border-left: 1px solid #D6D6D6; border-right: 1px solid #D6D6D6;}
+
+.p_btn{padding:15px;text-align:center;}
+
+.hide{display:none;}
+
+.span_pass,.span_noPass,.span_noMatch{width:18px;height:25px;line-height:25px;background:url(../images/icon_recipe.png) no-repeat 1px 4px;display: -moz-inline-stack;display:inline-block;*display:inline;*zoom:1;vertical-align:middle;font-size:0em;text-indent:-999em;text-indent:0\9;}
+.span_noPass{background-position:1px -26px !important;color:#fff;cursor:hand;cursor:pointer;}
+.span_noMatch{background-position:1px -56px;color:#fff;cursor:hand;cursor:pointer;}
+
+.btn_a{
+    display: inline-block;
+    zoom: 1;
+    margin-left: 5px;
+    margin-top:-1px;
+    border: 1px solid #c1c1c1;
+    border-radius: 2px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+    background: #ffffff;
+    background: -moz-linear-gradient(top, #ffffff, #f4f4f4);
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#f4f4f4));
+    background: -o-linear-gradient(top, #ffffff, #f4f4f4);
+    background: -ms-linear-gradient(top, #ffffff 0%,#f4f4f4 100%);
+    background: linear-gradient(top, #ffffff, #f4f4f4);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f4f4f4');
+    font-size:14px;
+    font-weight: bold;
+    color: #555;
+    vertical-align: middle;
+    cursor: pointer;
+    overflow:hidden; 
+    width:70px; 
+    line-height:25px; 
+    cursor:pointer; 
+    position:relative; 
+}
+
+.jplayerbox{position:absolute;top:-999px;left:0px;width:30px;height:30px;overflow:hidden;}
+
+.l-grid-row-alt .l-grid-row-cell{background:#d1dee9;border-right:1px solid #a6b7bf;}
+.l-grid-body tr td{cursor:hand;cursor:pointer;}
+.l-grid-body tr.l-selected td{background:#efe976;border-right:1px solid #a6b7bf;cursor:hand;cursor:pointer;}
+.a_autoRefresh,.a_exportExcel{float:left;width:18px;height:18px;background:url(../images/dcIcon.png) no-repeat 0 0;text-indent:-999em;overflow:hidden;margin:1px 3px 0 12px;}
+a.a_autoRefresh{width:22px;height:22px;background-position:-60px 0;margin-top:-1px;}
+a.a_refreshStart{background-position:-90px 0;}
+
+/* table_each */
+.table_each{width:100%;border-collapse:collapse;}
+.table_each th{
+padding:0 8px;
+height:26px;line-height:26px;
+border-right:1px solid #c0ced9;
+border-left:none;
+font-weight:normal;
+background:#e3edf7 url(../images/gridheaderbg.jpg) repeat-x;}
+.table_each a{color:#1761b3;}
+.table_each a:hover{text-decoration:underline;}
+.table_each td{
+padding:4px 8px;
+border-right:1px solid #c0ced9;}
+.tr_even td{background:#ecf5ff;}
+.table_each th.bor_n,.table_each td.bor_n{border-right:none;}
+.table_each th.tac,.table_each td.tac{text-align:center;}
+.table_each td.td_op a,.table_each td.td_op span{margin:0 5px;}
+.border_a{border:1px solid #9cafc0;}
+.table_each .txt{border:1px solid #ccc;width:160px;height:19px;padding:0 3px;line-height:19px;}
+
+
+
+.header_info, .p_welcome, .p_header_quick, .sidebar .h2_title, .dl_sidenav dt, .dl_sidenav dd a, .talk_sidebox .p_tip, .h3_box_a1 .span_title, .h3_box_a1 .span_rize, .footer_talkbox, .btn_talk_send {
+    background: url("../images/sprite.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+.txt_requireDate, .div_block .txt_requireDate {
+    background: url("../images/inputmark.png") no-repeat scroll 100% -1500px rgba(0, 0, 0, 0);
+}
+.div_block .txt_date, .div_block .txt_datetime, .searchDiv .txt_date, .searchDiv .txt_datetime {
+    background: url("../images/inputmark.png") no-repeat scroll 100% 0 rgba(0, 0, 0, 0);
+}

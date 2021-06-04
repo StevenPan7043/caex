@@ -1,0 +1,149 @@
+server:
+  port: 8082
+
+zzex:
+  pool:
+    static: 30
+    market: 10
+    kline: 10
+  log:
+    static: 1
+  timeout:
+    static: 8
+  currencyMarketPricetUrl: https://peppa.me/m/currency/price
+
+dubbo:
+  application:
+    name: zzex-provider-dubbo
+  provider:
+    timeout: 120000
+    accepts: 3000
+    executes: 3000
+    filter: dubboLogFilter
+    retries: 2
+  registry:
+#    address: 8.210.95.98:2181
+    protocol: zookeeper
+  protocol:
+    name: dubbo
+    port: 20883
+    accesslog: false
+    threads: 1000
+    threadpool: cached
+    dispatcher: message
+  scan: com.pmzhongguo.zzexrpcprovider.service
+
+# 根节点名称
+group:
+  path: /quartzLocks
+# 子节点名称
+sub:
+  path: /quartzLocks/sub
+
+#数据源配置
+spring:
+  application:
+    name: zzex-provider
+  redis:
+    cluster:
+      nodes: '8.210.95.98:6379'
+      max-redirects: 3
+    host: '8.210.95.98'
+    port: 6379
+    password: 'zbankrun0527'
+    timeout: '5000'
+    #    conn-type: single # cluster/single
+    #    expireTime: 3600
+    # redis连接池, Lettuce 是基于 netty 的，netty 是一个多线程、事件驱动的 I/O 框架, 所以 Lettuce 可以帮助我们充分利用异步的优势。
+    lettuce:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 5
+        # 连接池中的最大空闲连接
+        max-idle: 50
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 1000
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: 10000
+  datasource:
+    url: 'jdbc:mysql://8.210.95.98:3306/zbank-test?characterEncoding=UTF-8'
+    username: 'Diff@pwcUAtqzp7oOfW0yUIm0DQ##'
+    password: 'Diff@rr*1KwFk7a9cOIpQUdvPp6QrT@AvhGHFQd*rBZXJv8@nqvC52XQBqg##'
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    platform: mysql
+    druid:
+      #用于采集web-jdbc关联监控的数据
+      web-stat-filter:
+        #添加过滤规则
+        url-pattern: '/*'
+        #排除一些不必要的url
+        exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*'
+        enabled: true
+        #配置profileEnable能够监控单个url调用的sql列表
+        profile-enable: true
+        #session统计功能
+        session-stat-enable: true
+        #session-stat-max-count: 2
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        #是否可以重置统计页面
+        reset-enable: true
+        #控制台管理用户
+        login-username: root
+        login-password: 123456
+      aop-patterns: com.example.demo.cn.service.*
+      #最大连接池数量,  推荐的公式：((core_count * 2) + effective_spindle_count)
+      max-active: 200
+      #最小连接池数量
+      min-idle: 10
+      initial-size: 10
+      max-wait: 60000
+      #销毁线程中如果检测到当前连接的最后活跃时间和当前时间的差值大于minEvictableIdleTimeMillis，则关闭当前连接。(毫秒) 当前值: 30分钟
+      minEvictableIdleTimeMillis: 1800000
+      #用来检测连接是否有效的sql，要求是一个查询语句。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会其作用
+      validationQuery: select 'x' from dual
+      #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 600000
+      #建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于 timeBetweenEvictionRunsMillis，
+      #执行validationQuery检测连接是否有效。
+      testWhileIdle: true
+      #申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+      testOnBorrow: false
+      #归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
+      testOnReturn: false
+      #是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭。
+      poolPreparedStatements: false
+      #要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。
+      maxOpenPreparedStatements: 0
+      connection-properties: "config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAI0/5xoPD11/XeqtJef25bnsMwxfxbRC6x+j4rInDKYLzajTu5wkd/5+fl5bMAfhB37n4hoAvqQpz3mFSkOc9ZMCAwEAAQ=="
+      filters: stat,wall,log4j,config
+    tomcat:
+      #对于长时间不使用的连接强制关闭
+      remove-abandoned: true
+      #超过30分钟开始关闭空闲连接3-
+      remove-abandoned-timeout: 1800
+      #将当前关闭动作记录到日志
+      log-abandoned: true
+
+#mybatis配置
+mybatis:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  check-config-location: true
+  executor-type: simple
+#分页插件
+pagehelper:
+  helper-dialect: 'mysql'
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+logging:
+  path: /mnt/logs/zzex-rpc-provider
+  level:
+    com.pmzhongguo: warn
+    org.apache: error
+    springfox: error
+  pattern:
+    console: "[%d{HH:mm:ss:SSS}] [%p] - %pid - %l - %m%n"

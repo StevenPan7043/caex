@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ex.business.mapper.CustomServiceMapper">
+
+	<select id="findMgrByPage" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT * FROM app_customer_service WHERE 1 = 1
+	</select>
+
+	<select id="findQrCodeInfoById" resultType="java.util.Map">
+		SELECT * FROM  app_customer_service WHERE id = #{id}
+	</select>
+
+	<insert id="insertQrCode">
+		INSERT INTO app_customer_service
+		(service_info,img_url,is_show)
+		VALUES
+		(#{service_info},#{img_url},#{is_show})
+	</insert>
+
+	<update id="updateQrCode">
+		UPDATE app_customer_service SET
+		service_info = #{service_info},
+		img_url = #{img_url},
+		is_show = #{is_show}
+		WHERE id = #{id};
+	</update>
+
+	<select id="findAllIsShow" resultType="java.util.Map">
+		SELECT img_url FROM app_customer_service
+		 WHERE is_show = 1;
+	</select>
+
+	<delete id="deleteById">
+		DELETE FROM app_customer_service
+		WHERE  id = #{id};
+	</delete>
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.DataMapper">
+	
+	<select id="listOrderPage" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.Order">
+		SELECT o.*, m.m_name  
+		FROM t_order_${table_name} o, m_member m 
+		where o.member_id = m.id  
+		<if test="null != o_status and  o_status !=''">
+    	 	AND o_status = #{o_status}
+    	</if>
+    	<if test="null != o_status_in and  o_status_in !=''">
+    	 	AND o_status in (${o_status_in})
+    	</if>
+    	<if test="null != o_type and  o_type !=''">
+    	 	AND o_type = #{o_type}
+    	</if>
+    	<if test="null != m_name and  m_name !=''">
+    	 	AND m_name = #{m_name}
+    	</if>
+		<if test="null != startDate and  startDate !=''">
+    	 	AND create_time >= #{startDate}
+    	</if>
+		<if test="null != endDate and  endDate !=''">
+			<![CDATA[
+    			 AND create_time < #{endDate}
+    		]]>
+    	</if>
+	</select>
+	
+	
+	<select id="listTradePage" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.Trade">
+		SELECT o.*, m.m_name 
+		FROM t_trade_${table_name} o, m_member m 
+		where o.member_id = m.id  
+    	<if test="null != m_name and  m_name !=''">
+    	 	AND m_name = #{m_name}
+    	</if>
+		<if test="null != startDate and  startDate !=''">
+    	 	AND done_time >= #{startDate}
+    	</if>
+		<if test="null != endDate and  endDate !=''">
+			<![CDATA[
+    			 AND done_time < #{endDate}
+    		]]>
+    	</if>
+    	<if test="null != t_type and  t_type !=''">
+    	 	AND t_type = #{t_type}
+    	</if>
+	</select>
+
+	<select id="listMemberTrade" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT count(1)
+		FROM t_trade_${table_name} o, m_member m
+		where o.member_id = m.id
+		<if test="null != m_name and  m_name !=''">
+			AND m_name = #{m_name}
+		</if>
+		<if test="null != t_type and  t_type !=''">
+			AND t_type = #{t_type}
+		</if>
+		<if test="null != startDate and  startDate !=''">
+			AND done_time >= #{startDate}
+		</if>
+		<if test="null != endDate and  endDate !=''">
+			<![CDATA[
+    			 AND done_time < #{endDate}
+    		]]>
+		</if>
+	</select>
+	
+	
+	<select id="listAddrPoolBalancePage" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT currency, COUNT(address) num FROM m_coin_recharge_addr_pool GROUP BY currency
+	</select>
+</mapper>

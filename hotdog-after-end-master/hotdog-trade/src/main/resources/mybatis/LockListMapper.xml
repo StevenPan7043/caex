@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.LockListMapper">
+
+	<select id="findByPage" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.LockList">
+		select * from m_lock_list m where m.lk_id=#{lk_id}
+	</select>
+	
+	<insert id="insert" parameterType="com.pmzhongguo.ex.business.entity.LockList" useGeneratedKeys="true" keyProperty="id">
+		insert into m_lock_list (member_id,currency_id,currency,locktime,amount,l_type,undata)
+		values (#{member_id},#{currency_id},#{currency},#{locktime},#{amount},#{l_type},#{undata})
+	</insert>
+
+	<select id="findByLockRechargeIdAndUndata" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.LockList">
+		SELECT *
+		FROM m_lock_list m
+		where m.lk_id=#{lk_id} and m.undata=#{undata}
+	</select>
+
+	<!-- 根据释放日期和状态-->
+	<select id="findAllLockAfterundataAndStatus" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.LockList">
+		SELECT *
+		FROM m_lock_list m
+		where l_status = 0 and #{undata} <![CDATA[ >= ]]> m.undata
+	</select>
+
+	<!-- 更新锁仓信息-->
+	<update id="updateById" parameterType="com.pmzhongguo.ex.business.entity.LockList">
+		UPDATE m_lock_list
+		<set>
+			<if test="l_status != null">l_status=#{l_status},</if>
+			<if test="amount != null">amount=#{amount},</if>
+		</set>
+		WHERE id=#{id};
+	</update>
+	<!-- 查询交易排名-->
+	<select id="findTopLockByMemberAndDate" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT sum(l.amount) AS amount ,INSERT (m.m_name, 4, 4, '****') AS account
+		FROM m_lock_list l
+		LEFT JOIN m_member m
+		ON  l.member_id = m.id
+		WHERE locktime <![CDATA[ >= ]]> #{startDate} AND locktime <![CDATA[ <= ]]> #{endtDate}
+		and l_type = 3 or l_type = 6
+		GROUP BY member_id
+		ORDER BY l.amount desc
+		LIMIT #{startSize},#{size}
+	</select>
+
+	<select id="findLockRecordByPage" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.LockList">
+		SELECT * FROM m_lock_list
+		<where>
+			<if test="member_id != null and member_id != ''"> and member_id = #{member_id} </if>
+			<if test="currency != null and currency != ''"> and currency = #{currency} </if>
+		</where>
+		order by id desc
+	</select>
+
+	<select id="findLockTotalAmountByMemberIdAndCurrency" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT sum(amount) as frozen_amount FROM m_lock_list where member_id = #{member_id} and l_status = 0
+	</select>
+
+
+
+	<!--后台管理端查询-->
+	<select id="findLocklistByPage" parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT m.*,mm.m_name as m_name
+		FROM m_lock_list m join m_member mm on m.member_id = mm.id
+		WHERE 1=1
+		<if test="m_name != null and m_name != ''"> and mm.m_name=#{m_name} </if>
+		<if test="startDate != null and startDate != '' and endtDate != null and endtDate != ''">
+			locktime <![CDATA[ >= ]]> #{startDate} AND locktime <![CDATA[ <= ]]> #{endtDate}
+		</if>
+		<if test="l_type != null and l_type != ''">and m.l_type=#{l_type} </if>
+		<if test="l_status != null and l_status != ''">and m.l_status=#{l_status} </if>
+	</select>
+
+
+
+
+
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>hotdog-chat</groupId>
+        <artifactId>hotdog-chat</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <groupId>hotdog-chat</groupId>
+    <artifactId>chat-websocket</artifactId>
+    <version>1.0.0</version>
+    <name>chat-websocket</name>
+    <description>websocket</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>hotdog-chat</groupId>
+            <artifactId>chat-common</artifactId>
+            <version>${common.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+    </build>
+
+</project>

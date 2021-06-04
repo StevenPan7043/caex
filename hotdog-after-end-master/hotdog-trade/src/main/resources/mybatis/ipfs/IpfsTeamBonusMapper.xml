@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ipfs.mapper.IpfsTeamBonusMapper">
+  <resultMap id="BaseResultMap" type="com.pmzhongguo.ipfs.entity.IpfsTeamBonus">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="Level" jdbcType="VARCHAR" property="level" />
+    <result column="team_bonus" jdbcType="DECIMAL" property="teamBonus" />
+    <result column="bonus_rate" jdbcType="DECIMAL" property="bonusRate" />
+    <result column="sub_bonus_base" jdbcType="DECIMAL" property="subBonusBase" />
+    <result column="sub_hashrate_base" jdbcType="DECIMAL" property="subHashrateBase" />
+    <result column="bonus_date" jdbcType="VARCHAR" property="bonusDate" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, member_id, Level, team_bonus, bonus_rate, sub_bonus_base, bonus_date, memo, sub_hashrate_base,
+    create_time
+  </sql>
+  <sql id="Where_List">
+    <where>
+      <!-- 需要的条件自己加 -->
+      <if test="id != null and id != ''">
+        id = #{id,jdbcType=INTEGER}
+      </if>
+
+      <if test="memberId != null and memberId != ''">
+        and member_id = #{memberId,jdbcType=INTEGER}
+      </if>
+
+      <if test="bonusDate != null and bonusDate != ''">
+        and bonus_date = #{bonusDate,jdbcType=VARCHAR}
+      </if>
+
+      <if test="level != null and level != ''">
+        Level = #{level,jdbcType=VARCHAR}
+      </if>
+
+      <!--      <if test="login_start != null and login_start != ''">-->
+      <!--        <![CDATA[and m.last_login_time >= #{login_start,jdbcType=VARCHAR}]]>-->
+      <!--      </if>-->
+      <!--      <if test="o_status_in != null and o_status_in != ''">and o.o_status IN (${o_status_in})</if>-->
+      <!--      <if test="constomerGradeArray!=null and constomerGradeArray.length!=0">-->
+      <!--        　　　　AND a.constomer_grade in-->
+      <!--        　　　　<foreach collection="constomerGradeArray" item="extraId" index="i" open="(" separator="," close=")">-->
+      <!--        　　　　　　#{extraId}-->
+      <!--        　　　　</foreach>-->
+      <!--        　　</if>-->
+    </where>
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ipfs_team_bonus
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ipfs_team_bonus
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pmzhongguo.ipfs.entity.IpfsTeamBonus">
+    <selectKey resultType="java.lang.Integer" keyProperty="id"
+               order="AFTER">
+      SELECT @@IDENTITY
+    </selectKey>
+    insert into ipfs_team_bonus (id, member_id, Level, 
+      team_bonus, bonus_rate, sub_bonus_base, sub_hashrate_base,
+      bonus_date, memo, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{level,jdbcType=VARCHAR}, 
+      #{teamBonus,jdbcType=DECIMAL}, #{bonusRate,jdbcType=DECIMAL}, #{subBonusBase,jdbcType=DECIMAL}, #{subHashrateBase,jdbcType=DECIMAL},
+    #{bonusDate,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, now()
+      )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pmzhongguo.ipfs.entity.IpfsTeamBonus">
+    update ipfs_team_bonus
+    <set>
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="level != null">
+        Level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="teamBonus != null">
+        team_bonus = #{teamBonus,jdbcType=DECIMAL},
+      </if>
+      <if test="bonusRate != null">
+        bonus_rate = #{bonusRate,jdbcType=DECIMAL},
+      </if>
+      <if test="subBonusBase != null">
+        sub_bonus_base = #{subBonusBase,jdbcType=DECIMAL},
+      </if>
+      <if test="subHashrateBase != null">
+        sub_hashrate_base = #{subHashrateBase,jdbcType=DECIMAL},
+      </if>
+      <if test="bonusDate != null">
+        bonus_date = #{bonusDate,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pmzhongguo.ipfs.entity.IpfsTeamBonus">
+    update ipfs_team_bonus
+    set member_id = #{memberId,jdbcType=INTEGER},
+      Level = #{level,jdbcType=VARCHAR},
+      team_bonus = #{teamBonus,jdbcType=DECIMAL},
+      bonus_rate = #{bonusRate,jdbcType=DECIMAL},
+      sub_bonus_base = #{subBonusBase,jdbcType=DECIMAL},
+      sub_hashrate_base = #{subHashrateBase,jdbcType=DECIMAL},
+      bonus_date = #{bonusDate,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="findByConditionPage"
+          parameterType="java.util.Map"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ipfs_team_bonus
+    <include refid="Where_List" />
+  </select>
+  <select id="findByCondition"
+          parameterType="java.util.Map"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ipfs_team_bonus
+    <include refid="Where_List" />
+  </select>
+</mapper>

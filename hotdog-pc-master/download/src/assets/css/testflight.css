@@ -1,0 +1,117 @@
+
+.page-testFlight-guide {
+    background-color: #2953ff;
+    background-image: url(../image/background.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    padding: 20px 25px;
+}
+
+.page-testFlight-guide h1 {
+    height: 100px;
+    font-size: 24px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+.page-testFlight-guide h1 img{
+    width: 60px;
+    margin-right: 10px;
+}
+
+.page-testFlight-guide>p {
+    font-size: 14px;
+    color: #fff;
+    position: relative;
+    padding-left: 30px;
+    line-height: 20px
+}
+
+.page-testFlight-guide>p:after {
+    content: "***";
+    position: absolute;
+    left: 0;
+    top: 2px
+}
+
+.page-testFlight-guide dl dd {
+    text-align: center;
+    background: #fff;
+    border: 1px solid #979797;
+    border-radius: 15px;
+    margin-bottom: 27px;
+    margin-left: 0;
+    padding: 40px 30px 0
+}
+
+.page-testFlight-guide dl dd h2.list-title {
+    margin-bottom: 35px
+}
+
+.page-testFlight-guide dl dd h2.list-title span {
+    color: #1b6ade;
+    font-size: 24px;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 6px;
+}
+
+.page-testFlight-guide dl dd h2.list-title:before {
+    transform: rotate(180deg)
+}
+
+.page-testFlight-guide dl dd h2.list-title:after,.page-testFlight-guide dl dd h2.list-title:before {
+    vertical-align: middle;
+    display: inline-block;
+    background-image: url(../image/adlit.png);
+    background-repeat: no-repeat;
+    content: "";
+    padding-left: 33px;
+    height: 12px;
+    background-size: contain;
+    background-position: 100%
+}
+
+.page-testFlight-guide dl dd p {
+    font-size: 16px;
+    color: #0e1d33;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 26px;
+}
+
+.page-testFlight-guide dl dd p strong {
+    font-size: 17px
+}
+
+.page-testFlight-guide dl dd p.btm {
+    margin: 30px 0 40px
+}
+
+.page-testFlight-guide dl dd a {
+    display: inline-block;
+    width: 70%;
+    height: 50px;
+    line-height: 50px;
+    background: #409eff;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #fff;
+    text-align: center;
+    margin: 20px 0 40px;
+}
+
+.page-testFlight-guide dl dd img {
+    margin-top: 30px;
+    width: 100%
+}
+
+.page-testFlight-guide .buttonq{
+    display: block;
+    width: 70%;
+    margin: 15px auto;
+    border-radius: 7px;
+    background: #409eff;
+    border-color: #409eff;
+  }

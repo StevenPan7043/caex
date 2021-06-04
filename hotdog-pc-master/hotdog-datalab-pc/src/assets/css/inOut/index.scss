@@ -1,0 +1,45 @@
+.in-out {
+    width: 100%;
+    background-color: #f2f6f9;
+    .in-out-wrap {
+        width: 1200px;
+        margin: 0 auto;
+        padding: 20px 0 60px 0;
+        .data-box {
+            margin-top: 20px;
+            height: 700px;
+            width: 1200px;
+            background-color: #fff;
+            .content {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                .trade-coin {
+                    margin-right: 29px;
+                }
+                .coin-type {
+                    margin-right: 44px;
+                }
+                .id-search {
+                    margin-right: 29px;
+                }
+                .time {
+                    margin-right: 20px;
+                }
+            }
+            .table-box {
+                transform: translateY(49px);
+                box-sizing: border-box;
+                overflow: auto;
+                padding: 0 30px;
+                height: 578px;
+            }
+            .pagination {
+                transform: translateY(89px);
+                display: flex;
+                padding: 0 30px;
+                justify-content: flex-end;
+            }
+        }
+    }
+}

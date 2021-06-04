@@ -1,0 +1,1172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper
+	namespace="com.pmzhongguo.ex.business.mapper.MemberMapper">
+	<insert id="addMember"
+		parameterType="com.pmzhongguo.ex.business.entity.Member">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+		INSERT INTO m_member(m_name, sms_code, reg_time, last_login_ip,
+		last_login_time,area_code)
+		VALUES
+		(#{m_name}, #{sms_code}, #{reg_time}, #{last_login_ip}, #{reg_time},#{area_code})
+	</insert>
+
+	<update id="updateMember"
+		parameterType="com.pmzhongguo.ex.business.entity.Member">
+		UPDATE m_member SET
+		id = #{id}
+		<if test="m_nick_name != null and m_nick_name != ''">, m_nick_name = #{m_nick_name}</if>
+		<if test="m_pwd != null and m_pwd != ''">, m_pwd = #{m_pwd}</if>
+		<if test="last_mod_pwd_time != null and last_mod_pwd_time != ''">, last_mod_pwd_time = #{last_mod_pwd_time}</if>
+		<if test="sms_code != null and sms_code != ''">, sms_code = #{sms_code}</if>
+		<if test="sms_code_time != null and sms_code_time != ''">, sms_code_time = #{sms_code_time}</if>
+		<if test="auth_grade != null and auth_grade != ''">, auth_grade = #{auth_grade}</if>
+		<if test="m_status != null and m_status != ''">, m_status = #{m_status}</if>
+		<if test="api_status != null and api_status != ''">, api_status = #{api_status}</if>
+		<if test="last_login_ip != null and last_login_ip != ''">, last_login_ip = #{last_login_ip}</if>
+		<if test="last_login_time != null and last_login_time != ''">, last_login_time = #{last_login_time}</if>
+		<if test="m_security_pwd != null and m_security_pwd != ''">, m_security_pwd = #{m_security_pwd}</if>
+		<if test="introduce_m_id != null and introduce_m_id != ''">, introduce_m_id = #{introduce_m_id}</if>
+		<if test="invite_code != null and invite_code != ''">, invite_code = #{invite_code}</if>
+		<if test="google_auth_key != null and google_auth_key != ''">, google_auth_key = #{google_auth_key}</if>
+		<if test="trade_commission != null">, trade_commission = #{trade_commission}</if>
+		<if test="api_limit != null">, api_limit = #{api_limit}</if>
+		<if test="phone != null and phone != ''">, phone = #{phone}</if>
+		<if test="inter_standard != null and inter_standard != ''">, inter_standard = #{inter_standard}</if>
+		<if test="last_login_device != null and last_login_device != ''">, last_login_device = #{last_login_device}</if>
+		WHERE id=#{id}
+	</update>
+
+	<select id="listMemberPage" parameterType="java.util.Map"
+		resultType="java.util.HashMap">
+		SELECT m.*, CONCAT(IFNULL(i.family_name, ''), IFNULL(i.given_name,
+		'')) real_name, i.id_number FROM m_member m
+		LEFT JOIN m_auth_identity i ON m.id = i.id
+		WHERE m.id > 0
+		<if test="id != null and id != ''">and m.id = #{id} </if>
+		<if test="m_name != null and m_name != ''">and m_name = #{m_name} </if>
+		<if test="auth_grade != null and auth_grade != ''">and auth_grade = #{auth_grade} </if>
+		<if test="m_status != null and m_status != ''">and m_status = #{m_status} </if>
+		<if test="api_status != null and api_status != ''">and api_status = #{api_status} </if>
+		<if test="trade_commission != null and trade_commission != ''">and trade_commission = #{trade_commission} </if>
+		<if test="api_limit != null and api_limit != ''">and api_limit = #{api_limit} </if>
+		<if test="real_name != null and real_name != ''">
+			and (given_name like concat('%',#{real_name},'%') or
+			middle_name like concat('%',#{real_name},'%') or family_name like
+			concat('%',#{real_name},'%'))
+		</if>
+	</select>
+
+	<select id="getDemandLogByDemandId"
+		parameterType="java.lang.Integer"
+		resultType="com.pmzhongguo.ex.business.entity.DemandLog">
+		SELECT * FROM m_demand_log
+		WHERE demand_id = #{id}
+	</select>
+
+	<select id="listWaitUnFrozen"
+		resultType="com.pmzhongguo.ex.business.entity.ManFrozen">
+		<![CDATA[
+			SELECT id, member_id, currency, frozen_balance from m_man_frozen where f_status = 0 AND unfrozen_time < NOW()
+		]]>
+	</select>
+
+	<select id="listManFrozenPage"
+			resultType="java.util.HashMap">
+			SELECT m.m_name, f.* FROM m_man_frozen f,m_member m
+			WHERE f.member_id = m.id
+		<if test="member_id != null and member_id != ''">and member_id = #{member_id} </if>
+		<if test="id != null and id != ''" >and f.id = #{id} </if>
+		<if test="m_name != null and m_name != ''">and m_name = #{m_name} </if>
+		<if test="currency != null and currency != ''">and currency = #{currency} </if>
+		<if test="f_status != null and f_status != ''">and f_status = #{f_status} </if>
+		<if test="startDate != null and startDate != ''">and unfrozen_time >= #{startDate}</if>
+		<if test="endDate != null and endDate != ''">and  #{endDate} >= unfrozen_time </if>
+	</select>
+
+	<select id="getManFrozenById"
+			resultType="com.pmzhongguo.ex.business.entity.ManFrozen">
+			SELECT * FROM m_man_frozen
+			WHERE  id = #{id};
+	</select>
+
+	<select id="listAccounts" parameterType="java.lang.Integer"
+		resultType="com.pmzhongguo.ex.business.dto.AccountDto">
+		SELECT m.*, (m.total_balance - m.frozen_balance) balance
+		FROM m_account m
+		WHERE m.member_id = #{id}
+	</select>
+
+
+	<select id="getMemberById" parameterType="java.lang.Integer"
+		resultType="com.pmzhongguo.ex.business.entity.Member">
+		SELECT m.* FROM m_member m
+		WHERE m.id = #{id}
+	</select>
+
+	<select id="listMemberWithdrawAddrById"
+			parameterType="java.lang.Integer" resultType="java.util.HashMap">
+		SELECT m.* FROM
+		m_coin_withdraw_addr m
+		WHERE c_status = 1
+		<if test="null != member_id and  member_id !=''">
+			and m.member_id =#{member_id}
+		</if>
+		<if test="null != currency and  currency !=''">
+			and m.currency = #{currency}
+		</if>
+		<if test="null != currency_chain_type and  currency_chain_type !=''">
+			and currency_chain_type = #{currency_chain_type}
+		</if>
+	</select>
+
+	<insert id="addCoinWithdrawAddr"
+		parameterType="com.pmzhongguo.ex.business.entity.CoinWithdrawAddr">
+		INSERT INTO m_coin_withdraw_addr(member_id, currency_id, currency,
+		addr_label, addr,currency_chain_type)
+		VALUES
+		(#{member_id}, #{currency_id}, #{currency}, #{addr_label}, #{addr}, #{currency_chain_type})
+	</insert>
+
+	<insert id="delCoinWithdrawAddr"
+		parameterType="com.pmzhongguo.ex.business.entity.CoinWithdrawAddr">
+		update m_coin_withdraw_addr set c_status = 2 where member_id = #{member_id}
+		and id = #{id}
+	</insert>
+
+	<select id="getMemberBy" parameterType="java.util.Map"
+		resultType="com.pmzhongguo.ex.business.entity.Member">
+		SELECT m.* FROM m_member m
+		WHERE 1 = 1
+		<if test="id != null and id != ''">and m.id = #{id} </if>
+		<if test="m_name != null and m_name != ''">and m.m_name = #{m_name} </if>
+		<if test="m_pwd != null and m_pwd != ''">and m.m_pwd = #{m_pwd} </if>
+	</select>
+
+	<select id="getApiToken" parameterType="java.util.Map"
+		resultType="com.pmzhongguo.ex.business.entity.RespApiToken">
+		SELECT
+		id,label,member_id,api_key,create_time,trusted_ip,api_privilege FROM
+		m_api_token t where t.member_id = #{member_id} and t.id = #{id}
+	</select>
+
+	<select id="getApiTokensInner" parameterType="int"
+		resultType="com.pmzhongguo.ex.business.entity.ApiToken">
+		SELECT * FROM m_api_token t where t.member_id =
+		#{_parameter} and t_status = 1
+	</select>
+
+	<select id="getApiTokenInner"
+		parameterType="com.pmzhongguo.ex.business.entity.ApiToken"
+		resultType="com.pmzhongguo.ex.business.entity.ApiToken">
+		SELECT * FROM m_api_token t where t.member_id =
+		#{member_id} and t.id = #{id} and t.t_status = 1
+	</select>
+
+	<select id="getApiTokens" parameterType="int"
+		resultType="com.pmzhongguo.ex.business.entity.RespApiToken">
+		SELECT
+		id,label,member_id,api_key,create_time,trusted_ip,api_privilege,api_limit
+		FROM m_api_token t where t.member_id = #{_parameter} and t_status = 1
+	</select>
+
+	<select id="getApiCount" parameterType="int" resultType="int">
+		SELECT
+		COUNT(1) FROM m_api_token WHERE member_id = #{member_id} and t_status
+		= 1
+	</select>
+
+	<insert id="addApiToken"
+		parameterType="com.pmzhongguo.ex.business.entity.ApiToken">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+		INSERT INTO
+		m_api_token(label,member_id,api_key,api_secret,create_time,trusted_ip,api_privilege,api_limit)
+		VALUES
+		(#{label},#{member_id},#{api_key},#{api_secret},#{create_time},#{trusted_ip},#{api_privilege},#{api_limit})
+	</insert>
+
+	<update id="updateApiToken"
+		parameterType="com.pmzhongguo.ex.business.entity.ApiToken">
+		UPDATE m_api_token SET
+		label = #{label},
+		trusted_ip = #{trusted_ip},
+		api_privilege =
+		#{api_privilege}
+		WHERE id=#{id} and member_id=#{member_id}
+	</update>
+
+	<update id="delApiToken" parameterType="java.util.Map">
+		UPDATE m_api_token SET
+		t_status = 0
+		WHERE id=#{id} and member_id=#{member_id}
+	</update>
+
+	<select id="getAccount" parameterType="java.util.Map"
+		resultType="com.pmzhongguo.ex.business.entity.Account">
+		SELECT m.*,(m.total_balance - m.frozen_balance) as
+		available_balance FROM m_account m WHERE member_id = #{member_id} and
+		currency = #{currency}
+	</select>
+
+	<select id="getOTCAccount" parameterType="java.util.Map"
+			resultType="com.pmzhongguo.ex.business.entity.Account">
+		SELECT m.*,(m.total_balance - m.frozen_balance) as
+		available_balance FROM o_account m WHERE member_id = #{member_id} and
+		currency = #{currency}
+	</select>
+	<update id="addFrozenBalance"
+		parameterType="com.pmzhongguo.ex.business.entity.Account">
+		UPDATE m_account SET
+		frozen_balance = frozen_balance + #{frozen_balance}
+		WHERE id=#{id}
+	</update>
+
+	<update id="reduceFrozenBalance"
+		parameterType="com.pmzhongguo.ex.business.entity.Account">
+		UPDATE m_account SET
+		total_balance = total_balance - #{frozen_balance},
+		frozen_balance = frozen_balance - #{frozen_balance}
+		WHERE id=#{id}
+	</update>
+
+	<update id="returnFrozenBalance"
+		parameterType="com.pmzhongguo.ex.business.entity.Account">
+		UPDATE m_account SET
+		frozen_balance = frozen_balance - #{frozen_balance}
+		WHERE id=#{id}
+	</update>
+
+	<insert id="addAccount"
+		parameterType="com.pmzhongguo.ex.business.entity.Account">
+		INSERT INTO m_account(member_id,currency,total_balance)
+		VALUES
+		(#{member_id},#{currency},#{total_balance})
+	</insert>
+
+	<update id="updateAccount"
+		parameterType="com.pmzhongguo.ex.business.entity.Account">
+		UPDATE m_account
+		<set>
+			<if test="total_balance != null">total_balance=#{total_balance},</if>
+			<if test="frozen_balance != null">frozen_balance=#{frozen_balance},</if>
+		</set>
+		WHERE id=#{id} and currency=#{currency}
+	</update>
+
+	<update id="addTotalBalance"
+		parameterType="com.pmzhongguo.ex.business.entity.Account">
+		UPDATE m_account SET
+		total_balance = total_balance + #{total_balance}
+		WHERE id=#{id}
+	</update>
+
+	<update id="batchAddZCTotalBalanceByMemberId"
+			parameterType="java.util.List">
+		UPDATE m_account SET
+		<foreach collection="list" item="item" index="index" separator=",">
+			total_balance = total_balance + #{item.return_commi_amount}
+			WHERE member_id=#{item.member_id} and currency = 'ZC'
+		</foreach>
+
+	</update>
+
+
+	<insert id="addCoinRecharge"
+		parameterType="com.pmzhongguo.ex.business.entity.CoinRecharge">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+		INSERT INTO
+		m_coin_recharge(member_id,currency_id,currency,r_amount,r_create_time,r_address,r_txid,r_confirmations,r_status,r_guiji)
+		VALUES
+		(#{member_id},#{currency_id},#{currency},#{r_amount},#{r_create_time},#{r_address},#{r_txid},#{r_confirmations},#{r_status},#{r_guiji})
+	</insert>
+
+	<update id="confrimCoinRecharge"
+		parameterType="com.pmzhongguo.ex.business.entity.CoinRecharge">
+		UPDATE m_coin_recharge SET
+		r_status = #{r_status},
+		reject_reason = #{reject_reason},
+		auditor = #{auditor},
+		audit_time = #{audit_time}
+		WHERE id=#{id}
+	</update>
+
+	<insert id="addCoinRechargeByMember"
+		parameterType="com.pmzhongguo.ex.business.entity.CoinRecharge" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		m_coin_recharge(member_id,currency_id,currency,r_amount,r_create_time,r_address,r_txid,r_confirmations,r_status,
+		r_from_address, r_certify_image, r_source, otc_ads_id,
+		otc_oppsite_currency, otc_price, otc_money, otc_owner_name,r_guiji)
+		VALUES
+		(#{member_id},#{currency_id},#{currency},#{r_amount},#{r_create_time},#{r_address},#{r_txid},#{r_confirmations},#{r_status},
+		#{r_from_address}, #{r_certify_image}, #{r_source}, #{otc_ads_id},
+		#{otc_oppsite_currency}, #{otc_price}, #{otc_money},
+		#{otc_owner_name},#{r_guiji})
+	</insert>
+
+	<insert id="addManFrozen"
+		parameterType="com.pmzhongguo.ex.business.entity.CoinRecharge">
+		INSERT INTO
+		m_man_frozen(member_id,currency_id,currency,frozen_balance,unfrozen_time)
+		VALUES
+		(#{member_id},#{currency_id},#{currency},#{r_amount},#{unfrozen_time})
+	</insert>
+
+
+	<insert id="addCoinRechargeAddrPool"
+		parameterType="com.pmzhongguo.ex.business.entity.CoinAddressInner">
+		INSERT INTO m_coin_recharge_addr_pool(currency, address)
+		VALUES
+		(#{currency},#{address})
+	</insert>
+
+	<insert id="addCoinWithdraw"
+		parameterType="com.pmzhongguo.ex.business.entity.CoinWithdraw" useGeneratedKeys="true" keyProperty="id">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+		INSERT INTO
+		m_coin_withdraw(member_id,currency_id,currency,w_amount,w_fee,w_create_time,member_coin_addr_id,member_coin_addr,member_coin_addr_label,oper_ip,w_status,
+		otc_ads_id, otc_oppsite_currency, otc_price, otc_volume,
+		otc_owner_name,w_txid,w_from_addr)
+		VALUES
+		(#{member_id},#{currency_id},#{currency},#{w_amount},#{w_fee},#{w_create_time},#{member_coin_addr_id},#{member_coin_addr},#{member_coin_addr_label},#{oper_ip},#{w_status},
+		#{otc_ads_id}, #{otc_oppsite_currency}, #{otc_price}, #{otc_volume},
+		#{otc_owner_name},#{w_txid},#{w_from_addr})
+	</insert>
+
+	<update id="updateCoinWithdraw"
+		parameterType="com.pmzhongguo.ex.business.entity.CoinWithdraw">
+		UPDATE m_coin_withdraw
+        <set>
+            <if test='w_status != null'>w_status=#{w_status},</if>
+            <if test='reject_reason != null and reject_reason != "" '>reject_reason=#{reject_reason},</if>
+            <if test='auditor != null and auditor != "" '>auditor=#{auditor},</if>
+            <if test='audit_time != null and audit_time != "" '>audit_time=#{audit_time},</if>
+            <if test='w_txid != null and w_txid != "" '>w_txid=#{w_txid},</if>
+            <if test='w_from_addr != null and w_from_addr != "" '>w_from_addr=#{w_from_addr},</if>
+        </set>
+		WHERE id=#{id}
+	</update>
+
+	<update id="updateTransferCoinWithdraw"
+			parameterType="com.pmzhongguo.ex.business.entity.CoinWithdraw">
+		UPDATE m_coin_withdraw SET
+		w_status = #{w_status},
+		reject_reason = #{reject_reason},
+		auditor=#{auditor},
+		audit_time=#{audit_time},
+		w_txid=#{w_txid},
+		transfer_no=#{transfer_no},
+		w_from_addr=#{w_from_addr}
+		WHERE id=#{id}
+	</update>
+	<select id="listCoinWithdrawPage" parameterType="java.util.Map"
+		resultType="com.pmzhongguo.ex.business.entity.CoinWithdraw">
+		SELECT w.*, m.m_name FROM m_coin_withdraw w, m_member m where
+		w.member_id = m.id
+
+		<if test="null != w_status and  w_status !=''">
+			AND w.w_status = #{w_status}
+		</if>
+		<if test="null != m_name and  m_name !=''">
+			AND m_name = #{m_name}
+		</if>
+		<if test="null != member_id and  member_id !=''">
+			AND member_id = #{member_id}
+		</if>
+		<if test="null != w_txid and  w_txid !=''">
+			AND w.w_txid = #{w_txid}
+		</if>
+		<if test="null != currency and  currency !=''">
+			AND w.currency = #{currency}
+		</if>
+		<if test="null != transfer_no and  transfer_no !=''">
+			AND w.transfer_no = #{transfer_no}
+		</if>
+		<if test="null != id and  id !=''">
+			AND w.id = #{id}
+		</if>
+        <if test="null != w_txid and  w_txid !=''">
+            <if test="w_txid == 1 ">
+                AND (w.w_txid = "" or w.w_txid is null )
+            </if>
+            <if test="w_txid == 2 ">
+                AND (w.w_txid != "" or w.w_txid is not null)
+            </if>
+        </if>
+		<if test="null != member_coin_addr and  member_coin_addr !=''">
+			AND w.member_coin_addr = #{member_coin_addr}
+		</if>
+		<if test="null != OTC and  OTC =='1'.toString()">
+			AND w.otc_ads_id > 0
+			<if test="null != otc_owner_id and  otc_owner_id != ''">
+				AND w.otc_ads_id in (select id from otc_ads where owner_id =
+				#{otc_owner_id})
+			</if>
+		</if>
+		<if test="null != OTC and  OTC =='0'.toString()">
+			AND w.otc_ads_id = 0
+		</if>
+		<if test="create_time_start != null and create_time_start != ''">
+			<![CDATA[and w.w_create_time >= #{create_time_start,jdbcType=VARCHAR}]]>
+		</if>
+		<if test="create_time_end != null and create_time_end != ''">
+			<![CDATA[and w.w_create_time <= #{create_time_end,jdbcType=VARCHAR}]]>
+		</if>
+	</select>
+
+    <select id="listCoinWithdrawMemberPage"
+            parameterType="java.util.Map"
+            resultType="com.pmzhongguo.ex.business.entity.CoinWithdraw">
+        SELECT mcw.*, INSERT (mm.m_name, 4, 4, '****') m_name
+        FROM m_coin_withdraw mcw
+        left join m_member mm on mm.id = mcw.member_id
+        where 1 = 1
+
+        <if test="null != member_id and  member_id !=''">
+            AND mcw.member_id = #{member_id}
+        </if>
+        <if test="null != m_name and  m_name !=''">
+            AND mm.m_name = #{m_name}
+        </if>
+        <if test="null != currency and  currency !=''">
+            AND mcw.currency = #{currency}
+        </if>
+        <if test="null != w_txid and  w_txid !=''">
+            AND mcw.w_txid = #{w_txid}
+        </if>
+        <if test="null != w_status and  w_status !=''">
+            AND mcw.w_status != #{w_status}
+        </if>
+        <if test="null != wStatus and  wStatus !=''">
+            AND mcw.w_status = #{wStatus}
+        </if>
+        <if test="null != startTime and  startTime !=''">
+            AND mcw.w_create_time &gt;= #{startTime}
+        </if>
+        <if test="null != endTime and  endTime !=''">
+            AND mcw.w_create_time &lt; #{endTime}
+        </if>
+    </select>
+
+    <select id="getSumAmountGroupByMemberId"
+            parameterType="java.util.Map"
+            resultType="com.pmzhongguo.ex.business.entity.CoinWithdraw">
+        SELECT member_id,currency,SUM(w_amount) w_amount FROM m_coin_withdraw WHERE 1 = 1
+        <if test="null != member_id and  member_id !=''">
+            AND member_id = #{member_id}
+        </if>
+        <if test="null != currency and  currency !=''">
+            AND currency in (${currency})
+        </if>
+        <if test="null != w_txid and  w_txid !=''">
+            AND w_txid = #{w_txid}
+        </if>
+        <if test="null != w_status and  w_status !=''">
+            AND w_status != #{w_status}
+        </if>
+        <if test="create_time_start != null and create_time_start != ''">
+            <![CDATA[AND w_create_time >= #{create_time_start,jdbcType=VARCHAR}]]>
+        </if>
+        <if test="create_time_end != null and create_time_end != ''">
+            <![CDATA[AND w_create_time <= #{create_time_end,jdbcType=VARCHAR}]]>
+        </if>
+        GROUP BY member_id,currency
+    </select>
+	<select id="getCoinWithdraw" parameterType="java.util.Map"
+		resultType="com.pmzhongguo.ex.business.entity.CoinWithdraw">
+		SELECT * FROM m_coin_withdraw t
+		WHERE member_id =
+		#{member_id}
+		and id = #{id}
+	</select>
+
+	<select id="getCoinWithdrawByID" parameterType="java.lang.Long"
+		resultType="com.pmzhongguo.ex.business.entity.CoinWithdraw">
+		SELECT * FROM m_coin_withdraw t
+		WHERE id = #{id}
+	</select>
+
+	<select id="getCoinRechargeByID" parameterType="java.lang.Long"
+		resultType="com.pmzhongguo.ex.business.entity.CoinRecharge">
+		SELECT * FROM m_coin_recharge t
+		WHERE id = #{id}
+	</select>
+
+
+	<select id="listCoinRechargePage" parameterType="java.util.Map"
+		resultType="com.pmzhongguo.ex.business.entity.CoinRecharge">
+		SELECT r.*, m.m_name FROM m_coin_recharge r, m_member m where
+		r.member_id = m.id
+		<if test="null != r_txid and  r_txid !=''">
+			AND r.r_txid = #{r_txid}
+		</if>
+		<if test="null != r_status and  r_status !=''">
+			AND r.r_status = #{r_status}
+		</if>
+		<if test="null != m_name and  m_name !=''">
+			AND m_name = #{m_name}
+		</if>
+		<if test="null != member_id and  member_id !=''">
+			AND member_id = #{member_id}
+		</if>
+		<if test="null != currency and  currency !=''">
+			AND r.currency = #{currency}
+		</if>
+		<if test="null != r_address and  r_address !=''">
+			AND r.r_address like CONCAT('%', #{r_address}, '%')
+		</if>
+		<!--热狗后台虚拟币充值来源查询新增正常充值查询条件用的sql，其余功能不需要用到-->
+		<if test="null != sourceAddress and  sourceAddress !=''">
+			AND r.r_address NOT IN ('INVITE_REWARD','MAN_RECHARGE','REG_REWARD','SYS_REWARD','TRADE_RANKING_REWARD','TRADE_RETURN_FEE_REWARD','wxpay','alipay','bank','RETURN_COMMISSION','IEO众筹','TRANSFER','DATALAB')
+		</if>
+		<if test="null != _r_address and  _r_address !=''">
+			AND r.r_address = #{_r_address}
+		</if>
+		<if test="null != OTC and  OTC =='1'.toString()">
+			AND r.otc_ads_id > 0
+			<if test="null != otc_owner_id and  otc_owner_id != ''">
+				AND r.otc_ads_id in (select id from otc_ads where owner_id =
+				#{otc_owner_id})
+			</if>
+		</if>
+		<if test="null != OTC and  OTC =='0'.toString()">
+			AND r.otc_ads_id = 0
+		</if>
+		<if test="null != r_gas and  r_gas !=''">
+			AND r.r_gas = #{r_gas}
+		</if>
+		<if test="null != r_guiji and  r_guiji !=''">
+			AND r.r_guiji = #{r_guiji}
+		</if>
+		<if test="create_time_start != null and create_time_start != ''">
+				<![CDATA[and r.r_create_time >= #{create_time_start,jdbcType=VARCHAR}]]>
+		</if>
+		<if test="create_time_end != null and create_time_end != ''">
+				<![CDATA[and r.r_create_time <= #{create_time_end,jdbcType=VARCHAR}]]>
+		</if>
+	</select>
+    <resultMap id="coinRechargeResultMap" type="com.pmzhongguo.ex.business.entity.CoinRecharge">
+        <result column="mName" property="m_name"/>
+    </resultMap>
+    <select id="listCoinRechargeMemberPage" parameterType="java.util.Map" resultMap="coinRechargeResultMap">
+        SELECT mcr.* ,INSERT (mm.m_name, 4, 4, '****') mName
+        FROM m_coin_recharge mcr
+        left join m_member mm on mm.id = mcr.member_id
+        where 1 = 1
+        <if test="null != member_id and  member_id !=''">
+            AND mcr.member_id = #{member_id}
+        </if>
+        <if test="null != currency and  currency !=''">
+            AND mcr.currency = #{currency}
+        </if>
+        <if test="null != r_status and  r_status !=''">
+            AND mcr.r_status = #{r_status}
+        </if>
+
+        <if test="null != r_source and  r_source !=''">
+            AND mcr.r_source = #{r_source}
+        </if>
+        <if test="null != rechargeType and  rechargeType !=''">
+            and locate(#{rechargeType},mcr.r_txid) = 0
+        </if>
+        <if test="null != startTime and  startTime !=''">
+            AND mcr.r_create_time &gt;= #{startTime}
+        </if>
+        <if test="null != endTime and  endTime !=''">
+            AND mcr.r_create_time &lt; #{endTime}
+        </if>
+    </select>
+
+	<select id="listRechargeAddr" parameterType="java.util.Map"
+			resultType="java.lang.String">
+		SELECT address FROM m_coin_recharge_addr a WHERE (member_id
+		= #{member_id} AND currency = #{currency} AND currency_chain_type = #{currency_chain_type} ) OR (EXISTS (SELECT 1 FROM
+		d_currency WHERE currency = #{currency} AND is_in_eth = 1  ) AND
+		member_id = #{member_id} AND currency='ETH' AND currency_chain_type = #{currency_chain_type})
+	</select>
+
+
+	<select id="getAssertsPage" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT m.id, m.m_name, a.currency, a.total_balance, a.frozen_balance,m.m_status,m.trade_commission
+		FROM m_account a, m_member m WHERE a.member_id = m.id
+		<if test="null != m_name and  m_name !=''">
+			AND m.m_name = #{m_name}
+		</if>
+		<if test="null != currency and  currency !=''">
+			AND a.currency = #{currency}
+		</if>
+		<if test="null != trade_commission and  trade_commission !=''">
+			AND trade_commission = #{trade_commission}
+		</if>
+		<if test="null != m_status and  m_status !=''">
+			AND m_status = #{m_status}
+		</if>
+	</select>
+	<select id="getAssertsOtcPage" parameterType="java.util.Map"
+			resultType="java.util.Map">
+		SELECT m.id, m.m_name, a.currency, a.total_balance, a.frozen_balance
+		FROM o_account a, m_member m WHERE a.member_id = m.id
+		<if test="null != m_name and  m_name !=''">
+			AND m.m_name = #{m_name}
+		</if>
+		<if test="null != currency and  currency !=''">
+			AND a.currency = #{currency}
+		</if>
+	</select>
+
+	<select id="getAssertsCollectionPage"
+		parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT m.id, m.m_name, GROUP_CONCAT(a.currency) currency,
+		GROUP_CONCAT(a.total_balance) total_balance,
+		GROUP_CONCAT(a.frozen_balance) frozen_balance FROM m_account a,
+		m_member m WHERE a.member_id = m.id
+		<if test="null != m_name and  m_name !=''">
+			AND m.m_name = #{m_name}
+		</if>
+		GROUP BY m.`id`, m.m_name
+	</select>
+
+
+
+	<select id="getAuthIdentityByID"
+		parameterType="java.lang.Integer"
+		resultType="com.pmzhongguo.ex.business.entity.AuthIdentity">
+		SELECT * FROM m_auth_identity t, m_member m where t.id =
+		m.id
+		AND t.id = #{id}
+	</select>
+
+	<select id="listAuthIdentityPage" parameterType="java.util.Map"
+		resultType="com.pmzhongguo.ex.business.entity.AuthIdentity">
+		SELECT w.*, m.m_name, m.last_login_ip, m.introduce_m_id FROM
+		m_auth_identity w, m_member m where w.id = m.id
+
+		<if test="null != id_status and  id_status !=''">
+			AND w.id_status = #{id_status}
+		</if>
+		<if test="null != m_name and  m_name !=''">
+			AND m_name = #{m_name}
+		</if>
+		<if test="null != last_login_ip and  last_login_ip !=''">
+			AND last_login_ip = #{last_login_ip}
+		</if>
+		<if test="null != introduce_m_id and  introduce_m_id !=''">
+			AND introduce_m_id = #{introduce_m_id}
+		</if>
+	</select>
+
+	<update id="updateAuthIdentity"
+		parameterType="com.pmzhongguo.ex.business.entity.AuthIdentity">
+		UPDATE m_auth_identity SET
+		<if test="null != id_handheld_img and  id_handheld_img !=''">
+		id_handheld_img = #{id_handheld_img},
+		</if>
+		<if test="null != id_status and  id_status !=''">
+			id_status = #{id_status},
+		</if>
+		<if test="null != auditor and  auditor !=''">
+			auditor=#{auditor},
+		</if>
+		<if test="null != audit_time and  audit_time !=''">
+			audit_time=#{audit_time},
+		</if>
+		reject_reason=#{reject_reason},
+		<![CDATA[
+		audit_history=CONCAT(IFNULL(audit_history, ''), '<hr>', #{audit_history})
+		]]>
+		WHERE id=#{id}
+	</update>
+
+	<update id="updateFaceIdAuthIdentity" parameterType="com.pmzhongguo.ex.business.entity.AuthIdentity">
+		UPDATE m_auth_identity SET
+		id_status = #{id_status},
+		given_name=#{given_name},
+		middle_name=#{middle_name},
+		family_name=#{family_name},
+		sex=#{sex},
+		nationality=#{nationality},
+		province=#{province},
+		city=#{city},
+		birthday=#{birthday},
+		id_number=#{id_number},
+		id_begin_date=#{id_begin_date},
+		id_end_date=#{id_end_date},
+		id_handheld_img=#{id_handheld_img},
+		id_front_img=#{id_front_img},
+		id_back_img=#{id_back_img},
+		id_type=#{id_type},
+		last_submit_time=#{last_submit_time},
+		auditor=#{auditor},
+		audit_time=#{audit_time},
+		reject_reason=#{reject_reason},
+		<![CDATA[
+		audit_history=CONCAT(IFNULL(audit_history, ''), '<hr>', #{audit_history})
+		]]>
+		WHERE
+		id=#{id}
+	</update>
+
+	<update id="memberUpdateAuthIdentity"
+		parameterType="com.pmzhongguo.ex.business.entity.AuthIdentity">
+		UPDATE m_auth_identity SET
+		id_status = #{id_status},
+		given_name=#{given_name},
+		middle_name=#{middle_name},
+		family_name=#{family_name},
+		sex=#{sex},
+		birthday=#{birthday},
+		nationality=#{nationality},
+		province=#{province},
+		city=#{city},
+		id_type=#{id_type},
+		id_number=#{id_number},
+		id_begin_date=#{id_begin_date},
+		id_end_date=#{id_end_date},
+		id_handheld_img=#{id_handheld_img},
+		id_front_img=#{id_front_img},
+		id_back_img=#{id_back_img},
+		last_submit_time=#{last_submit_time},
+		biz_token = #{biz_token}
+		WHERE
+		id=#{id}
+	</update>
+
+	<update id="memberUpdateAuthIdentityByFaceId"
+			parameterType="com.pmzhongguo.ex.business.entity.AuthIdentity">
+		UPDATE m_auth_identity SET
+		id_status = 0,
+		biz_token = #{biz_token}
+		WHERE
+		id=#{id}
+	</update>
+
+
+	<insert id="addAuthIdentity"
+		parameterType="com.pmzhongguo.ex.business.entity.AuthIdentity">
+		INSERT INTO
+		m_auth_identity(id,sex,given_name,middle_name,family_name,birthday,nation,nationality,province,city,id_type,id_number,id_begin_date,id_end_date,id_handheld_img,id_front_img,id_back_img,last_submit_time,id_status,reject_reason,biz_token)
+		VALUES
+		(#{id},#{sex},#{given_name},#{middle_name},#{family_name},#{birthday},#{nation},#{nationality},#{province},#{city},#{id_type},#{id_number},#{id_begin_date},#{id_end_date},#{id_handheld_img},#{id_front_img},#{id_back_img},#{last_submit_time},#{id_status},#{reject_reason},#{biz_token})
+	</insert>
+
+
+
+
+	<select id="getAuthVideoByID" parameterType="java.lang.Integer"
+		resultType="com.pmzhongguo.ex.business.entity.AuthVideo">
+		SELECT * FROM m_auth_video t
+		WHERE id = #{id}
+	</select>
+
+	<select id="getMemberAuthVideoByID"
+		parameterType="java.lang.Integer"
+		resultType="com.pmzhongguo.ex.business.entity.AuthVideo">
+		SELECT m.id, m.auth_grade, w.v_im_info, w.v_video,
+		w.v_status, w.reject_reason, w.auditor, w.audit_time, w.audit_history,
+		m.m_name, CONCAT(given_name, ',', middle_name, ',', family_name)
+		real_name
+		FROM m_member m LEFT JOIN m_auth_identity i ON m.id = i.id LEFT JOIN
+		m_auth_video w ON w.id = m.id
+		WHERE m.id = #{id}
+	</select>
+
+	<select id="getDemandById" parameterType="java.lang.Integer"
+		resultType="com.pmzhongguo.ex.business.entity.Demand">
+		SELECT *
+		FROM m_demand
+		WHERE id = #{id}
+	</select>
+
+	<select id="listAuthVideoPage" parameterType="java.util.Map"
+		resultType="com.pmzhongguo.ex.business.entity.AuthVideo">
+		SELECT m.id, w.v_im_info, w.v_video, w.v_status, w.reject_reason,
+		w.auditor, w.audit_time, w.audit_history, m.m_name,
+		CONCAT(i.given_name, i.middle_name, i.family_name) real_name
+		FROM m_member m LEFT JOIN m_auth_identity i ON m.id = i.id LEFT JOIN
+		m_auth_video w ON w.id = m.id
+		where m.auth_grade > 0
+		<if test="null != v_status and  v_status !=''">
+			AND w.v_status = #{v_status}
+		</if>
+		<if test="null != m_name and  m_name !=''">
+			AND m_name = #{m_name}
+		</if>
+	</select>
+
+	<insert id="addAuthVideo"
+		parameterType="com.pmzhongguo.ex.business.entity.AuthVideo">
+		INSERT INTO
+		m_auth_video(id,v_im_info,v_video,v_status,reject_reason,auditor,audit_time,audit_history)
+		VALUES
+		(#{id},#{v_im_info},#{v_video},#{v_status},#{reject_reason},#{auditor},#{audit_time},#{audit_history})
+	</insert>
+
+	<insert id="memberAddDemand"
+		parameterType="com.pmzhongguo.ex.business.entity.Demand">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+		INSERT INTO m_demand(member_id,m_name,create_time,d_title)
+		VALUES
+		(#{member_id},#{m_name},#{create_time},#{d_title})
+	</insert>
+
+	<insert id="memberAddDemandLog"
+		parameterType="com.pmzhongguo.ex.business.entity.DemandLog">
+		INSERT INTO
+		m_demand_log(demand_id,log_type,create_time,l_memo_type,l_memo,plat_user_name)
+		VALUES(#{demand_id},#{log_type},#{create_time},#{l_memo_type},#{l_memo},#{plat_user_name})
+	</insert>
+
+	<update id="updateAuthVideo"
+		parameterType="com.pmzhongguo.ex.business.entity.AuthVideo">
+		UPDATE m_auth_video SET
+		v_im_info = #{v_im_info},
+		v_video = #{v_video},
+		reject_reason = #{reject_reason},
+		v_status = #{v_status},
+		auditor=#{auditor},
+		audit_time=#{audit_time},
+		<![CDATA[
+		audit_history=CONCAT(IFNULL(audit_history, ''), '<br>-----------------------------------------------<br>', #{audit_history})
+		]]>
+		WHERE id=#{id}
+	</update>
+
+
+
+	<select id="listIntroMemberPage" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT m_name, reg_time, last_login_time, auth_grade
+		FROM m_member
+		where 1 = 1
+		<if test="null != member_id and  member_id !=''">
+			AND introduce_m_id = #{member_id}
+		</if>
+	</select>
+
+
+	<select id="listDemandPage" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT id, m_name, create_time, d_title, d_status
+		FROM m_demand d
+		where 1 = 1
+		<if test="null != member_id and  member_id !=''">
+			AND member_id = #{member_id}
+		</if>
+		<if test="null != m_name and  m_name !=''">
+			AND m_name = #{m_name}
+		</if>
+		<if test="null != d_status and  d_status !=''">
+			AND d_status = #{d_status}
+		</if>
+		<if test="d_statusIn != null and d_statusIn != ''">
+			and d_status IN (${d_statusIn})
+		</if>
+		<if test="null != keyword and  keyword !=''">
+			and (
+			d_title like concat('%',#{keyword},'%')
+			or
+			exists (select 1 from m_demand_log where demand_id = d.id and l_memo like
+			concat('%',#{keyword},'%'))
+			)
+		</if>
+	</select>
+
+	<update id="updateDemand"
+		parameterType="com.pmzhongguo.ex.business.entity.Demand">
+		UPDATE m_demand SET
+		id = #{id}
+		<if test="d_status != null">, d_status = #{d_status}</if>
+		<if test="is_has_unread != null">, is_has_unread = #{is_has_unread}</if>
+		<if test="is_has_unread_plat != null">, is_has_unread_plat = #{is_has_unread_plat}</if>
+		WHERE id=#{id}
+	</update>
+
+
+	<select id="listMemberOperLogPage" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT *
+		FROM m_member_oper_log
+		where 1 = 1
+		<if test="null != oper_type and  oper_type !=''">
+			AND oper_type = #{oper_type}
+		</if>
+		<if test="null != member_id and  member_id !=''">
+			AND member_id = #{member_id}
+		</if>
+		<if test="null != m_name and  m_name !=''">
+			AND m_name = #{m_name}
+		</if>
+		<if test="null != startDate and  startDate !=''">
+			AND oper_time >= #{startDate}
+		</if>
+		<if test="null != endDate and  endDate !=''">
+			<![CDATA[
+    			 AND oper_time< #{endDate}
+    		]]>
+		</if>
+		<if test="null != oper_memo and oper_memo != ''">
+			and oper_memo like concat('%',#{oper_memo},'%')
+		</if>
+	</select>
+
+	<!--分页查询会员秘钥 -->
+	<select id="getMemberApiTokenPage" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT m.id, m.m_name,
+		a.api_key,a.api_secret,m.trade_commission,a.create_time,a.api_privilege,a.trusted_ip,a.t_status
+		FROM m_api_token a, m_member m WHERE a.member_id=m.id
+		<if test="null != id and  id !=''">
+			AND m.id = #{id}
+		</if>
+		<if test="null != m_name and  m_name !=''">
+			AND m.m_name = #{m_name}
+		</if>
+		<if test="null != api_key and  api_key !=''">
+			AND a.api_key = #{api_key}
+		</if>
+		<if test="null != api_secret and  api_secret !=''">
+			AND a.api_secret = #{api_secret}
+		</if>
+	</select>
+
+	<!--分页查询已分配钱包地址 -->
+	<select id="getMemberCoinRechargeAddrPage"
+		parameterType="java.util.Map" resultType="java.util.Map">
+		select m.m_name,c.currency,c.address from m_member m join
+		m_coin_recharge_addr c WHERE c.member_id=m.id
+
+		<if test="null != m_name and  m_name !=''">
+			AND m.m_name = #{m_name}
+		</if>
+		<if test="null != currency and  currency !=''">
+			AND c.currency = #{currency}
+		</if>
+		<if test="null != address and  address !=''">
+			AND c.address = #{address}
+		</if>
+	</select>
+
+	<!--分页查询未分配钱包地址 -->
+	<select id="getMemberCoinRechargeAddrPoolPage"
+		parameterType="java.util.Map" resultType="java.util.Map">
+		select c.currency,c.address from m_coin_recharge_addr_pool c WHERE 1=1
+
+		<if test="null != currency and  currency !=''">
+			AND c.currency = #{currency}
+		</if>
+		<if test="null != address and  address !=''">
+			AND c.address = #{address}
+		</if>
+	</select>
+	<delete id="deleteCoinRecharge" parameterType="java.lang.Long">
+		delete from m_coin_recharge where id = #{id}
+	</delete>
+
+
+	<select id="findIntroduceIdByMemberId" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select introduce_m_id from m_member where id = #{member_id}
+	</select>
+
+	<select id="findMemberIntroByPage" parameterType="java.util.Map" resultType="java.util.Map">
+
+		select m.id as mid,m.m_name as mname,intr.m_name as intro_mname,intr.id as intro_id,m.reg_time as reg_time
+		from m_member m join m_member intr on m.introduce_m_id = intr.id
+		<where>
+			<if test="m_name != null and m_name != '' ">
+				intr.m_name = #{m_name}
+			</if>
+		</where>
+	</select>
+
+	<select id="findIntroAmountByMemberId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(*) from m_member where introduce_m_id = #{member_id}
+	</select>
+
+	<select id="findIntroByPage" parameterType="java.util.Map" resultType="java.util.Map">
+		select m.m_name,rc.return_commi_time as expire_time,rc.create_time
+		from m_member m  JOIN return_commi rc   on rc.member_id = m.id and m.introduce_m_id = #{member_id}
+	</select>
+	<select id="getCoinRechargeAddrList" resultType="com.pmzhongguo.ex.business.entity.CoinRechargeAddr">
+		select *
+		from m_coin_recharge_addr c where 1=1
+		<if test="null != currency and  currency !=''">
+			and c.currency = #{currency}
+		</if>
+		<if test="null != member_id and  member_id !=''">
+			and c.member_id = #{member_id}
+		</if>
+        <if test="null != address and  address !=''">
+            and c.address = #{address}
+        </if>
+	</select>
+	<select id="getMemberByIdList" resultType="com.pmzhongguo.ex.business.vo.MemberRspVo">
+		select	id,m_name,m_nick_name,introduce_m_id
+		from m_member where id in ${idList}
+	</select>
+	<select id="getMemberListByIntroIdStr" resultType="com.pmzhongguo.ex.business.vo.MemberRspVo">
+		select id,m_name,m_nick_name,introduce_m_id
+		from m_member where introduce_m_id in ${idList}
+	</select>
+
+	<select id="getCoinRechargeList" parameterType="java.util.Map"
+			resultType="com.pmzhongguo.ex.business.vo.CoinRechargeExcelVo">
+		SELECT r.*, m.m_name FROM m_coin_recharge r, m_member m where
+		r.member_id = m.id
+		<if test="null != r_txid and  r_txid !=''">
+			AND r.r_txid = #{r_txid}
+		</if>
+		<if test="null != r_status and  r_status !=''">
+			AND r.r_status = #{r_status}
+		</if>
+		<if test="null != m_name and  m_name !=''">
+			AND m_name = #{m_name}
+		</if>
+		<if test="null != member_id and  member_id !=''">
+			AND member_id = #{member_id}
+		</if>
+		<if test="null != currency and  currency !=''">
+			AND r.currency = #{currency}
+		</if>
+		<if test="null != r_address and  r_address !=''">
+			AND r.r_address like "%"#{r_address}"%"
+		</if>
+		<if test="null != _r_address and  _r_address !=''">
+			AND r.r_address = #{_r_address}
+		</if>
+		<if test="null != OTC and  OTC =='1'.toString()">
+			AND r.otc_ads_id > 0
+			<if test="null != otc_owner_id and  otc_owner_id != ''">
+				AND r.otc_ads_id in (select id from otc_ads where owner_id =
+				#{otc_owner_id})
+			</if>
+		</if>
+		<if test="null != OTC and  OTC =='0'.toString()">
+			AND r.otc_ads_id = 0
+		</if>
+		<if test="null != r_gas and  r_gas !=''">
+			AND r.r_gas = #{r_gas}
+		</if>
+		<if test="null != r_guiji and  r_guiji !=''">
+			AND r.r_guiji = #{r_guiji}
+		</if>
+		<if test="create_time_start != null and create_time_start != ''">
+			<![CDATA[and r.r_create_time >= #{create_time_start,jdbcType=VARCHAR}]]>
+		</if>
+		<if test="create_time_end != null and create_time_end != ''">
+			<![CDATA[and r.r_create_time <= #{create_time_end,jdbcType=VARCHAR}]]>
+		</if>
+	</select>
+
+	<select id="getCoinWithdrawList" parameterType="java.util.Map"
+			resultType="com.pmzhongguo.ex.business.vo.CoinWithdrawExcelVo">
+		SELECT w.id,w.member_id, m.m_name,w.w_amount,w.w_fee,w.w_txid,w.w_create_time,w.w_txid,w.w_status,w.currency FROM m_coin_withdraw w, m_member m where
+		w.member_id = m.id
+
+		<if test="null != w_status and  w_status !=''">
+			AND w.w_status = #{w_status}
+		</if>
+		<if test="null != m_name and  m_name !=''">
+			AND m_name = #{m_name}
+		</if>
+		<if test="null != member_id and  member_id !=''">
+			AND member_id = #{member_id}
+		</if>
+		<if test="null != w_txid and  w_txid !=''">
+			AND w.w_txid = #{w_txid}
+		</if>
+		<if test="null != currency and  currency !=''">
+			AND w.currency = #{currency}
+		</if>
+		<if test="null != transfer_no and  transfer_no !=''">
+			AND w.transfer_no = #{transfer_no}
+		</if>
+		<if test="null != id and  id !=''">
+			AND w.id = #{id}
+		</if>
+		<if test="null != w_txid and  w_txid !=''">
+			<if test="w_txid == 1 ">
+				AND (w.w_txid = "" or w.w_txid is null )
+			</if>
+			<if test="w_txid == 2 ">
+				AND (w.w_txid != "" or w.w_txid is not null)
+			</if>
+		</if>
+		<if test="null != member_coin_addr and  member_coin_addr !=''">
+			AND w.member_coin_addr = #{member_coin_addr}
+		</if>
+		<if test="null != OTC and  OTC =='1'.toString()">
+			AND w.otc_ads_id > 0
+			<if test="null != otc_owner_id and  otc_owner_id != ''">
+				AND w.otc_ads_id in (select id from otc_ads where owner_id =
+				#{otc_owner_id})
+			</if>
+		</if>
+		<if test="null != OTC and  OTC =='0'.toString()">
+			AND w.otc_ads_id = 0
+		</if>
+	</select>
+	<select id="findCountryList" resultType="com.pmzhongguo.ex.framework.entity.Country">
+		select * from m_country order by c_order
+	</select>
+    <select id="getEtcTotal" resultType="java.util.Map">
+		select count(*) idTotal ,sum(ma.total_balance) balanceTotal
+		from m_account ma
+		where  currency = #{currency}
+    </select>
+    <select id="getTotalRecharge" resultType="java.math.BigDecimal">
+        select sum(r_amount)
+        from m_coin_recharge
+        where 1=1 and r_status = 1
+        and currency = #{currency} and r_create_time like #{createTime}
+    </select>
+    <select id="getTotalWithdrawal" resultType="java.math.BigDecimal">
+        select sum(w_amount)
+        from m_coin_withdraw
+        where 1=1 and w_status = 1
+        and currency = #{currency} and w_create_time like #{createTime}
+    </select>
+
+    <select id="findMemberByInviteId" resultType="com.pmzhongguo.ex.business.entity.Member" parameterType="java.lang.Integer">
+        select *
+        from m_member
+        where id = #{introduce_m_id}
+    </select>
+    <select id="findMemberByInviteCode" resultType="com.pmzhongguo.ex.business.entity.Member" parameterType="java.lang.String">
+        select *
+        from m_member
+        where invite_code = #{invite_code}
+    </select>
+    <select id="listAccountsByPage" resultType="com.pmzhongguo.ex.business.dto.AccountDto"
+            parameterType="java.util.Map">
+        select mm.id uid,insert (mm.m_name, 4, 4, '****') mName,currency,total_balance,frozen_balance
+        from m_account ma
+        left join m_member mm on mm.id = ma.member_id
+        where 1=1
+        <if test="currency  != null  and currency != ''">
+            and ma.currency = #{currency}
+        </if>
+        <if test="uid  != null  and uid != ''">
+            and ma.member_id = #{uid}
+        </if>
+        <if test="mName  != null  and mName != ''">
+            and mm.m_name = #{mName}
+        </if>
+    </select>
+</mapper>

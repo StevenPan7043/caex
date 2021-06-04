@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd 
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd 
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd 
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<context:component-scan
+		base-package="com.pmzhongguo.ex.*.controller,com.pmzhongguo.ex.swagger,com.pmzhongguo.ex.business.scheduler,
+		com.pmzhongguo.ex.aspect,com.pmzhongguo.otc.controller,com.pmzhongguo.crowd.controller,com.pmzhongguo.crowd.service,
+		com.pmzhongguo.crowd.config.scheduler,com.pmzhongguo.ex.transfer,com.pmzhongguo.ex.datalab.*,com.pmzhongguo.ipfs,com.pmzhongguo.ex.business.mapper,
+		com.pmzhongguo.gd.controller,com.pmzhongguo.gd.service,com.pmzhongguo.gd.mapper" />
+
+	<bean class="com.pmzhongguo.crowd.config.support.BeanContext"></bean>
+
+	<task:annotation-driven />
+
+	<aop:aspectj-autoproxy />
+
+	<!-- 全局配置 -->
+	<mvc:interceptors>
+		<bean class="com.pmzhongguo.ex.core.web.BaseInterceptor"></bean>
+		<bean class="com.pmzhongguo.ex.transfer.interceptor.TransferApiInterceptor"></bean>
+	</mvc:interceptors>
+
+	<mvc:annotation-driven />
+
+	<!-- 配置国际化资源文件路径 -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename">
+			<!-- 定义消息资源文件的相对路径 -->
+			<value>messages/message</value>
+		</property>
+	</bean>
+	<!-- 基于Cookie的本地化解析器 -->
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="cookieMaxAge" value="604800" />
+		<property name="defaultLocale" value="zh_cn" />
+		<property name="cookieName" value="Language"></property>
+	</bean>
+
+
+	<!-- swagger -->
+	<bean class="com.pmzhongguo.ex.swagger.SwaggerConfig"></bean>
+
+	<!-- jsp页面解析器，当Controller返回XXX字符串时，先通过拦截器，然后该类就会在/WEB-INF/views/目录下，查找XXX.jsp文件 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/jsp/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/html;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="mappingJacksonHttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+
+	<!-- spring系统启动以后，加载该类，查询配置数据 -->
+	<bean class="com.pmzhongguo.ex.core.web.SysInit" />
+
+	<!-- 文件上传表单的视图解析器 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- one of the properties available; the maximum file size in bytes -->
+		<property name="maxUploadSize" value="204800000" />
+	</bean>
+
+	<bean id="startQuertz" lazy-init="false" autowire="no"
+		  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	</bean>
+
+
+</beans>  

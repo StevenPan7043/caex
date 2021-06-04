@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.pmzhongguo.otc.dao.OTCAccountDetailMapper">
+	<resultMap id="BaseResultMap"
+		type="com.pmzhongguo.otc.entity.dataobject.OTCAccountDetailDO">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="member_id" jdbcType="INTEGER"
+			property="memberId" />
+		<result column="currency" jdbcType="VARCHAR"
+			property="currency" />
+		<result column="num" jdbcType="DECIMAL" property="num" />
+		<result column="proc_type" jdbcType="INTEGER"
+			property="procType" />
+		<result column="before_info" jdbcType="VARCHAR"
+			property="beforeInfo" />
+		<result column="create_time" jdbcType="VARCHAR"
+			property="createTime" />
+	</resultMap>
+    
+	<sql id="Base_Column_List">
+		id, member_id, currency, num, proc_type, before_info,
+		create_time
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from o_account_detail
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<select id="selectPage" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from o_account_detail
+		<where>
+			<if test="memberId != null  and memberId != ''">
+				and member_id = #{memberId,jdbcType=INTEGER}
+			</if>
+			<if test="currency != null  and currency != ''">
+				and currency = #{currency,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+    <select id="selectMemberDetailsPage" parameterType="java.util.Map"
+		resultType="hashMap">
+        SELECT id, member_id, currency, num, create_time,
+            CASE
+	            WHEN proc_type = 1 THEN "买入"
+	            WHEN proc_type = 4 THEN "卖出"
+	            WHEN proc_type = 5 THEN "转入"
+	            WHEN proc_type = 6 THEN "转出"
+                WHEN proc_type = 8 THEN "商家"
+                WHEN proc_type = 10 THEN "退商"
+	            ELSE proc_type
+            END AS proc_type
+            FROM `o_account_detail`
+        <where>
+			<if test="memberId != null  and memberId != ''">
+				and member_id = #{memberId,jdbcType=INTEGER}
+			</if>
+			<if test="currency != null  and currency != ''">
+				and currency = #{currency,jdbcType=VARCHAR}
+			</if>
+            <if test="procType != null  and procType != ''">
+				and proc_type = #{procType,jdbcType=INTEGER}
+			</if>
+            <if test="procTypeAll != null  and procTypeAll != '' and procTypeAll == 1">
+                and proc_type in (1,4,5,6,8,10)
+            </if>
+		</where>
+	</select>
+
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from o_account_detail
+		where id =
+		#{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.OTCAccountDetailDO">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+		insert into o_account_detail (id, member_id, currency,
+		num, proc_type,
+		before_info,
+		create_time)
+		values (#{id,jdbcType=BIGINT},
+		#{memberId,jdbcType=INTEGER},
+		#{currency,jdbcType=VARCHAR},
+		#{num,jdbcType=DECIMAL}, #{procType,jdbcType=INTEGER},
+		#{beforeInfo,jdbcType=VARCHAR},
+		now())
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.OTCAccountDetailDO">
+		update o_account_detail
+		<set>
+			<if test="memberId != null and memberId != ''">
+				member_id = #{memberId,jdbcType=INTEGER},
+			</if>
+			<if test="currency != null and currency != ''">
+				currency = #{currency,jdbcType=VARCHAR},
+			</if>
+			<if test="num != null and num != ''">
+				num = #{num,jdbcType=DECIMAL},
+			</if>
+			<if test="procType != null and procType != ''">
+				proc_type = #{procType,jdbcType=INTEGER},
+			</if>
+			<if test="beforeInfo != null and beforeInfo != ''">
+				before_info = #{beforeInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.OTCAccountDetailDO">
+		update o_account_detail
+		set member_id =
+		#{memberId,jdbcType=INTEGER},
+		currency = #{currency,jdbcType=VARCHAR},
+		num = #{num,jdbcType=DECIMAL},
+		proc_type =
+		#{procType,jdbcType=INTEGER},
+		before_info =
+		#{beforeInfo,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

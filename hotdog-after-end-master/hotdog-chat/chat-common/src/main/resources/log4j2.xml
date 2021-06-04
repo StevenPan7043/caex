@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--monitorInterval属性，每隔xx秒重新读取配置文件，可以不重启应用的情况下修改配置-->
+<Configuration status="WARN" monitorInterval="300">
+    <Properties><!--变量配置-->
+        <!-- 格式化输出：
+        %d:表示日期
+        %t:表示线程名
+        %-5level:输出日志级别，-5表示左对齐并且固定输出5个字符，如果不足在右边补0
+        %m：日志消息
+        %F 输出所在的类文件名
+        %L 输出行号
+        %M 输出所在方法名
+        %l  输出语句所在的行数, 包括类名、方法名、文件名、行数
+        %n是换行符
+        -->
+        <Property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%10t] %-5level {%40F:%3L} -%m  -%l%n"/>
+        <!-- 定义日志存储的路径 -->
+        <Property name="FILE_PATH" value="./logs"/>
+        <Property name="FILE_NAME" value="log"/>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT"><!--控制台输出-->
+            <!--输出日志的格式-->
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <!-- 这个会打印出信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <!-- fileName  指定当前日志文件的位置和文件名称-->
+        <!-- filePattern  指定当发生Rolling时，文件的转移和重命名规则-->
+        <RollingRandomAccessFile name="RollingFile" fileName="${FILE_PATH}/${FILE_NAME}.log"
+                                 filePattern="${FILE_PATH}/${FILE_NAME}-%d{yyyy-MM-dd}_%i.log">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <!--TimeBasedTriggeringPolicy  这个配置需要和filePattern结合使用，
+                注意filePattern中配置的文件重命名规则是${FILE_NAME}-%d{yyyy-MM-dd HH-mm}-%i，
+                最小的时间粒度是mm，即分钟，TimeBasedTriggeringPolicy指定的size是1，结合起来就是每1分钟生成一个新文件。
+                如果改成%d{yyyy-MM-dd HH}，最小粒度为小时，则每一个小时生成一个文件-->
+                <!--interval属性用来指定多久滚动一次-->
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <!--当文件体积大于size指定的值时，触发Rolling-->
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy 指定最多保存的文件个数,属性如不设置，则默认为最多同一文件夹下7个文件开始覆盖-->
+            <DefaultRolloverStrategy max="15"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

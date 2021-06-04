@@ -1,0 +1,610 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+a{text-decoration: none}
+body,html{
+    min-width: 1200px;
+    background: #f7f9fa;
+}
+input:focus{outline:none;}
+header{
+    width: 100%;
+    height: 60px;
+    background: aqua;
+}
+footer{
+    width: 100%;
+    height: 240px;
+    background: aqua;
+}
+/*展示*/
+.exhibition-nav{
+    background: url("../image/exhibition.png")no-repeat;
+    background-size: 100% 100%;
+    width: 100%;
+    height: 100%;
+    min-height: 480px;
+    padding: 110px 0 90px;
+    box-sizing: border-box;
+}
+.exhibition-box{
+    width: 1100px;
+    margin: 0 auto;
+    position: relative;
+}
+.exhibition-title{
+    font-size: 40px;
+    color: #ffffff;
+}
+.exhibition-say{
+    font-size: 22px;
+    color: #ffffff;
+    margin-top: 30px;
+}
+.downBtn{
+    width: 150px;
+    height: 40px;
+    border-radius: 20px;
+    border: none;
+    font-size: 16px;
+    margin-top: 50px;
+}
+#exhibitionBtn1{
+    border: 1px solid #ffffff;
+    background: none;
+    color: #ffffff;
+    margin-right: 30px;
+}
+#exhibitionBtn2{
+    background: #f7f9fa;
+    color: #5f81ec;
+}
+.computer{
+    width: 500px;
+    height: 277px;
+    background: url("../image/computer.png")no-repeat;
+    background-size: 100% 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.computer-content{
+    width: 362px;
+    height: 227px;
+    position: absolute;
+    top: 21px;
+    left: 69px;
+}
+.computer-content img{
+    width: 100%;
+    height: 100%;
+}
+.exhibition-list{
+    width: 100%;
+    height: 100%;
+    padding: 80px 0 258px;
+    box-sizing: border-box;
+}
+.list-tabName{
+    width: 1200px;
+    height: 38px;
+    margin: 0 auto;
+    border-bottom: 1px solid #e1e1e1;
+}
+.box-td{
+    width: 110px;
+    height: 38px;
+    font-size: 18px;
+    color: #4b5a7c;
+    float: left;
+    margin-right: 30px;
+    cursor: pointer;
+}
+.listNav{
+    display: none;
+}
+.listBox{
+    width: 1200px;
+    height: 200px;
+    background: #ffffff;
+    margin: 0 auto;
+    margin-top: 20px;
+    border: 1px solid #e8e8e8;
+    padding: 56px 20px 56px 42px;
+    box-sizing: border-box;
+}
+.personal{
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    float: left;
+}
+.personal img{
+    width: 100%;
+    height: 100%;
+}
+.club{
+    width: 1010px;
+    height: 81px;
+    margin-left: 20px;
+    float: right;
+}
+.selfName{
+    font-size: 18px;
+    color: #4b5a7c;
+}
+.selfList{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+.selfListName{
+    font-size: 12px;
+    color: #7381a1;
+}
+.selfListNum{
+    font-size: 14px;
+    color: #4b5a7c;
+    margin-top: 5px;
+}
+.switch{
+    padding-top: 10px;
+    box-sizing: border-box;
+}
+.selfStyle{
+    color: #ee6560;
+}
+
+/*登录*/
+.backstage-login{
+    background: url("../image/backstage.png")no-repeat;
+    background-size: 100% 100%;
+    width: 100%;
+    height: 100%;
+    min-height: 780px;
+    padding-top: 150px;
+    box-sizing: border-box;
+}
+.tab-title{
+    width: 500px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 48px;
+    color: #ffffff;
+    margin: 0 auto;
+}
+.from-grop{
+    position: relative;
+}
+.from-grop img{
+    position: absolute;
+    top: 14px;
+    left: 28px;
+}
+.form-back{
+    width: 510px;
+    height: 300px;
+    margin: 0 auto;
+    background-color: #86D0F9;
+    box-shadow: 2px 3px 8px 0
+    rgba(30, 72, 111, 0.35);
+    border-radius: 10px;
+    margin-top: 65px;
+    padding: 50px 47px;
+    box-sizing: border-box;
+}
+.form-back input{
+    width: 100%;
+    height: 45px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: inset 1px 1px 3px 0
+    rgba(0, 0, 0, 0.3);
+    border: none;
+    margin-bottom: 19px;
+    padding-left: 69px;
+    box-sizing: border-box;
+}
+.backstage-btn{
+    width: 100%;
+    height: 51px;
+    background: #3CA1FE;
+    border-radius: 10px;
+    border: none;
+    color: #ffffff;
+    font-size: 18px;
+    margin-top: 20px;
+}
+/*后台首页*/
+.heads{
+    width: 100%;
+    height: 300px;
+    background: #ffffff;
+    padding: 60px 0 0 360px ;
+    box-sizing: border-box;
+    position: relative;
+}
+.head-top{
+    width: 100%;
+    height: 300px;
+}
+.head-topImg{
+    width: 150px;
+    height: 150px;
+    float: left;
+}
+.head-topImg img{
+    width: 100%;
+    height: 100%;
+}
+.head-topInformation{
+    width: 280px;
+    height: 150px;
+    float: left;
+    margin-left: 40px;
+    padding: 24px 0 20px;
+    box-sizing: border-box;
+}
+.clubName{
+    font-size: 24px;
+    color: #4b5a7c;
+}
+.clubLevel{
+    margin-top: 15px;
+}
+.clubLevelImg{
+    width: 16px;
+    height: 14px;
+}
+.clubLevelName{
+    font-size: 16px;
+    color: #4b5a7c;
+    line-height: 14px;
+}
+.clubNum{
+    width: 280px;
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+.clubBox{
+    width: 88px;
+    height: 28px;
+    border: 1px solid #999999;
+    text-align: center;
+    line-height: 28px;
+    font-size: 14px;
+    color: #4b5a7c;
+}
+.indexList{
+    width: 323px;
+    height: 35px;
+    position: absolute;
+    bottom: 0;
+    left: 384px;
+    display: flex;
+    justify-content: space-between;
+}
+.coin-data{
+    font-size: 18px;
+    color: #4b5a7c;
+    cursor: pointer;
+}
+.coin-data.self{
+    color: #5f81ec;
+    border-bottom: 3px solid #5f81ec;
+}
+.box-td.self{
+    color: #5f81ec;
+    border-bottom: 3px solid #5f81ec;
+}
+/*币种数据*/
+.coin-dataNav{
+    width: 1200px;
+    height: 100%;
+    margin: 20px 360px;
+}
+.coin-dataNavLeft{
+    width: 220px;
+    height: 100%;
+    min-height: 560px;
+    background: #ffffff;
+    float: left;
+}
+.coinType{
+    width: 100%;
+    height: 60px;
+    border-bottom: 1px solid #f0f0f0;
+    line-height: 60px;
+    padding-left: 25px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.coinType.active{
+    background: #e5edff;
+}
+.coinTypeImg{
+    width: 30px;
+    height: 30px;
+    float:left ;
+    margin-top: 10px;
+}
+.coinTypeName{
+    height: 50px;
+    font-size: 14px;
+    color: #4b5a7c;
+    float: left;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+.coin-dataNavRight{
+    width: 960px;
+    height: 100%;
+    min-height: 560px;
+    margin-left: 20px;
+    background: #ffffff;
+    float: right;
+    padding: 30px;
+    box-sizing: border-box;
+}
+.coin-dataNavRight .coinList:last-child{
+    margin-bottom: 0;
+}
+.coinList{
+    width: 900px;
+    height: 150px;
+    border: 1px solid #eeeeee;
+    position: relative;
+    margin-bottom: 20px;
+}
+.coinListNum{
+    width: 0;height:0;border-bottom:30px solid transparent;border-left:30px solid #93a0bd;border-right: 30px solid transparent;
+    text-align: center;line-height: 30px;
+}
+.Serial{
+    position: absolute;
+    top: -5px;
+    left: 4px;
+    font-size: 14px;
+    color: #ffffff;
+}
+.coinSerialNum{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 25px;
+}
+.coinSpecific{
+    width: 25%;
+}
+.circulationName{
+    font-size: 14px;
+    color: #4b5a7c;
+}
+.circulationNum{
+    font-size: 24px;
+    color: #4b5a7c;
+    margin-top: 2px;
+}
+.circulationNames{
+    font-size: 14px;
+    color: #ffffff;
+}
+.circulationNums{
+    font-size: 24px;
+    color: #ffffff;
+    margin-top: 2px;
+}
+.serialNum{
+    float: left;
+}
+.localStyles{
+    float: right;
+}
+.localStyle{
+    font-size: 14px;
+    color: #5f81ec;
+    margin-left: 5px;
+}
+.coinBOX{
+    display: none;
+}
+/*手续费*/
+.coin-dataNavLefts{
+    width: 220px;
+    height: 100%;
+    min-height: 760px;
+    background: #ffffff;
+    float: left;
+}
+.coin-dataNavRights{
+    width: 960px;
+    height: 760px;
+    margin-left: 20px;
+    background: #ffffff;
+    float: right;
+    padding: 30px;
+    box-sizing: border-box;
+    position: relative;
+}
+.Service-title{
+    font-size: 14px;
+    color: #4b5a7c;
+}
+.Service-nav{
+    width: 900px;
+    height: 120px;
+    background: #86D0F9;
+    margin-top: 14px;
+    margin-bottom: 40px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 2.5px 4.3px 15px 0
+    rgba(175, 192, 209, 0.55);
+}
+.Service-listTd{
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #7381a1;
+}
+.ServiceListBox{
+    width: 16%;
+}
+.Service-listTd .data{
+    width: 26%;
+    text-align: left;
+}
+.Service-listTd .status{
+    width: 10%;
+    text-align: right;
+}
+.Service-listTr{
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #4b5a7c;
+    border-bottom: 1px solid #f0f0f0;
+}
+.ServiceListTrBox{
+    width: 16%;
+}
+.Service-listTr .data{
+    width: 26%;
+    text-align: left;
+}
+.Service-listTr .status{
+    width: 10%;
+    text-align: right;
+}
+.liPage{
+    position: absolute;
+    right: 30px;
+    bottom: 10px;
+    font-size: 12px;
+    color: #4b5a7c;
+}
+.nextPage{
+    margin-left: 15px;
+}
+/*我的账户*/
+.coin-dataNavLeftAss{
+    width: 220px;
+    height: 100%;
+    min-height: 760px;
+    background: #ffffff;
+    float: left;
+}
+.coin-dataNavRightAss{
+    width: 960px;
+    height: 760px;
+    margin-left: 20px;
+    background: #ffffff;
+    float: right;
+    padding: 30px;
+    box-sizing: border-box;
+    position: relative;
+}
+.assets-title{
+    font-size: 16px;
+    color: #4b5a7c;
+}
+.assetsList{
+    margin-top: 30px;
+
+}
+.assetsList-Tr{
+    height: 50px;
+    font-size: 12px;
+    color: #7381a1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eeeeee;
+}
+.assetsList-Td{
+    height: 50px;
+    font-size: 14px;
+    color: #4b5a7c;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eeeeee;
+}
+.assetsList-Operation{
+    color: #5f81ec;
+}
+.assets-form{
+    width: 900px;
+    height: 200px;
+    border: 1px solid #eeeeee;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.assets-lable{
+    width: 900px;
+    font-size: 12px;
+    color: #7381a1;
+}
+.form-contro,.form-contros{
+    height: 45px;
+    margin-top: 10px;
+    border: 1px solid #eeeeee;
+    border-radius: 5px;
+    color: #4b5a7c;
+    font-size: 14px;
+    padding-left: 15px;
+    box-sizing: border-box;
+}
+.form-contro{
+    width: 100%;
+}
+.form-contros{
+    width: 640px;
+}
+.TransferBtn{
+    width: 200px;
+    height: 45px;
+    background: #5f81ec;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+}
+.AllNumber{
+    font-size: 14px;
+    color: #5f81ec;
+    position: absolute;
+    bottom: 15px;
+    right: 240px;
+}
+.assetsList-Time{
+    width: 25%;
+}
+.assetsList-CoinType{
+    width: 15%;
+}
+.assetsList-Type{
+    width: 15%;
+}
+.assetsList-Whereabouts{
+    width: 20%;
+}
+.assetsList-Number{
+    width: 15%;
+}
+.assetsList-Status{
+    width: 10%;
+    text-align: right;
+}

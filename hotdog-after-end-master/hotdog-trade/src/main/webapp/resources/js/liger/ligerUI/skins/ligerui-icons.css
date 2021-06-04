@@ -1,0 +1,67 @@
+﻿.l-icon{ width:16px; height:16px; overflow:hidden;}
+.l-icon-add{ background:url('icons/add.png') no-repeat 0px 1px;}
+.l-icon-stop{ background:url('icons/stop.png') no-repeat 0px;}
+.l-icon-start{ background:url('icons/start.png') no-repeat 0px;}
+.l-icon-stock{ background:url('icons/stock.png') no-repeat 0px;}
+.l-icon-copyadd{ background:url('icons/copyadd.png') no-repeat 0px 1px;}
+.l-icon-delete{ background:url('icons/delete.gif') no-repeat 0px 1px;}
+.l-icon-back{ background:url('icons/back.png') no-repeat 0px 1px;}
+.l-icon-bluebook{ background:url('icons/bluebook.gif') no-repeat 0px 1px;}
+.l-icon-bookpen{ background:url('icons/bookpen.gif') no-repeat 0px 1px;} 
+.l-icon-coffee{ background:url('icons/coffee.gif') no-repeat 0px 1px;}
+.l-icon-cut{ background:url('icons/cut.gif') no-repeat 0px 1px;}
+.l-icon-discuss{ background:url('icons/discuss.gif') no-repeat 0px 1px;} 
+.l-icon-graywarn{ background:url('icons/graywarn.gif') no-repeat 0px 1px;}
+.l-icon-greenwarn{ background:url('icons/greenwarn.gif') no-repeat 0px 1px;}
+.l-icon-help{ background:url('icons/help.gif') no-repeat 0px 1px;}
+.l-icon-home{ background:url('icons/home.gif') no-repeat 0px 1px;}
+.l-icon-lock{ background:url('icons/lock.gif') no-repeat 0px 1px;}
+.l-icon-logout{ background:url('icons/logout.gif') no-repeat 0px 1px;}
+.l-icon-mailbox{ background:url('icons/mailbox.gif') no-repeat 0px 1px;}
+.l-icon-memeber{ background:url('icons/memeber.gif') no-repeat 0px 1px;}
+.l-icon-modify{ background:url('icons/modify.png') no-repeat 0px 1px;}
+.l-icon-msn{ background:url('icons/msn.gif') no-repeat 0px 1px;}
+.l-icon-ok{ background:url('icons/ok.gif') no-repeat 0px 1px;}
+.l-icon-outbox{ background:url('icons/outbox.gif') no-repeat 0px 1px;}
+.l-icon-pager{ background:url('icons/pager.gif') no-repeat 0px 1px;}
+.l-icon-photograph{ background:url('icons/photograph.gif') no-repeat 0px 1px;}
+.l-icon-prev{ background:url('icons/prev.gif') no-repeat 0px 1px;}
+.l-icon-print{ background:url('icons/print.png') no-repeat 0px 1px;}
+.l-icon-preview{ background:url('icons/preview.png') no-repeat 0px 1px;}
+.l-icon-qq{ background:url('icons/qq.gif') no-repeat 0px 1px;}
+.l-icon-refresh{ background:url('icons/refresh.png') no-repeat 0px 1px;}
+.l-icon-right{ background:url('icons/right.gif') no-repeat 0px 1px;}
+.l-icon-save-disabled{ background:url('icons/save-disabled.gif') no-repeat 0px 1px;}
+.l-icon-save{ background:url('icons/save.gif') no-repeat 0px 1px;}
+.l-icon-search{ background:url('icons/search.gif') no-repeat 0px 1px;}
+.l-icon-search2{ background:url('icons/search2.gif') no-repeat 0px 1px;}
+.l-icon-settings{ background:url('icons/set.png') no-repeat 0px 1px;}
+.l-icon-adjust{ background:url('icons/adjust.png') no-repeat 0px 1px;}
+.l-icon-TRUE{ background:url('icons/TRUE.gif') no-repeat 0px 1px;}
+.l-icon-up{ background:url('icons/up.gif') no-repeat 0px 1px;}
+.l-icon-down{ background:url('icons/down.gif') no-repeat 0px 1px;}
+.l-icon-role{ background:url('icons/role.gif') no-repeat 0px 1px;}
+.l-icon-config{ background:url('icons/config.gif') no-repeat 0px 1px;}
+.l-icon-address{ background:url('icons/address.gif') no-repeat 0px 1px;}
+.l-icon-process{ background:url('icons/process.gif') no-repeat 0px 1px;}
+.l-icon-archives{ background:url('icons/archives.gif') no-repeat 0px 1px;}
+.l-icon-attibutes{ background:url('icons/attibutes.gif') no-repeat 0px 1px;}
+.l-icon-busy{ background:url('icons/busy.gif') no-repeat 0px 1px;}
+.l-icon-calendar{ background:url('icons/calendar.gif') no-repeat 0px 1px;}
+.l-icon-comment{ background:url('icons/comment.gif') no-repeat 0px 1px;}
+.l-icon-plus{ background:url('icons/plus.gif') no-repeat 0px 1px;}
+.l-icon-communication{ background:url('icons/communication.gif') no-repeat 0px 1px;}
+.l-icon-customers{ background:url('icons/customers.gif') no-repeat 0px 1px;}
+.l-icon-database{ background:url('icons/database.gif') no-repeat 0px 1px;}
+.l-icon-myaccount{ background:url('icons/myaccount.gif') no-repeat 0px 1px;}
+.l-icon-changeinvoice{ background:url('icons/changeinvoice.png') no-repeat 0px 1px;}
+.l-icon-viewdetail{ background:url('icons/viewdetail.png') no-repeat 0px 1px;}
+.l-icon-over{ background:url('icons/over.png') no-repeat 0px 1px;}
+.l-icon-excel{ background:url('icons/excel.png') no-repeat 0px 1px;}
+.l-icon-cz{ background:url('icons/cz.png') no-repeat 0px 1px;}
+.l-icon-qz{ background:url('icons/qz.png') no-repeat 0px 1px;}
+.l-icon-paymoney{ background:url('icons/paymoney.png') no-repeat 0px 1px;}
+.l-icon-settlement{ background:url('icons/settlement.png') no-repeat 0px 1px;}
+.l-icon-receivemoney{ background:url('icons/receivemoney.png') no-repeat 0px 1px;}
+.l-icon-prereceivemoney{ background:url('icons/prereceivemoney.png') no-repeat 0px 1px;}
+

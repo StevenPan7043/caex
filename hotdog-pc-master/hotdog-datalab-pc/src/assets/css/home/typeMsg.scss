@@ -1,0 +1,20 @@
+.type-msg {
+    width: 293px;
+	height: 140px;
+        color: #feffff;
+    .msg {
+       padding:39px 0 0 30px;
+       p {
+            font-size: 13px;
+       }
+       .msg-box {
+           margin-top: 20px;
+           .content {
+            font-size: 18px;
+           }
+           .unit {
+               font-size: 13px;
+           }
+       }
+    }
+}

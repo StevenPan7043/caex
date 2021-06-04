@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.otc.dao.AccountInfoMapper">
+	<resultMap id="BaseResultMap"
+		type="com.pmzhongguo.otc.entity.dataobject.AccountInfoDO">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="member_id" jdbcType="INTEGER"
+			property="memberId" />
+		<result column="type" jdbcType="INTEGER" property="type" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="account" jdbcType="VARCHAR" property="account" />
+		<result column="bank_or_img" jdbcType="VARCHAR"
+			property="bankOrImg" />
+		<result column="create_time" jdbcType="VARCHAR"
+			property="createTime" />
+		<result column="modify_time" jdbcType="VARCHAR"
+			property="modifyTime" />
+		<result column="is_delete" jdbcType="INTEGER"
+			property="isDelete" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, member_id, type, name, account, bank_or_img, create_time,
+		modify_time, is_delete
+	</sql>
+	<select id="findById" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from o_account_info
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="findByIdAll" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from o_account_info
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from o_account_info
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.AccountInfoDO">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+		insert into o_account_info (id, member_id, type,
+		name, account, bank_or_img,
+		create_time, modify_time, is_delete
+		)
+		values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER},
+		#{type,jdbcType=TINYINT},
+		#{name,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, #{bankOrImg,jdbcType=VARCHAR},
+		now(), now(), 0
+		)
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.AccountInfoDO">
+		update o_account_info
+		<set>
+			<if test="type != null and type != ''">
+				`type` = #{type,jdbcType=TINYINT},
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="account != null and account != ''">
+				account = #{account,jdbcType=VARCHAR},
+			</if>
+			<if test="bankOrImg != null and bankOrImg != ''">
+				bank_or_img = #{bankOrImg,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null and isDelete != ''">
+				is_delete = #{isDelete,jdbcType=TINYINT},
+			</if>
+			modify_time = now()
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="findByConditionPage"
+		parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from o_account_info
+		<where>
+			<if test="id != null and id != ''">
+				and id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="memberId != null and memberId != ''">
+				and member_id = #{memberId,jdbcType=INTEGER}
+			</if>
+			<if test="type != null and type != ''">
+				and `type` = #{type,jdbcType=TINYINT}
+			</if>
+			<if test="name != null and name != ''">
+				and name = #{name,jdbcType=VARCHAR}
+			</if>
+			<if test="account != null and account != ''">
+				and account = #{account,jdbcType=VARCHAR}
+			</if>
+			<if test="bankOrImg != null and bankOrImg != ''">
+				and bank_or_img = #{bankOrImg,jdbcType=VARCHAR}
+			</if>
+			<if test="isDelete != null">
+				and is_delete = #{isDelete}
+			</if>
+			<if test="id_list != null and id_list != ''">
+				and id IN (${id_list})
+			</if>
+		</where>
+	</select>
+</mapper>

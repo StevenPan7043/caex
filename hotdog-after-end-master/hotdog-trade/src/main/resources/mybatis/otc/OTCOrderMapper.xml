@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.otc.dao.OTCOrderMapper">
+	<resultMap id="BaseResultMap"
+			   type="com.pmzhongguo.otc.entity.dataobject.OTCOrderDO">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="member_id" jdbcType="INTEGER"
+				property="memberId" />
+		<result column="base_currency" jdbcType="VARCHAR"
+				property="baseCurrency" />
+		<result column="quote_currency" jdbcType="VARCHAR"
+				property="quoteCurrency" />
+		<result column="number" jdbcType="VARCHAR" property="number" />
+		<result column="type" jdbcType="INTEGER" property="type" />
+		<result column="price_type" jdbcType="INTEGER"
+				property="priceType" />
+		<result column="price" jdbcType="DECIMAL" property="price" />
+		<result column="volume" jdbcType="DECIMAL" property="volume" />
+		<result column="frozen" jdbcType="DECIMAL" property="frozen" />
+		<result column="remain_volume" jdbcType="DECIMAL"
+				property="remainVolume" />
+		<result column="min_quote" jdbcType="DECIMAL"
+				property="minQuote" />
+		<result column="max_quote" jdbcType="DECIMAL"
+				property="maxQuote" />
+		<result column="payment_time" jdbcType="INTEGER"
+				property="paymentTime" />
+		<result column="remain" jdbcType="DECIMAL" property="remain" />
+		<result column="lock_volume" jdbcType="DECIMAL"
+				property="lockVolume" />
+		<result column="lock_amount" jdbcType="DECIMAL"
+				property="lockAmount" />
+		<result column="done_volume" jdbcType="DECIMAL"
+				property="doneVolume" />
+		<result column="cancel_volume" jdbcType="DECIMAL"
+				property="cancelVolume" />
+		<result column="unfrozen" jdbcType="DECIMAL"
+				property="unfrozen" />
+		<result column="create_time" jdbcType="VARCHAR"
+				property="createTime" />
+		<result column="modify_time" jdbcType="VARCHAR"
+				property="modifyTime" />
+		<result column="oper_ip" jdbcType="VARCHAR" property="operIp" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="effective_time" jdbcType="INTEGER"
+				property="effectiveTime" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="acount_id" jdbcType="VARCHAR"
+				property="acountId" />
+		<result column="is_ads" jdbcType="TINYINT" property="isAds" />
+		<result column="price_change_type" jdbcType="TINYINT" property="priceChangeType" />
+		<result column="orig_price" jdbcType="DECIMAL" property="origPrice" />
+		<result column="base_rate" jdbcType="DECIMAL" property="baseRate" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, member_id, base_currency, quote_currency, number,
+		type,
+		price_type,
+		price, volume,
+		frozen, remain_volume, min_quote, max_quote,
+		payment_time,
+		remain,
+		lock_volume, lock_amount, done_volume,
+		cancel_volume,
+		unfrozen,
+		create_time,
+		modify_time, oper_ip, `status`,
+		effective_time, remark, acount_id, is_ads,
+		price_change_type, orig_price, base_rate
+	</sql>
+	<select id="findByConditionPage" parameterType="java.util.Map"
+			resultMap="BaseResultMap">
+		select
+		o.*, m.m_name as mName
+		from o_order o
+		left join m_member m on o.member_id = m.id
+		left join o_merchant om on om.member_id = m.id
+		<where>
+			<if test="m_name != null and m_name != ''">
+				and m.m_name = #{m_name}
+			</if>
+			<if test="payType != null and payType != ''">
+				and #{payType} IN ( SELECT type FROM o_account_info WHERE FIND_IN_SET( id, o.acount_id ) )
+			</if>
+			<if test="memberId != null and memberId != ''">
+				and o.member_id = #{memberId,jdbcType=INTEGER}
+			</if>
+			<if test="baseCurrency != null and baseCurrency != ''">
+				and o.base_currency = #{baseCurrency,jdbcType=VARCHAR}
+			</if>
+			<if test="quoteCurrency != null and quoteCurrency != ''">
+				and o.quote_currency = #{quoteCurrency,jdbcType=VARCHAR}
+			</if>
+			<if test="number != null and number != ''">
+				and o.number = #{number,jdbcType=VARCHAR}
+			</if>
+			<if test="type != null and type != ''">
+				and o.`type` = #{type,jdbcType=INTEGER}
+			</if>
+			<if test="priceType != null and priceType != ''">
+				and o.price_type = #{priceType,jdbcType=INTEGER}
+			</if>
+			<if test="price != null and price != ''">
+				and o.price = #{price,jdbcType=DECIMAL}
+			</if>
+			<if test="volume != null and volume != ''">
+				and o.volume = #{volume,jdbcType=DECIMAL}
+			</if>
+			<if test="frozen != null and frozen != ''">
+				and o.frozen = #{frozen,jdbcType=DECIMAL}
+			</if>
+			<if test="remainVolume != null and remainVolume != ''">
+				and o.remain_volume = #{remainVolume,jdbcType=DECIMAL}
+			</if>
+			<if test="minQuote != null and minQuote != ''">
+				and o.min_quote = #{minQuote,jdbcType=DECIMAL}
+			</if>
+			<if test="remain != null and remain != ''">
+				and o.remain = #{remain,jdbcType=DECIMAL}
+			</if>
+			<if test="lockVolume != null and lockVolume != ''">
+				and o.lock_volume = #{lockVolume,jdbcType=DECIMAL}
+			</if>
+			<if test="lockAmount != null and lockAmount != ''">
+				and o.lock_amount = #{lockAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="doneVolume != null and doneVolume != ''">
+				and o.done_volume = #{doneVolume,jdbcType=DECIMAL}
+			</if>
+			<if test="cancelVolume != null and cancelVolume != ''">
+				and o.cancel_volume = #{cancelVolume,jdbcType=DECIMAL}
+			</if>
+			<if test="unfrozen != null and unfrozen != ''">
+				and o.unfrozen = #{unfrozen,jdbcType=DECIMAL}
+			</if>
+			<if test="modifyTime != null and modifyTime != ''">
+				and o.modify_time = #{modifyTime,jdbcType=VARCHAR}
+			</if>
+			<if test="operIp != null and operIp != ''">
+				and o.oper_ip = #{operIp,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null and status != ''">
+				and o.`status` = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="cacelStatus != null and cacelStatus!= ''">
+				and o.`status` != #{cacelStatus,jdbcType=INTEGER}
+			</if>
+			<if test="create_start != null and create_start != ''">
+				<![CDATA[and o.create_time >= #{create_start,jdbcType=VARCHAR}]]>
+			</if>
+			<if test="create_end != null and create_end != ''">
+				<![CDATA[and o.create_time <= #{create_end,jdbcType=VARCHAR}]]>
+			</if>
+			<if test="isAds != null">
+				and o.is_ads = #{isAds,jdbcType=TINYINT}
+			</if>
+			<if test="priceChangeType != null">
+				and o.price_change_type = #{priceChangeType,jdbcType=TINYINT}
+			</if>
+		</where>
+	</select>
+	<select id="findById" parameterType="java.lang.Long"
+			resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from o_order
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="getCancelOrderList" parameterType="java.util.Map"
+			resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from o_order o
+		<![CDATA[
+		WHERE o.`status` = 1 AND ( o.`effective_time` = #{effectiveTime,jdbcType=INTEGER} AND o.`create_time` < #{createTime,jdbcType=VARCHAR})
+        ]]>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		o_order
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+			parameterType="com.pmzhongguo.otc.entity.dataobject.OTCOrderDO">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+				   order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+		insert into o_order (id, member_id, base_currency,
+		quote_currency,
+		number, type,
+		price_type, price, volume,
+		frozen, remain_volume,
+		min_quote, max_quote, payment_time,
+		remain, lock_volume, lock_amount,
+		done_volume,
+		cancel_volume,
+		unfrozen,
+		create_time,
+		modify_time, oper_ip,
+		`status`, effective_time, remark, acount_id, is_ads,
+		price_change_type, orig_price, base_rate)
+		values
+		(#{id,jdbcType=BIGINT},
+		#{memberId,jdbcType=INTEGER},
+		#{baseCurrency,jdbcType=VARCHAR},
+		#{quoteCurrency,jdbcType=VARCHAR},
+		#{number,jdbcType=VARCHAR},
+		#{type,jdbcType=INTEGER},
+		#{priceType,jdbcType=INTEGER},
+		#{price,jdbcType=DECIMAL},
+		#{volume,jdbcType=DECIMAL},
+		#{frozen,jdbcType=DECIMAL},
+		#{remainVolume,jdbcType=DECIMAL},
+		#{minQuote,jdbcType=DECIMAL},
+		#{maxQuote,jdbcType=DECIMAL},
+		#{paymentTime},
+		#{remain,jdbcType=DECIMAL},
+		#{lockVolume,jdbcType=DECIMAL},
+		#{lockAmount,jdbcType=DECIMAL},
+		#{doneVolume,jdbcType=DECIMAL},
+		#{cancelVolume,jdbcType=DECIMAL},
+		#{unfrozen,jdbcType=DECIMAL}, now(),
+		now(), #{operIp,jdbcType=VARCHAR},
+		#{status,jdbcType=INTEGER},#{effectiveTime,jdbcType=INTEGER},
+		#{remark,jdbcType=VARCHAR},#{acountId,jdbcType=VARCHAR},#{isAds},
+		#{priceChangeType},#{origPrice,jdbcType=DECIMAL},#{baseRate,jdbcType=DECIMAL})
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+			parameterType="com.pmzhongguo.otc.entity.dataobject.OTCOrderDO">
+		update o_order
+		<set>
+			modify_time = now(),
+			<if test="volume != null and volume != ''">
+				volume = #{volume,jdbcType=DECIMAL},
+			</if>
+			<if test="frozen != null and frozen != ''">
+				frozen = #{frozen,jdbcType=DECIMAL},
+			</if>
+			<if test="remainVolume != null and remainVolume != ''">
+				remain_volume = #{remainVolume,jdbcType=DECIMAL},
+			</if>
+			<if test="remain != null and remain != ''">
+				remain = #{remain,jdbcType=DECIMAL},
+			</if>
+			<if test="lockVolume != null and lockVolume != ''">
+				lock_volume = #{lockVolume,jdbcType=DECIMAL},
+			</if>
+			<if test="lockAmount != null and lockAmount != ''">
+				lock_amount = #{lockAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="doneVolume != null and doneVolume != ''">
+				done_volume = #{doneVolume,jdbcType=DECIMAL},
+			</if>
+			<if test="cancelVolume != null and cancelVolume != ''">
+				cancel_volume = #{cancelVolume,jdbcType=DECIMAL},
+			</if>
+			<if test="unfrozen != null and unfrozen != ''">
+				unfrozen = #{unfrozen,jdbcType=DECIMAL},
+			</if>
+			<if test="status != null and status != ''">
+				`status` = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="price != null and price != ''">
+				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="baseRate != null and baseRate != ''">
+				base_rate = #{baseRate,jdbcType=DECIMAL},
+			</if>
+			<if test="maxQuote != null and maxQuote != ''">
+				max_quote = #{maxQuote,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="lockTrade"
+			parameterType="com.pmzhongguo.otc.entity.dataobject.OTCOrderDO">
+		update o_order
+		<set>
+			modify_time = now(),
+			remain_volume = remain_volume - #{curVolume},
+			remain = remain -
+			#{curAmount},
+			lock_volume = lock_volume +
+			#{curVolume},
+			lock_amount =
+			lock_amount + #{curAmount},
+			<if test="status != null and status != ''">
+				`status` = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="doneTrade"
+			parameterType="com.pmzhongguo.otc.entity.dataobject.OTCOrderDO">
+		update o_order
+		<set>
+			modify_time = now(),
+			lock_volume = lock_volume - #{curVolume},
+			lock_amount = lock_amount -
+			#{curAmount},
+			done_volume = done_volume +
+			#{curVolume},
+			unfrozen =
+			unfrozen + #{curAmount},
+			<if test="status != null and status != ''">
+				`status` = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="cancelTrade"
+			parameterType="com.pmzhongguo.otc.entity.dataobject.OTCOrderDO">
+		update o_order
+		<set>
+			modify_time = now(),
+			remain_volume = remain_volume + #{curVolume},
+			remain = remain +
+			#{curAmount},
+			lock_volume = lock_volume -
+			#{curVolume},
+			lock_amount =
+			lock_amount - #{curAmount},
+			<if test="status != null and status != ''">
+				`status` = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="cancelOrder"
+			parameterType="com.pmzhongguo.otc.entity.dataobject.OTCOrderDO">
+		update o_order
+		<set>
+			modify_time = now(),
+			remain_volume = remain_volume - #{curVolume},
+			remain = remain - #{curAmount},
+			cancel_volume = cancel_volume +
+			#{curVolume},
+			unfrozen =
+			unfrozen + #{curAmount},
+			<if test="status != null and status != ''">
+				`status` = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

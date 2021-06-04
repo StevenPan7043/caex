@@ -1,0 +1,39 @@
+# 同一个配置文件, 启动多个服务, 需要修改 ： server.port & dubbo.protocol.port
+#
+# tomcat 启动端口
+server:
+  port: 8090
+
+dubbo:
+  registry:
+    # zookeeper 服务地址
+    address: zookeeper://127.0.0.1:2181
+  protocol:
+    # dubbo 服务端口
+    port: '20880'
+
+# 根节点名称
+group:
+  path: /quartzLocks
+# 子节点名称
+sub:
+  path: /quartzLocks/sub
+
+#数据源配置
+spring:
+  application:
+    name: zzex-provider
+  # 发布环境 prod:生产 test:测试 dev:开发 (prod日志打印为warn,dev & test 是debug)
+  profiles:
+    active: prod
+  redis:
+    cluster:
+      # redis 服务节点, 可配置集群， ','分隔
+      nodes: 127.0.0.1:6379
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+  datasource:
+    url: jdbc:mysql://47.75.218.160:3306/zzex?characterEncoding=UTF-8
+    username: root
+    password: JIUchang@821207

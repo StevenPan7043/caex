@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ex.business.mapper.ReturnCommiMapper">
+
+	<!-- 添加一条返佣 -->
+	<insert id="insertReturnCommi" parameterType="com.pmzhongguo.ex.business.entity.ReturnCommi">
+		INSERT INTO return_commi(member_id,introduce_id,return_commi_time,return_commi_rate,create_time,update_time)
+		VALUES (#{member_id,jdbcType=INTEGER},#{introduce_id},#{return_commi_time},#{return_commi_rate},#{create_time},#{update_time})
+	</insert>
+
+	<insert id="insertReturnCommiCurrAmount" parameterType="java.util.Map">
+		INSERT INTO return_commi_curr_amount(member_id,currency,amount,rate,create_time,update_time,return_commi_id)
+		VALUE (#{member_id},#{currency},#{amount},#{rate},#{create_time},#{update_time},#{return_commi_id})
+	</insert>
+
+	<!-- 查找有效的返佣-->
+	<select id="findHasVaildReturnCommiByMemberIdAndIntroduceId" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.ReturnCommi">
+		SELECT id,return_commi_rate,return_commi_time from return_commi
+		WHERE member_id = #{member_id} and introduce_id = #{introduce_id}
+		and return_commi_time <![CDATA[ >= ]]> #{return_commi_time}
+	</select>
+
+
+
+	<select id="findCurrReturnCommiOfDay" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT member_id,SUM(amount * rate) AS return_commi_amount
+		FROM return_commi_curr_amount
+		WHERE create_time <![CDATA[ >= ]]> #{start_time} AND create_time <![CDATA[ <= ]]> #{end_time}
+		GROUP BY member_id
+	</select>
+
+	<insert id="batchInsertAmountReturnCommiOfDay" parameterType="java.util.List">
+		insert into return_commi_amount (member_id, return_commi_amount,create_time,update_time,currency) values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.member_id},#{item.return_commi_amount},#{item.create_time},#{item.update_time},#{item.currency})
+		</foreach>
+	</insert>
+
+	<select id="findReturnCommiAmountWithCurrencyByPage" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT rca.return_commi_amount ,rca.create_time,rca.currency
+		from return_commi_amount rca
+		WHERE rca.member_id = #{member_id}
+	</select>
+
+	<select id="findReturnCommiByTimeAndGroupByMemberId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT member_id
+		from return_commi rca
+		WHERE rca.return_commi_time <![CDATA[ >= ]]> #{curr_time}
+		group by member_id
+	</select>
+
+	<select id="findMgrReturnCommiAmountByPage" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT rca.return_commi_amount ,rca.create_time,rca.member_id
+		from return_commi_amount rca
+		WHERE 1=1
+	  	<if test="member_id != null and member_id != ''">
+			AND rca.member_id = #{member_id}
+		</if>
+
+	</select>
+	<select id="findMgrReturnCommiCurrAmountByPage" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT member_id,create_time,currency,sum(amount) as amount,rate
+		from return_commi_curr_amount
+		WHERE 1=1
+		<if test="member_id != null and member_id != ''">
+			AND member_id = #{member_id}
+		</if>
+		group by currency
+	</select>
+
+	<select id="findReturnCommiAmountTotalByMemberId" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		SELECT sum(return_commi_amount) as amount
+		from return_commi_amount
+		WHERE member_id = #{member_id}
+	</select>
+
+	<select id="isExistByMemberIdAndIntroduceId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*)
+		from return_commi
+		WHERE member_id = #{member_id} and introduce_id = #{introduce_id}
+	</select>
+
+
+
+
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>hotdog-chat</groupId>
+        <artifactId>hotdog-chat</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <groupId>hotdog-chat</groupId>
+    <artifactId>chat-run</artifactId>
+    <version>1.0.0</version>
+    <name>chat-run</name>
+    <description>run Spring Boot</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>hotdog-chat</groupId>
+            <artifactId>chat-common</artifactId>
+            <version>${common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>hotdog-chat</groupId>
+            <artifactId>chat-business</artifactId>
+            <version>${business.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>hotdog-chat</groupId>
+            <artifactId>chat-websocket</artifactId>
+            <version>${websocket.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.zytx.ChatRunApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal><!--可以把依赖的包都打包到生成的Jar包中-->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

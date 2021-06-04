@@ -1,0 +1,48 @@
+.withdraw-rec {
+    width: 100%;
+    background-color: #f2f6f9;
+    .rec-wrap {
+        width: 1200px;
+        margin: 0 auto;
+        padding: 20px 0 60px 0;
+    }
+    .table-box {
+        margin-top: 10px;
+        background-color: #fff;
+        height: 710px;
+        .rec-type {
+            height: 100%;
+            .item-wrap {
+                height: 100%;
+                display: flex;
+                .item {
+                    font-size: 16px;
+                    color: #1c242c;
+                    margin-right: 60px;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+                    box-sizing: border-box;
+                    &.active {
+                        border-bottom: 3px solid #196bdf;
+                    }
+                }
+            }
+        }
+    }
+    .table-content {
+        padding: 0 30px;
+        transform: translateY(50px);
+        overflow: auto;
+        height: 618px;
+        // border: 1px solid black;
+    }
+    .pagination {
+        padding: 0 30px;
+        display: flex;
+        justify-content: flex-end;
+        transform: translateY(64px);
+        // border: 1px solid black;
+    }
+}

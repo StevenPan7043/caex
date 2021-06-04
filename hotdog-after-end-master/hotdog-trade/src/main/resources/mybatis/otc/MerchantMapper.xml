@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.otc.dao.MerchantMapper">
+	<resultMap id="BaseResultMap"
+		type="com.pmzhongguo.otc.entity.dataobject.MerchantDO">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="member_id" jdbcType="INTEGER"
+			property="memberId" />
+		<result column="deposit_currency" jdbcType="VARCHAR" property="depositCurrency" />
+        <result column="deposit_volume" jdbcType="DECIMAL" property="depositVolume" />
+		<result column="status" jdbcType="TINYINT" property="status" />
+		<result column="create_time" jdbcType="VARCHAR"
+			property="createTime" />
+		<result column="modify_time" jdbcType="VARCHAR"
+			property="modifyTime" />
+        <result column="memo" jdbcType="VARCHAR" property="memo" />
+        <result column="is_deposit" jdbcType="TINYINT" property="isDeposit" />
+        <result column="vip" jdbcType="INTEGER" property="vip" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, member_id, deposit_currency, deposit_volume, `status`, create_time, modify_time, memo, is_deposit,vip
+	</sql>
+	<select id="findById" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from o_merchant
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="findByConditionPage"
+		parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select o.*, m.m_name as mName, m.last_login_time as last_login_time
+		from o_merchant o 
+		left join m_member m on  o.member_id = m.id
+		<where>
+			<if test="id != null">
+				o.id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="depositCurrency != null and depositCurrency != ''">
+				and o.deposit_currency = #{depositCurrency,jdbcType=VARCHAR}
+			</if>
+            <if test="depositVolume != null and depositVolume != ''">
+				and o.deposit_volume = #{depositVolume,jdbcType=DECIMAL}
+			</if>
+			<if test="status != null and status != ''">
+				and o.`status` = #{status,jdbcType=TINYINT}
+			</if>
+			<if test="memberId != null and memberId != ''">
+				and o.member_id = #{memberId,jdbcType=INTEGER}
+			</if>
+            <if test="isDeposit != null">
+				and o.is_deposit = #{isDeposit,jdbcType=TINYINT}
+			</if>
+			<if test="vip != null">
+				and vip = #{vip}
+			</if>
+			<if test="m_name != null and m_name != ''">and m.m_name = #{m_name} </if>
+			<if test="login_start != null and login_start != ''">
+				<![CDATA[and m.last_login_time >= #{login_start,jdbcType=VARCHAR}]]>
+			</if>
+			<if test="login_end != null and login_end != ''">
+				<![CDATA[and m.last_login_time <= #{login_end,jdbcType=VARCHAR}]]>
+			</if>
+		</where>
+	</select>
+
+	<delete id="deleteById"
+		parameterType="java.util.Map">
+		delete from o_merchant
+		<where>
+            <if  test="id != null and id != ''">
+               and id = #{id,jdbcType=INTEGER}
+            </if>
+             <if  test="memberId != null and memberId != ''">
+               and member_id = #{memberId,jdbcType=INTEGER}
+            </if>
+        </where>
+	</delete>
+	<insert id="insert"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.MerchantDO">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+		insert into o_merchant (id, member_id, deposit_currency, deposit_volume,
+		`status`, create_time,
+		modify_time, memo, is_deposit
+		)
+		values (#{id,jdbcType=INTEGER},
+		#{memberId,jdbcType=INTEGER},
+		#{depositCurrency,jdbcType=VARCHAR}, #{depositVolume,jdbcType=DECIMAL},
+		#{status,jdbcType=TINYINT}, now(), now(), #{memo,jdbcType=VARCHAR}, #{isDeposit,jdbcType=TINYINT}
+		)
+	</insert>
+	<update id="updateStatus"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.MerchantDO">
+		update o_merchant
+		<set>
+			<if test="status != null and status != ''">
+				`status` = #{status,jdbcType=TINYINT},
+			</if>
+            <if test="memo != null and memo != ''">
+				memo = if(isnull(memo), #{memo,jdbcType=VARCHAR} , CONCAT(memo, '▲', #{memo,jdbcType=VARCHAR})) ,
+			</if>
+			<if test="vip != null">
+				vip = #{vip},
+			</if>
+			modify_time = now()
+		</set>
+        <where>
+            <if  test="id != null and id != ''">
+               and id = #{id,jdbcType=INTEGER}
+            </if>
+             <if  test="memberId != null and memberId != ''">
+               and member_id = #{memberId,jdbcType=INTEGER}
+            </if>
+        </where>
+	</update>
+</mapper>

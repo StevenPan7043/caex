@@ -1,0 +1,48 @@
+.wallet {
+    width: 100%;
+    background-color: #f2f6f9;
+    .wallet-box {
+        width: 1200px;
+        margin: 0 auto;
+        padding: 20px 0 60px 0;
+        .wallet-contain {
+            margin-top: 20px;
+            height: 700px;
+            width: 1200px;
+            background-color: #fff;
+            .withdraw-box {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                position: relative;
+                .rest-item {
+                    margin-right: 60px;
+                }
+                .rec-withdraw {
+                    position: absolute;
+                    right: 0;
+                    .withdraw-btn {
+                        font-size: 14px;
+                        font-weight: normal;
+                        font-stretch: normal;
+                        letter-spacing: 0px;
+                        color: #196bdf;
+                    }
+                }
+            }
+            .table-box {
+                transform: translateY(49px);
+                box-sizing: border-box;
+                overflow: auto;
+                padding: 0 30px;
+                height: 578px;
+            }
+            .pagination {
+                transform: translateY(89px);
+                display: flex;
+                padding: 0 30px;
+                justify-content: flex-end;
+            }
+        }
+    }
+}

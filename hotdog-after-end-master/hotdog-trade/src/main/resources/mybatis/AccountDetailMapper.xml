@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.pmzhongguo.ex.business.mapper.AccountDetailMapper">
+	<resultMap id="BaseResultMap"
+		type="com.pmzhongguo.ex.business.dto.AccountDetailDto">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="member_id" jdbcType="INTEGER"
+			property="memberId" />
+		<result column="currency" jdbcType="VARCHAR"
+			property="currency" />
+		<result column="num" jdbcType="DECIMAL" property="num" />
+		<result column="proc_type" jdbcType="INTEGER"
+			property="procType" />
+		<result column="before_info" jdbcType="VARCHAR"
+			property="beforeInfo" />
+		<result column="create_time" jdbcType="VARCHAR"
+			property="createTime" />
+		<result column="opt_source" jdbcType="VARCHAR"
+				property="optSource" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, member_id, currency, num, proc_type, before_info,
+		create_time,opt_source
+	</sql>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from m_account_detail
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<select id="selectPage" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from m_account_detail
+		<where>
+			<if test="memberId != null  and memberId != ''">
+				and member_id = #{memberId,jdbcType=INTEGER}
+			</if>
+			<if test="currency != null  and currency != ''">
+				and currency = #{currency,jdbcType=VARCHAR}
+			</if>
+			<if test="optSource != null  and optSource != ''">
+				and opt_source = #{optSource,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectOTCPage" parameterType="java.util.Map"
+			resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from o_account_detail
+		<where>
+			<if test="memberId != null  and memberId != ''">
+				and member_id = #{memberId,jdbcType=INTEGER}
+			</if>
+			<if test="currency != null  and currency != ''">
+				and currency = #{currency,jdbcType=VARCHAR}
+			</if>
+			<if test="optSource != null  and optSource != ''">
+				and opt_source = #{optSource,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from m_account_detail
+		where id =
+		#{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.pmzhongguo.ex.business.dto.AccountDetailDto">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+		insert into m_account_detail (id, member_id, currency,
+		num, proc_type,
+		before_info,
+		create_time,
+		opt_source)
+		values (#{id,jdbcType=BIGINT},
+		#{memberId,jdbcType=INTEGER},
+		#{currency,jdbcType=VARCHAR},
+		#{num,jdbcType=DECIMAL}, #{procType,jdbcType=INTEGER},
+		#{beforeInfo,jdbcType=VARCHAR},
+		now(),
+		#{optSource,jdbcType=INTEGER})
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.pmzhongguo.ex.business.dto.AccountDetailDto">
+		update m_account_detail
+		<set>
+			<if test="memberId != null">
+				member_id = #{memberId,jdbcType=INTEGER},
+			</if>
+			<if test="currency != null">
+				currency = #{currency,jdbcType=VARCHAR},
+			</if>
+			<if test="num != null">
+				num = #{num,jdbcType=DECIMAL},
+			</if>
+			<if test="procType != null">
+				proc_type = #{procType,jdbcType=INTEGER},
+			</if>
+			<if test="beforeInfo != null">
+				before_info = #{beforeInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.pmzhongguo.ex.business.dto.AccountDetailDto">
+		update m_account_detail
+		set member_id =
+		#{memberId,jdbcType=INTEGER},
+		currency = #{currency,jdbcType=VARCHAR},
+		num = #{num,jdbcType=DECIMAL},
+		proc_type =
+		#{procType,jdbcType=INTEGER},
+		before_info =
+		#{beforeInfo,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

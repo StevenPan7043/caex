@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ex.business.mapper.ReturnCommiRecordMapper">
+
+
+	<!-- 返佣明细-->
+	<insert id="insertReturnCommiRecord" parameterType="com.pmzhongguo.ex.business.entity.ReturnCommiRecord">
+		INSERT INTO return_commi_record(member_id,return_commi_id,return_commi_num,tx_num,currency,create_time,update_time)
+		VALUES (#{member_id,jdbcType=INTEGER},#{return_commi_id},#{return_commi_num},#{tx_num},#{currency},#{create_time},#{update_time});
+	</insert>
+
+
+
+
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.LockRechargeMapper">
+
+
+	<!-- 查询所有数据 -->
+	<select id="findAll" resultType="com.pmzhongguo.ex.business.dto.LockRechargeDto">
+		SELECT m.id,m.member_id,m.currency_id,m.currency,m.r_amount,m.r_unnum, m.locktime,m.r_create_time,m.r_address,
+		 m.r_txid,m.r_status,m.r_release_num,d.unlockpre,dc.c_precision FROM m_lock_recharge m join d_currency_locked d on m.currency_id = d.currency_id
+		 JOIN d_currency dc ON dc.id = d.currency_id
+		 WHERE r_status = 1 and r_unnum > 0
+	</select>
+
+	<!-- 修改一条数据 -->
+	<update id="update" parameterType="java.util.Map">
+		UPDATE m_lock_recharge SET r_update_time=#{r_update_time},r_unnum=#{r_unnum}
+ 		<if test="r_release_num != null and r_release_num != ''">,r_release_num=#{r_release_num}</if>
+ 		<if test="locktime != null and locktime != ''">,locktime=#{locktime}</if>
+		<if test="r_update_time != null and r_update_time != ''">,r_update_time=#{r_update_time}</if>
+		<if test="r_status != null and r_status != ''">,r_status=#{r_status}</if>
+
+		WHERE id=#{id}
+	</update>
+
+
+	<select id="findCurrencyByPage" resultType="com.pmzhongguo.ex.business.entity.LockRecharge">
+		SELECT m.id,m.member_id,m.currency_id,m.currency,m.r_amount,m.r_unnum, m.locktime,m.r_create_time,m.r_address,
+		 m.r_txid,m.r_status,m.r_release_num FROM m_lock_recharge m where m.member_id=#{member_id}
+		<if test="currency_id != null and currency_id != ''">and m.currency_id=#{currency_id}</if>
+	</select>
+
+	<select id="findLockListByPage" resultType="com.pmzhongguo.ex.business.entity.LockRecharge" parameterType="java.util.Map">
+		SELECT * FROM m_lock_recharge m
+		 WHERE m.member_id=#{member_id} and m.currency_id={currency_id} ORDER BY id ASC
+	</select>
+
+	<select id="findRechargeByPage" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT m.*,mm.m_name as m_name
+		FROM m_lock_recharge m join m_member mm  on m.member_id = mm.id where 1=1
+		<if test="m_name != null and m_name != ''">and mm.m_name=#{m_name} </if>
+		<if test="currency != null and currency != ''">and m.currency=#{currency} </if>
+		<if test="r_status != null and r_status != ''">and m.r_status=#{r_status} </if>
+	</select>
+
+	<select id="findOne" resultType="com.pmzhongguo.ex.business.entity.LockRecharge" parameterType="java.lang.Integer">
+		SELECT * FROM m_lock_recharge m
+		WHERE m.id=#{id}
+	</select>
+
+
+</mapper>

@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.otc.dao.OTCTradeMapper">
+	<resultMap id="BaseResultMap"
+		type="com.pmzhongguo.otc.entity.dataobject.OTCTradeDO">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="member_id" jdbcType="INTEGER"
+			property="memberId" />
+		<result column="base_currency" jdbcType="VARCHAR"
+			property="baseCurrency" />
+		<result column="quote_currency" jdbcType="VARCHAR"
+			property="quoteCurrency" />
+		<result column="t_type" jdbcType="INTEGER" property="tType" />
+		<result column="o_id" jdbcType="INTEGER" property="oId" />
+		<result column="opposite_o_id" jdbcType="INTEGER"
+			property="oppositeOId" />
+		<result column="opposite_t_id" jdbcType="INTEGER"
+			property="oppositeTId" />
+		<result column="price" jdbcType="DECIMAL" property="price" />
+		<result column="volume" jdbcType="DECIMAL" property="volume" />
+		<result column="modify_time" jdbcType="VARCHAR"
+			property="modifyTime" />
+		<result column="taker" jdbcType="INTEGER" property="taker" />
+		<result column="fee" jdbcType="DECIMAL" property="fee" />
+		<result column="fee_currency" jdbcType="VARCHAR"
+			property="feeCurrency" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="pay_time" jdbcType="VARCHAR" property="payTime" />
+		<result column="create_time" jdbcType="VARCHAR"
+			property="createTime" />
+		<result column="payment_time" jdbcType="INTEGER"
+			property="paymentTime" />
+		<result column="done_time" jdbcType="VARCHAR"
+			property="doneTime" />
+        <result column="consuming_time" jdbcType="INTEGER"
+			property="consumingTime" />
+         <result column="acount_id" jdbcType="INTEGER"
+			property="acountId" />
+        <result column="memo" jdbcType="VARCHAR"
+			property="memo" />
+		<result column="memoStr" jdbcType="VARCHAR"
+				property="memoStr" />
+        <result column="complain_type" jdbcType="INTEGER"
+			property="complainType" />
+        <result column="t_number" jdbcType="VARCHAR"
+			property="tNumber" />
+		<result column="oppositeStatus" jdbcType="VARCHAR"
+				property="oppositeStatus" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, member_id, base_currency, quote_currency, t_type,
+		o_id,
+		opposite_o_id, opposite_t_id, price,
+		volume, modify_time, taker,
+		fee,
+		fee_currency, `status`, pay_time, create_time,
+		payment_time, done_time, consuming_time, acount_id, memo, 
+        complain_type, t_number
+	</sql>
+	<select id="findByConditionPage" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		t.*, m.m_nick_name as opposite_nick_name, m.id as opposite_member_id, me.m_name as mName,ot.status oppositeStatus,
+		case
+		when t.status = 5 then t.memo
+		when ot.status = 5 then ot.memo
+		else '' end memoStr
+		from o_trade t
+        left join o_order o on  t.opposite_o_id = o.id
+        left join m_member m on  o.member_id = m.id
+        left join m_member me on  t.member_id = me.id
+		left join o_trade ot on t.opposite_t_id = ot.id
+		<where>
+			<if test="memberId != null and memberId != ''">
+				and t.member_id = #{memberId,jdbcType=INTEGER}
+			</if>
+			<if test="baseCurrency != null and baseCurrency != ''">
+				and t.base_currency = #{baseCurrency,jdbcType=VARCHAR}
+			</if>
+			<if test="m_name != null and m_name != ''">
+				and me.m_name = #{m_name,jdbcType=VARCHAR}
+			</if>
+			<if test="quoteCurrency != null and quoteCurrency != ''">
+				and t.quote_currency = #{quoteCurrency,jdbcType=VARCHAR}
+			</if>
+			<if test="tType != null and tType != ''">
+				and t.t_type = #{tType,jdbcType=INTEGER}
+			</if>
+			<if test="oId != null and oId != ''">
+				and t.o_id = #{oId,jdbcType=INTEGER}
+			</if>
+			<if test="oppositeOId != null and oppositeOId != ''">
+				and t.opposite_o_id = #{oppositeOId,jdbcType=INTEGER}
+			</if>
+			<if test="oppositeTId != null and oppositeTId != ''">
+				and t.opposite_t_id = #{oppositeTId,jdbcType=INTEGER}
+			</if>
+			<if test="price != null and price != ''">
+				and t.price = #{price,jdbcType=DECIMAL}
+			</if>
+			<if test="volume != null and volume != ''">
+				and t.volume = #{volume,jdbcType=DECIMAL}
+			</if>
+			<if test="modifyTime != null and modifyTime != ''">
+				and t.modify_time = #{modifyTime,jdbcType=VARCHAR}
+			</if>
+			<if test="taker != null and taker != ''">
+				and t.taker = #{taker,jdbcType=INTEGER}
+			</if>
+			<if test="status != null and status != ''">
+				and t.`status` = #{status,jdbcType=DECIMAL}
+			</if>
+			<if test="complainTypeStr != null and complainTypeStr != ''">
+				and t.complain_type not in (#{complainTypeStr,jdbcType=VARCHAR})
+			</if>
+            <if test="complainType != null and complainType != ''">
+				and t.complain_type = #{complainType,jdbcType=INTEGER}
+			</if>
+            <if test="tNumber != null and tNumber != ''">
+				and t.t_number = #{tNumber,jdbcType=INTEGER}
+			</if>
+			<if test="create_start != null and create_start != ''">
+				<![CDATA[and t.create_time >= #{create_start,jdbcType=VARCHAR}]]>
+			</if>
+            <if test="create_end != null and create_end != ''">
+				<![CDATA[and t.create_time <= #{create_end,jdbcType=VARCHAR}]]>
+			</if>
+		</where>
+	</select>
+
+    <select id="findBytradingPage" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		t.*, m.m_nick_name as opposite_nick_name, m.id as opposite_member_id, me.m_name as mName
+		from o_trade t
+        left join o_order o on  t.opposite_o_id = o.id
+        left join m_member m on  o.member_id = m.id
+        left join m_member me on  t.member_id = me.id
+		left join o_trade ot on t.opposite_t_id = ot.id
+		<where>
+            t.`status` in (1, 2)
+			<if test="memberId != null and memberId != ''">
+				and t.member_id = #{memberId,jdbcType=INTEGER}
+			</if>
+			<if test="baseCurrency != null and baseCurrency != ''">
+				and t.base_currency = #{baseCurrency,jdbcType=VARCHAR}
+			</if>
+			<if test="quoteCurrency != null and quoteCurrency != ''">
+				and t.quote_currency = #{quoteCurrency,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null and status != ''">
+				<if test="status == 5">
+					and (t.status != #{status,jdbcType=INTEGER} and ot.status != #{status,jdbcType=INTEGER})
+				</if>
+			</if>
+			<if test="tType != null and tType != ''">
+				and t.t_type = #{tType,jdbcType=INTEGER}
+			</if>
+			<if test="oId != null and oId != ''">
+				and t.o_id = #{oId,jdbcType=INTEGER}
+			</if>
+			<if test="oppositeOId != null and oppositeOId != ''">
+				and t.opposite_o_id = #{oppositeOId,jdbcType=INTEGER}
+			</if>
+			<if test="oppositeTId != null and oppositeTId != ''">
+				and t.opposite_t_id = #{oppositeTId,jdbcType=INTEGER}
+			</if>
+			<if test="price != null and price != ''">
+				and t.price = #{price,jdbcType=DECIMAL}
+			</if>
+			<if test="volume != null and volume != ''">
+				and t.volume = #{volume,jdbcType=DECIMAL}
+			</if>
+			<if test="modifyTime != null and modifyTime != ''">
+				and t.modify_time = #{modifyTime,jdbcType=VARCHAR}
+			</if>
+			<if test="taker != null and taker != ''">
+				and t.taker = #{taker,jdbcType=INTEGER}
+			</if>
+			<if test="fee != null and fee != ''">
+				and t.fee = #{fee,jdbcType=DECIMAL}
+			</if>
+			<if test="feeCurrency != null and feeCurrency != ''">
+				and t.fee_currency = #{feeCurrency,jdbcType=VARCHAR}
+			</if>
+            <if test="complainType != null and complainType != ''">
+				and t.complain_type = #{complainType,jdbcType=INTEGER}
+			</if>
+            <if test="tNumber != null and tNumber != ''">
+				and t.t_number = #{tNumber,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+
+	<select id="countDone" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select
+		count(*) AS total 
+		from o_trade
+		<where>
+            <if test="memberId != null and memberId != ''">
+				and member_id = #{memberId,jdbcType=INTEGER}
+			</if>
+            <if test="done_time_start != null and done_time_start != ''">
+				<![CDATA[and done_time >= #{done_time_start,jdbcType=VARCHAR}]]>
+			</if>
+            <if test="done_time_end != null and done_time_end != ''">
+				<![CDATA[and done_time <= #{done_time_end,jdbcType=VARCHAR}]]>
+			</if>
+            <if test="status != null and status != ''">
+                and `status` = #{status,jdbcType=INTEGER}
+            </if>
+        </where>
+	</select>
+
+    <select id="countComplain" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM `o_trade` o LEFT JOIN `o_trade` t ON o.`opposite_t_id` = t.id WHERE t.`complain_type` != 98 AND o.`member_id` = #{memberId,jdbcType=INTEGER}
+	</select>
+
+    <select id="getConsumingTime" parameterType="java.util.Map"
+		resultType="java.util.Map">
+        select count(consuming_time) AS total, sum(consuming_time) AS consumingTime from o_trade 
+        where member_id = #{memberId,jdbcType=INTEGER} and `status` = #{status,jdbcType=INTEGER}
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from o_trade
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		o_trade
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.OTCTradeDO">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+		insert into o_trade (id, member_id, base_currency,
+		quote_currency,
+		t_type, o_id,
+		opposite_o_id, opposite_t_id, price, volume,
+		modify_time,
+		taker, fee, fee_currency,
+		`status`, pay_time, create_time, payment_time, done_time, 
+        consuming_time, acount_id, memo, complain_type, t_number)
+		values
+		(#{id,jdbcType=BIGINT}, #{memberId,jdbcType=INTEGER},
+		#{baseCurrency,jdbcType=VARCHAR},
+		#{quoteCurrency,jdbcType=VARCHAR},
+		#{tType,jdbcType=INTEGER}, #{oId,jdbcType=INTEGER},
+		#{oppositeOId,jdbcType=INTEGER}, #{oppositeTId,jdbcType=INTEGER},
+		#{price,jdbcType=DECIMAL},
+		#{volume,jdbcType=DECIMAL},now(),
+		#{taker,jdbcType=INTEGER}, #{fee,jdbcType=DECIMAL},
+		#{feeCurrency,jdbcType=VARCHAR},
+		#{status,jdbcType=INTEGER}, null,
+		now(), #{paymentTime}, null, null, #{acountId}, #{memo}, 
+        #{complainType,jdbcType=INTEGER}, #{tNumber,jdbcType=INTEGER})
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.pmzhongguo.otc.entity.dataobject.OTCTradeDO">
+		update o_trade
+		<set>
+			modify_time = now(),
+			<if test="tType != null and tType != ''">
+				t_type = #{tType,jdbcType=INTEGER},
+			</if>
+			<if test="oId != null and oId != ''">
+				o_id = #{oId,jdbcType=INTEGER},
+			</if>
+			<if test="oppositeOId != null and oppositeOId != ''">
+				opposite_o_id = #{oppositeOId,jdbcType=INTEGER},
+			</if>
+			<if test="oppositeTId != null and oppositeTId != ''">
+				opposite_t_id = #{oppositeTId,jdbcType=INTEGER},
+			</if>
+			<if test="price != null and price != ''">
+				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="volume != null and volume != ''">
+				volume = #{volume,jdbcType=DECIMAL},
+			</if>
+			<if test="taker != null and taker != ''">
+				taker = #{taker,jdbcType=INTEGER},
+			</if>
+			<if test="fee != null and fee != ''">
+				fee = #{fee,jdbcType=DECIMAL},
+			</if>
+			<if test="feeCurrency != null and feeCurrency != ''">
+				fee_currency = #{feeCurrency,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null and status != ''">
+				`status` = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="payTime != null and payTime != ''">
+				pay_time = #{payTime,jdbcType=VARCHAR},
+			</if>
+			<if test="doneTime != null and doneTime != ''">
+				done_time = #{doneTime,jdbcType=VARCHAR},
+			</if>
+            <if test="consumingTime != null and consumingTime != ''">
+				consuming_time = #{consumingTime,jdbcType=INTEGER},
+			</if>
+             <if test="acountId != null and acountId != ''">
+				acount_id = #{acountId,jdbcType=INTEGER},
+			</if>
+            <if test="memo != null and memo != ''">
+             memo = if(isnull(memo), #{memo,jdbcType=VARCHAR} , CONCAT(memo, '▲', #{memo,jdbcType=VARCHAR})) ,
+			</if>
+            <if test="complainType != null and complainType != ''">
+				complain_type = #{complainType,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<select id="findByComplainTradePage" parameterType="java.util.Map"
+			resultMap="BaseResultMap">
+		select
+		t.*, m.m_nick_name as opposite_nick_name, m.id as opposite_member_id, me.m_name as mName,ot.status oppositeStatus,
+		case
+		when t.status = 5 then t.memo
+		when ot.status = 5 then ot.memo
+		else '' end memoStr
+		from o_trade t
+		left join o_order o on  t.opposite_o_id = o.id
+		left join m_member m on  o.member_id = m.id
+		left join m_member me on  t.member_id = me.id
+		left join o_trade ot on t.opposite_t_id = ot.id
+		<where>
+			<if test="memberId != null and memberId != ''">
+				and t.member_id = #{memberId,jdbcType=INTEGER}
+			</if>
+			<if test="status != null and status != ''">
+				<if test="status == 5">
+					and (t.status = #{status,jdbcType=INTEGER} or ot.status = #{status,jdbcType=INTEGER})
+				</if>
+				<if test="status != 5">
+					and t.status = #{status,jdbcType=INTEGER}
+				</if>
+			</if>
+			<if test="baseCurrency != null and baseCurrency != ''">
+				and t.base_currency = #{baseCurrency,jdbcType=VARCHAR}
+			</if>
+			<if test="quoteCurrency != null and quoteCurrency != ''">
+				and t.quote_currency = #{quoteCurrency,jdbcType=VARCHAR}
+			</if>
+			<if test="tType != null and tType != ''">
+				and t.t_type = #{tType,jdbcType=INTEGER}
+			</if>
+			<if test="oId != null and oId != ''">
+				and t.o_id = #{oId,jdbcType=INTEGER}
+			</if>
+			<if test="oppositeOId != null and oppositeOId != ''">
+				and t.opposite_o_id = #{oppositeOId,jdbcType=INTEGER}
+			</if>
+			<if test="oppositeTId != null and oppositeTId != ''">
+				and t.opposite_t_id = #{oppositeTId,jdbcType=INTEGER}
+			</if>
+			<if test="price != null and price != ''">
+				and t.price = #{price,jdbcType=DECIMAL}
+			</if>
+			<if test="volume != null and volume != ''">
+				and t.volume = #{volume,jdbcType=DECIMAL}
+			</if>
+			<if test="modifyTime != null and modifyTime != ''">
+				and t.modify_time = #{modifyTime,jdbcType=VARCHAR}
+			</if>
+			<if test="taker != null and taker != ''">
+				and t.taker = #{taker,jdbcType=INTEGER}
+			</if>
+			<if test="fee != null and fee != ''">
+				and t.fee = #{fee,jdbcType=DECIMAL}
+			</if>
+			<if test="feeCurrency != null and feeCurrency != ''">
+				and t.fee_currency = #{feeCurrency,jdbcType=VARCHAR}
+			</if>
+			<if test="complainType != null and complainType != ''">
+				and t.complain_type = #{complainType,jdbcType=INTEGER}
+			</if>
+			<if test="tNumber != null and tNumber != ''">
+				and t.t_number = #{tNumber,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+</mapper>

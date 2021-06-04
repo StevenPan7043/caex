@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里的namespace名字必须为执行该sql的dao地址 或者Mapper的地址 -->
+<mapper namespace="com.pmzhongguo.ex.business.mapper.CurrencyMapper">
+	<insert id="addCurrencyPair" parameterType="com.pmzhongguo.ex.business.entity.CurrencyPair">
+   		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+			SELECT @@IDENTITY
+		</selectKey>
+   		INSERT INTO d_currency_pair(dsp_name,base_currency,quote_currency,key_name,
+   		taker_fee,maker_fee,min_price,max_price,open_time,p_status,
+   		can_buy,can_sell,stop_desc,p_depth,p_order,area_id,is_area_first,
+   		min_buy_volume,min_buy_amount,min_sell_volume,
+   		fixed_buy_price,price_precision,volume_precision,
+   		fraud_magnitude,
+		is_flash_sale_open,
+		flash_sale_open_time,
+		flash_sale_close_time,
+		max_buy_volume,is_ups_downs_limit,ups_downs_limit
+   		)
+   		VALUES
+   		(#{dsp_name},#{base_currency},#{quote_currency},#{key_name},
+   		#{taker_fee},#{maker_fee},#{min_price},#{max_price},#{open_time},
+   		#{p_status},#{can_buy},#{can_sell},#{stop_desc},#{p_depth},#{p_order},
+   		#{area_id},#{is_area_first},#{min_buy_volume},#{min_buy_amount},#{min_sell_volume},
+   		#{fixed_buy_price},#{price_precision},#{volume_precision},
+   		#{fraud_magnitude},
+   		#{is_flash_sale_open},
+   		#{flash_sale_open_time},
+   		#{flash_sale_close_time},
+   		#{max_buy_volume},#{is_ups_downs_limit},#{ups_downs_limit}
+   		)
+   	</insert>
+   	
+	<update id="editCurrencyPair" parameterType="com.pmzhongguo.ex.business.entity.CurrencyPair">
+		UPDATE d_currency_pair SET 
+		dsp_name=#{dsp_name},
+		taker_fee=#{taker_fee},
+		maker_fee=#{maker_fee},
+		min_price=#{min_price},
+		max_price=#{max_price},
+		open_time=#{open_time},
+		p_status=#{p_status},
+		can_buy=#{can_buy},
+		can_sell=#{can_sell},
+		stop_desc=#{stop_desc},
+		p_depth=#{p_depth},
+		p_order=#{p_order},
+		area_id=#{area_id},
+		is_area_first=#{is_area_first},
+		min_buy_volume=#{min_buy_volume},
+		min_buy_amount=#{min_buy_amount},
+		min_sell_volume=#{min_sell_volume},
+		fixed_buy_price=#{fixed_buy_price},
+		price_precision=#{price_precision},
+		volume_precision=#{volume_precision},
+		fraud_magnitude=#{fraud_magnitude},
+		is_flash_sale_open=#{is_flash_sale_open},
+		flash_sale_open_time=#{flash_sale_open_time},
+		flash_sale_close_time=#{flash_sale_close_time},
+		max_buy_volume=#{max_buy_volume},
+		is_ups_downs_limit=#{is_ups_downs_limit},
+		ups_downs_limit=#{ups_downs_limit}
+		WHERE id=#{id}
+	</update>
+	<select id="listCurrencyPairPage" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.CurrencyPair">
+		SELECT p.*, d.dic_data_name p_status_name, price_currency.currency_name quote_currency_name, volume_currency.currency_name base_currency_name
+		FROM d_currency_pair p, frm_dictionary d, d_currency price_currency, d_currency volume_currency
+		WHERE p.p_status = d.dic_data_code AND d.dic_code = 'pair_status'
+		AND p.base_currency = volume_currency.currency AND p.quote_currency = price_currency.currency
+		<if test="null != p_status and  p_status !=''">
+    	 	AND p.p_status = #{p_status}
+    	</if>
+    	<if test="null != keyword and  keyword !=''">
+    	 	AND (p.key_name LIKE CONCAT('%', #{keyword}, '%') OR p.key_name LIKE CONCAT('%', #{keyword}, '%'))
+    	</if>
+    	<if test="null != area_id and  area_id !=''">
+    	 	AND p.area_id = #{area_id}
+    	</if>
+	</select>
+
+	<select id="findAllCurrencyPair" resultType="com.pmzhongguo.ex.business.entity.CurrencyPair">
+		select key_name ,base_currency,quote_currency from d_currency_pair;
+	</select>
+	
+	
+	<select id="getCurrencyPair" parameterType="java.lang.Integer" resultType="com.pmzhongguo.ex.business.entity.CurrencyPair">
+		SELECT * FROM d_currency_pair
+		WHERE id = #{id}
+	</select>
+
+
+
+
+
+	<insert id="addCurrency" parameterType="com.pmzhongguo.ex.business.entity.Currency">
+		INSERT INTO d_currency(currency,currency_name,currency_img,c_precision,c_min_recharge,c_min_withdraw,is_coin
+		,is_in_eth,can_recharge,can_withdraw,withdraw_fee,withdraw_fee_percent,withdraw_fee_min,withdraw_fee_max,is_show
+		,c_order, c_intro_cn, c_intro_en,c_cannot_recharge_desc_cn,c_cannot_recharge_desc_en,c_cannot_withdraw_desc_cn
+		,c_cannot_withdraw_desc_en,is_otc,c_max_withdraw,c_limit_withdraw
+		,tokenaddr
+		,`decimal`
+		,num
+		,createNum
+		,recharge_open_time
+		,withdraw_open_time
+		,withdraw_rule
+		,auto_confirm
+		,can_internal_transfer
+		,auto_withdraw_up_limit
+		)
+		VALUES
+		(#{currency},#{currency_name},#{currency_img},#{c_precision},#{c_min_recharge},
+		#{c_min_withdraw},#{is_coin},#{is_in_eth},#{can_recharge},#{can_withdraw},#{withdraw_fee}
+		,#{withdraw_fee_percent},#{withdraw_fee_min},#{withdraw_fee_max},#{is_show},#{c_order}
+		, #{c_intro_cn}, #{c_intro_en},#{c_cannot_recharge_desc_cn},#{c_cannot_recharge_desc_en}
+		,#{c_cannot_withdraw_desc_cn},#{c_cannot_withdraw_desc_en},#{is_otc},#{c_max_withdraw},#{c_limit_withdraw}
+		,#{tokenaddr}
+		,#{decimal}
+		,#{num}
+		,#{createNum}
+		,#{recharge_open_time}
+		,#{withdraw_open_time}
+		,#{withdraw_rule}
+		,#{auto_confirm}
+		,#{can_internal_transfer}
+		,#{auto_withdraw_up_limit}
+		)
+	</insert>
+
+	<update id="editCurrency" parameterType="com.pmzhongguo.ex.business.entity.Currency">
+		UPDATE d_currency SET
+		withdraw_rule=#{withdraw_rule},
+		currency=#{currency},
+		currency_name=#{currency_name},
+		c_precision=#{c_precision},
+		c_min_recharge=#{c_min_recharge},
+		c_min_withdraw=#{c_min_withdraw},
+		c_max_withdraw=#{c_max_withdraw},
+		c_limit_withdraw=#{c_limit_withdraw},
+		is_coin=#{is_coin},
+		is_in_eth=#{is_in_eth},
+		can_recharge=#{can_recharge},
+		can_withdraw=#{can_withdraw},
+		withdraw_fee=#{withdraw_fee},
+		withdraw_fee_percent=#{withdraw_fee_percent},
+		withdraw_fee_min=#{withdraw_fee_min},
+		withdraw_fee_max=#{withdraw_fee_max},
+		is_show=#{is_show},
+		c_order=#{c_order},
+		c_intro_cn = #{c_intro_cn},
+		c_intro_en = #{c_intro_en},
+		c_cannot_recharge_desc_cn=#{c_cannot_recharge_desc_cn},
+		c_cannot_recharge_desc_en=#{c_cannot_recharge_desc_en},
+		c_cannot_withdraw_desc_cn=#{c_cannot_withdraw_desc_cn},
+		c_cannot_withdraw_desc_en=#{c_cannot_withdraw_desc_en},
+		is_otc=#{is_otc},
+		tokenaddr=#{tokenaddr},
+		`decimal`=#{decimal},
+		currency_img=#{currency_img},
+		createNum=#{createNum},
+		num=#{num},
+		recharge_open_time=#{recharge_open_time},
+		withdraw_open_time=#{withdraw_open_time}
+		,auto_confirm=#{auto_confirm}
+		,can_internal_transfer=#{can_internal_transfer}
+		,auto_withdraw_up_limit=#{auto_withdraw_up_limit}
+		WHERE id=#{id}
+	</update>
+
+	<select id="listCurrencyPage" parameterType="java.util.Map" resultType="com.pmzhongguo.ex.business.entity.Currency">
+		SELECT c.* FROM d_currency c where 1 = 1
+		<if test="null != is_show and  is_show !=''">
+    	 	AND c.is_show = #{is_show}
+    	</if>
+    	<if test="null != keyword and  keyword !=''">
+    	 	and (c.currency like CONCAT('%', #{keyword}, '%') or c.currency_name like CONCAT('%', #{keyword}, '%'))
+    	</if>
+	</select>
+	
+	
+	<select id="getCurrency" parameterType="java.lang.Integer" resultType="com.pmzhongguo.ex.business.entity.Currency">
+		SELECT * FROM d_currency
+		WHERE id = #{id}
+	</select>
+
+	<select id="findByName" parameterType="java.lang.String" resultType="com.pmzhongguo.ex.business.entity.Currency">
+		SELECT * FROM d_currency
+		WHERE currency = #{currency}
+	</select>
+</mapper>

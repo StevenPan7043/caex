@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ipfs.mapper.IpfsHashrateMapper">
+  <resultMap id="BaseResultMap" type="com.pmzhongguo.ipfs.entity.IpfsHashrate">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="project_id" jdbcType="INTEGER" property="projectId" />
+    <result column="project_code" jdbcType="VARCHAR" property="projectCode" />
+    <result column="project_name" jdbcType="VARCHAR" property="projectName" />
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+    <result column="output_currency" jdbcType="VARCHAR" property="outputCurrency" />
+    <result column="quote_currency" jdbcType="VARCHAR" property="quoteCurrency" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="total" jdbcType="DECIMAL" property="total" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, project_id, project_code, project_name, member_id, num, output_currency, quote_currency, price,
+    total, status, type, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ipfs_hashrate
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ipfs_hashrate
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pmzhongguo.ipfs.entity.IpfsHashrate">
+    <selectKey resultType="java.lang.Integer" keyProperty="id"
+               order="AFTER">
+      SELECT @@IDENTITY
+    </selectKey>
+    insert into ipfs_hashrate (id, project_id, project_code, project_name,
+      member_id, num, output_currency, 
+      quote_currency, price, total, 
+      status, type, create_time, modify_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{projectId,jdbcType=INTEGER}, #{projectCode,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR},
+    #{memberId,jdbcType=INTEGER}, #{num,jdbcType=DECIMAL}, #{outputCurrency,jdbcType=VARCHAR},
+      #{quoteCurrency,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{total,jdbcType=DECIMAL}, 
+      '1', #{type,jdbcType=VARCHAR}, now(), now()
+      )
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.pmzhongguo.ipfs.entity.IpfsHashrate">
+    update ipfs_hashrate
+    <set>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="projectCode != null">
+        project_code = #{projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null">
+        project_name = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="num != null">
+        num = #{num,jdbcType=DECIMAL},
+      </if>
+      <if test="outputCurrency != null">
+        output_currency = #{outputCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="quoteCurrency != null">
+        quote_currency = #{quoteCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="total != null">
+        total = #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pmzhongguo.ipfs.entity.IpfsHashrate">
+    update ipfs_hashrate
+    set project_id = #{projectId,jdbcType=INTEGER},
+      project_code = #{projectCode,jdbcType=VARCHAR},
+      project_name = #{projectName,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      num = #{num,jdbcType=DECIMAL},
+      output_currency = #{outputCurrency,jdbcType=VARCHAR},
+      quote_currency = #{quoteCurrency,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      total = #{total,jdbcType=DECIMAL},
+      status = #{status,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="findByConditionPage"
+          parameterType="java.util.Map"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ipfs_hashrate
+    <where>
+    <!-- 需要的条件自己加 -->
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="status != null and status != ''">
+        and status = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="projectId != null and projectId != ''">
+        and project_id = #{projectId,jdbcType=INTEGER}
+      </if>
+      <if test="memberId != null and memberId != ''">
+        and member_id = #{memberId,jdbcType=INTEGER}
+      </if>
+      <if test="type != null and type != ''">
+        and type = #{type ,jdbcType=VARCHAR}
+      </if>
+
+<!--      <if test="login_start != null and login_start != ''">-->
+<!--        <![CDATA[and m.last_login_time >= #{login_start,jdbcType=VARCHAR}]]>-->
+<!--      </if>-->
+<!--      <if test="o_status_in != null and o_status_in != ''">and o.o_status IN (${o_status_in})</if>-->
+<!--      <if test="constomerGradeArray!=null and constomerGradeArray.length!=0">-->
+<!--        　　　　AND a.constomer_grade in-->
+<!--        　　　　<foreach collection="constomerGradeArray" item="extraId" index="i" open="(" separator="," close=")">-->
+<!--        　　　　　　#{extraId}-->
+<!--        　　　　</foreach>-->
+<!--        　　</if>-->
+    </where>
+  </select>
+
+  <select id="findHashrate" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from ipfs_hashrate
+    <where> 1=1
+      <if test="projectIdList != null and projectIdList.size > 0">
+        and project_id in
+        <foreach collection="projectIdList" item="item" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+      </if>
+      <if test="status != null">
+        and status = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="memberId != null">
+        and member_id = #{memberId,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+</mapper>

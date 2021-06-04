@@ -1,0 +1,2 @@
+1. 在本地maven路径 .m2/repository 创建目录：mkdir -p com/huobi/arno
+2. 解压api.zip压缩包，将解压后的api文件夹剪切到 .m2/repository/com/huobi/arno 路径下

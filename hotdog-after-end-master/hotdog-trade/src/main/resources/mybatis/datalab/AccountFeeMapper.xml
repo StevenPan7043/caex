@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ex.datalab.mapper.AccountFeeMapper">
+
+    <resultMap id="BaseResultMap" type="com.pmzhongguo.ex.datalab.entity.AccountFee" >
+        <result column="id" property="id" />
+        <result column="member_id" property="memberId" />
+        <result column="fee_currency" property="feeCurrency" />
+        <result column="total_amount" property="totalAmount" />
+        <result column="forzen_amount" property="forzenAmount" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <resultMap id="DtoResultMap" type="com.pmzhongguo.ex.datalab.entity.dto.AccountFeeDto">
+        <result column="id" property="id"/>
+        <result column="member_id" property="memberId"/>
+        <result column="fee_currency" property="feeCurrency"/>
+        <result column="total_amount" property="totalAmount"/>
+        <result column="forzen_amount" property="forzenAmount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="mName" property="mName"/>
+        <result column="availableBalance" property="availableBalance"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+                 id,
+                member_id,
+                fee_currency,
+                total_amount,
+                forzen_amount,
+                create_time,
+                update_time
+    </sql>
+
+    <insert id="insert" parameterType="com.pmzhongguo.ex.datalab.entity.PairFreeDetail">
+        INSERT INTO m_account_fee
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ='null != memberId'>
+                member_id,
+            </if>
+            <if test ='null != feeCurrency'>
+                fee_currency,
+            </if>
+            <if test ='null != totalAmount'>
+                total_amount,
+            </if>
+            <if test ='null != forzenAmount'>
+                forzen_amount,
+            </if>
+            <if test ='null != createTime'>
+                create_time,
+            </if>
+            <if test ='null != updateTime'>
+                update_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ='null != memberId'>
+                #{memberId},
+            </if>
+            <if test ='null != feeCurrency'>
+                #{feeCurrency},
+            </if>
+            <if test ='null != totalAmount'>
+                #{totalAmount},
+            </if>
+            <if test ='null != forzenAmount'>
+                #{forzenAmount},
+            </if>
+            <if test ='null != createTime'>
+                #{createTime},
+            </if>
+            <if test ='null != updateTime'>
+                #{updateTime}
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateById" parameterType="com.pmzhongguo.ex.datalab.entity.AccountFee">
+        UPDATE m_account_fee
+        <set>
+            <if test='null != memberId'>member_id = #{memberId},</if>
+            <if test='null != feeCurrency'>fee_currency = #{feeCurrency},</if>
+            <if test='null != totalAmount'>total_amount = #{totalAmount},</if>
+            <if test='null != forzenAmount'>forzen_amount = #{forzenAmount},</if>
+            <if test='null != createTime'>create_time = #{createTime},</if>
+            <if test='null != updateTime'>update_time = #{updateTime}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <select id="getAccountFeeByMemberId" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM m_account_fee
+        WHERE 1=1
+        <if test='null != memberId'>AND member_id = #{memberId}</if>
+        <if test='null != feeCurrency'>AND fee_currency = #{feeCurrency}</if>
+    </select>
+
+    <select id="getAccountFeeByPage" parameterType="java.util.Map" resultMap="DtoResultMap">
+        SELECT
+        mf.*,mm.m_name mName,(mf.total_amount - mf.forzen_amount) availableBalance
+        FROM m_account_fee mf
+        LEFT JOIN m_member mm ON mm.id = mf.member_id
+        WHERE 1=1
+        <if test="null != memberId">AND mf.member_id = #{memberId}</if>
+        <if test="null != feeCurrency and '' != feeCurrency">AND mf.fee_currency = #{feeCurrency}</if>
+        <if test="null != mName and '' != mName">AND mm.m_name = #{mName}</if>
+        <if test="null != currencyPairStr and '' != currencyPairStr">AND mf.fee_currency in ${currencyPairStr}</if>
+    </select>
+
+</mapper>

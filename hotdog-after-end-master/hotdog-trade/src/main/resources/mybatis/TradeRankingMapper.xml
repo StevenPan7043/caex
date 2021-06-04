@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pmzhongguo.ex.business.mapper.TradeRankingMapper">
+
+    <!-- 交易排名列表分页 -->
+    <select id="list" parameterType="map" resultType="com.pmzhongguo.ex.business.entity.TradeRanking">
+		SELECT
+		(@rownum :=@rownum + 1) AS `no`,
+		t.uid,
+		t.account,
+		0 + CAST(t.num
+		AS CHAR) num
+		FROM
+		(
+		SELECT
+		ttb.member_id uid,
+		INSERT
+		(m.m_name, 4, 4,
+		'****') account,
+		SUM(ttb.volume) num
+		FROM
+		t_trade_${type} ttb
+		LEFT JOIN
+		m_member m ON ttb.member_id =
+		m.id
+		WHERE 1 = 1
+		<![CDATA[AND done_time >= #{startdate}]]>
+		<![CDATA[AND done_time <= #{enddate}]]>
+		GROUP BY member_id
+		ORDER BY num DESC
+		LIMIT #{startsize},10
+		) t,
+		(SELECT(@rownum :=#{startsize})) b;
+	</select>
+
+    <!-- 列表总条数 -->
+    <select id="count" parameterType="map" resultType="integer">
+		SELECT
+		COUNT(*) total
+		FROM
+		(
+		SELECT
+		COUNT(*) total
+		FROM
+		t_trade_${type}
+		WHERE
+		1=1
+		<![CDATA[AND done_time >= #{startdate}]]>
+		<![CDATA[AND done_time <= #{enddate}]]>
+		GROUP BY member_id
+		) t
+	</select>
+
+    <!-- 交易排名查询 -->
+    <select id="search" parameterType="map" resultType="com.pmzhongguo.ex.business.entity.TradeRanking">
+        SELECT
+        `no`,
+        uid,
+        INSERT (account, 4, 4, '****') account,
+        num
+        FROM
+        (
+        SELECT
+        (@rownum :=@rownum + 1) AS `no`,
+        t.uid,
+        t.account,
+        0+CAST(t.num AS CHAR)
+        num
+        FROM
+        (
+        SELECT
+        ttb.member_id uid,
+        m.m_name account,
+        SUM(ttb.volume) num
+        FROM
+        t_trade_${type} ttb
+        LEFT
+        JOIN m_member m ON ttb.member_id = m.id
+        WHERE 1 = 1
+        <![CDATA[AND done_time >= #{startdate}]]>
+        <![CDATA[AND done_time <= #{enddate}]]>
+        GROUP BY member_id
+        ORDER BY num DESC
+        ) t,
+        (SELECT(@rownum := 0)) b
+        ) t1
+        WHERE 1=1
+        <if test="null != uid and  uid !=''">
+            AND uid=#{uid}
+        </if>
+        <if test="null != account and  account !=''">
+            AND account=#{account}
+        </if>
+    </select>
+
+
+    <!-- =============后台============= -->
+
+    <!-- 后台交易排名列表 查询 -->
+    <select id="getTradeRankingList" parameterType="map" resultType="com.pmzhongguo.ex.business.entity.TradeRanking">
+		SELECT
+		(@rownum :=@rownum + 1) AS `no`,
+		t.uid,
+		t.mname,
+		t.account,
+		0 +
+		CAST(t.num AS CHAR) num
+		FROM
+		(
+		SELECT
+		ttb.member_id uid,
+		m.m_name mname,
+		INSERT
+		(m.m_name, 4, 4, '****') account,
+		SUM(ttb.volume) num
+		FROM
+		t_trade_${type} ttb
+		LEFT JOIN m_member m
+		ON ttb.member_id=m.id
+		WHERE 1 =
+		1
+		<![CDATA[AND done_time >= #{startdate}]]>
+		<![CDATA[AND done_time <= #{enddate}]]>
+		GROUP BY member_id
+		ORDER BY num DESC
+		LIMIT #{page},#{pagesize}
+		) t,
+		(SELECT(@rownum :=#{page})) b;
+	</select>
+
+    <!-- 联合查询交易对的是否开启排名 -->
+    <select id="getCurrencyPairList" resultType="com.pmzhongguo.ex.business.entity.TradeRankingSet">
+		SELECT
+		dcp.id dcpid,
+		dcp.dsp_name dspname,
+		dcp.key_name
+		keyname,
+		ttrs.id
+		ttrsid,
+		ttrs.open_time opentime,
+		ttrs.startdate
+		startdate,
+		ttrs.enddate enddate,
+		ttrs.is_open isopen
+		FROM
+		d_currency_pair
+		dcp
+		LEFT JOIN t_trade_ranking_set
+		ttrs ON
+		dcp.id=ttrs.currency_pair_id
+	</select>
+
+    <!-- 查询一条数据 -->
+    <select id="fineTradeRankingOne" resultType="com.pmzhongguo.ex.business.entity.TradeRankingSet"
+            parameterType="integer">
+		SELECT
+		dcp.id dcpid,
+		dcp.dsp_name dspname,
+		dcp.key_name
+		keyname,
+		ttrs.id ttrsid,
+		ttrs.open_time opentime,
+		ttrs.startdate
+		startdate,
+		ttrs.enddate enddate,
+		ttrs.is_open isopen
+		FROM
+		d_currency_pair
+		dcp
+		LEFT JOIN t_trade_ranking_set
+		ttrs ON
+		dcp.id=ttrs.currency_pair_id
+		WHERE 1=1
+		AND dcp.id=#{dcpid}
+	</select>
+
+    <!-- 根据keyname 查询交易排名设置信息 -->
+    <select id="findByKeyName" resultType="com.pmzhongguo.ex.business.entity.TradeRankingSet" parameterType="string">
+		SELECT
+		id ttrsid,
+		currency_pair_id dcpid,
+		key_name keyname,
+		open_time opentime,
+		startdate startdate,
+		enddate enddate,
+		is_open
+		isopen,
+		is_send_reward isSendReward
+		FROM t_trade_ranking_set
+		WHERE 1=1
+		AND
+		key_name=#{keyname}
+	</select>
+
+    <!-- 添加交易对 排行 开启数据 -->
+    <insert id="insertTradeRankingSet" parameterType="com.pmzhongguo.ex.business.entity.TradeRankingSet"
+            useGeneratedKeys="true">
+		INSERT INTO t_trade_ranking_set (
+		currency_pair_id,
+		key_name,
+		open_time,
+		startdate,
+		enddate,
+		is_open
+		)
+		VALUE
+		(#{dcpid},#{keyname},#{opentime},#{startdate},#{enddate},#{isopen});
+	</insert>
+    <!-- 修改交易对 排行 开启数据 -->
+    <update id="updateTradeRankingSet" parameterType="com.pmzhongguo.ex.business.entity.TradeRankingSet">
+        UPDATE t_trade_ranking_set
+        <set>
+            <if test="dcpid != null">currency_pair_id=#{dcpid},</if>
+            <if test="keyname != null">key_name=#{keyname},</if>
+            <if test="keyname != null">open_time=#{opentime},</if>
+            <if test="startdate != null">startdate=#{startdate},</if>
+            <if test="enddate != null">enddate=#{enddate},</if>
+            <if test="isopen != null">is_open=#{isopen},</if>
+            <if test="isSendReward != null">is_send_reward=#{isSendReward}</if>
+        </set>
+        WHERE id=#{ttrsid};
+    </update>
+
+    <!-- 查询所有的交易对排名设置 -->
+    <select id="getTradeRankingSetList" resultType="com.pmzhongguo.ex.business.entity.TradeRankingSet">
+		SELECT
+		id ttrsid,
+		currency_pair_id dcpid,
+		key_name keyname,
+		open_time opentime,
+		startdate startdate,
+		enddate enddate,
+		is_open isopen,
+		is_send_reward isSendReward
+		FROM
+		t_trade_ranking_set
+	</select>
+
+    <!-- 交易排名查询，可以查到24h成交量-->
+    <select id="getTradeRankingAndDayTradeList" parameterType="map" resultType="java.util.Map">
+		SELECT
+		(@rownum :=@rownum + 1) AS `no`,
+		t.uid,
+		t.account,
+		IFNULL(truncate(0 + CAST(dt.day_trade AS CHAR),2),0) as day_trade,
+		truncate(0 + CAST(t.num AS CHAR),2) num
+		FROM
+		(
+		SELECT
+		ttb.member_id uid,
+		INSERT (m.m_name, 4, 4, '****') account,
+		SUM(ttb.volume) num
+		FROM t_trade_${type} ttb
+		LEFT JOIN m_member m
+		ON ttb.member_id=m.id
+		left join t_order_${type} toe
+		on ttb.opposite_o_id = toe.id
+		WHERE 1 = 1
+		and ttb.member_id != toe.member_id
+		<![CDATA[AND ttb.done_time >= #{startdate}]]>
+		<![CDATA[AND ttb.done_time <= #{enddate}]]>
+		GROUP BY ttb.member_id
+		ORDER BY num DESC
+		) t
+		left join
+		(
+		select
+		sum(tte.volume) as day_trade  ,
+		tte.member_id as mid
+		from t_order_${type} toe
+		left join t_trade_${type} tte
+		on tte.opposite_o_id = toe.id
+		where  tte.member_id != toe.member_id
+		and tte.done_time >=(NOW() - interval 24 hour)
+		<![CDATA[AND tte.done_time >= #{startdate}]]>
+		<![CDATA[AND tte.done_time <= #{enddate}]]>
+		GROUP BY tte.member_id
+		) dt
+		on t.uid = dt.mid ,
+		(SELECT(@rownum := 0)) b limit #{page} ,#{size};
+	</select>
+
+    <!-- 查询zc,usdt24h交易量排名-->
+    <select id="getDayTradeRankingByZcAndUsdtList" parameterType="map" resultType="java.util.Map">
+		SELECT t1.day_trade as day_trade, t1.mid as uid
+		FROM (
+		SELECT sum( ttezc.volume ) AS day_trade, ttezc.member_id AS mid
+		FROM t_order_${zc} toezc
+		LEFT JOIN t_trade_${zc} ttezc
+		ON ttezc.opposite_o_id = toezc.id
+		WHERE ttezc.member_id != toezc.member_id
+		AND ttezc.done_time >= ( NOW( ) - INTERVAL 24 HOUR )
+		<![CDATA[AND ttezc.done_time >= #{startdate}]]>
+		<![CDATA[AND ttezc.done_time <= #{enddate}]]>
+		GROUP BY ttezc.member_id
+
+		UNION
+
+		SELECT sum( tteusdt.volume ) AS day_trade, tteusdt.member_id AS mid
+		FROM t_order_${usdt} toeusdt
+		LEFT JOIN t_trade_${usdt} tteusdt
+		ON tteusdt.opposite_o_id = toeusdt.id
+		WHERE tteusdt.member_id != toeusdt.member_id
+		AND tteusdt.done_time >= ( NOW( ) - INTERVAL 24 HOUR )
+		<![CDATA[AND tteusdt.done_time >= #{startdate}]]>
+		<![CDATA[AND tteusdt.done_time <= #{enddate}]]>
+		GROUP BY tteusdt.member_id
+		) t1
+		GROUP BY t1.mid
+	</select>
+    <!-- 查询zc,usdt总交易量排名-->
+    <select id="getTotalTradeRankingByZcAndUsdtList" parameterType="map" resultType="java.util.Map">
+		SELECT t.account as account, t.uid as uid, sum(t.num) as num
+		FROM (
+			SELECT ttbzc.member_id uid, m.m_name AS account, SUM( ttbzc.volume ) num
+			FROM t_trade_${zc} ttbzc
+			LEFT JOIN m_member m ON ttbzc.member_id = m.id
+			LEFT JOIN t_order_${zc} toezc ON ttbzc.opposite_o_id = toezc.id
+			WHERE 1 = 1
+			AND ttbzc.member_id != toezc.member_id
+			<![CDATA[AND ttbzc.done_time >= #{startdate}]]>
+			<![CDATA[AND ttbzc.done_time <= #{enddate}]]>
+			GROUP BY ttbzc.member_id
+
+		UNION
+
+		SELECT ttbusdt.member_id uid, m.m_name AS account, SUM( ttbusdt.volume ) num
+		FROM t_trade_${usdt} ttbusdt
+		LEFT JOIN m_member m ON ttbusdt.member_id = m.id
+		LEFT JOIN t_order_${usdt} toeusdt ON ttbusdt.opposite_o_id = toeusdt.id
+		WHERE 1 = 1
+		AND ttbusdt.member_id != toeusdt.member_id
+		<![CDATA[AND ttbusdt.done_time >= #{startdate}]]>
+		<![CDATA[AND ttbusdt.done_time <= #{enddate}]]>
+		GROUP BY ttbusdt.member_id
+		) t
+		GROUP BY t.account
+		ORDER BY num DESC
+		LIMIT #{count}
+	</select>
+
+    <!--   24h 自身的交易可以累加-->
+    <select id="getSelfDayTradeRankingByZcAndUsdtList" parameterType="map" resultType="java.util.Map">
+		SELECT t1.day_trade as day_trade, t1.mid as uid
+		FROM (
+		SELECT sum( ttezc.volume ) AS day_trade, ttezc.member_id AS mid
+		FROM   t_trade_${zc} ttezc LEFT JOIN
+		m_member m ON ttezc.member_id = m.id
+		WHERE 1=1
+		and ttezc.done_time >= ( NOW( ) - INTERVAL 24 HOUR )
+		<![CDATA[AND ttezc.done_time >= #{startdate}]]>
+		<![CDATA[AND ttezc.done_time <= #{enddate}]]>
+		GROUP BY ttezc.member_id
+		UNION
+
+		SELECT sum( tteusdt.volume ) AS day_trade, tteusdt.member_id AS mid
+		FROM  t_trade_${usdt} tteusdt LEFT JOIN
+		m_member m ON tteusdt.member_id = m.id
+
+		WHERE 1=1
+		and  tteusdt.done_time >= ( NOW( ) - INTERVAL 24 HOUR )
+		<![CDATA[AND tteusdt.done_time >= #{startdate}]]>
+		<![CDATA[AND tteusdt.done_time <= #{enddate}]]>
+		GROUP BY tteusdt.member_id
+		) t1
+		GROUP BY t1.mid
+		ORDER BY day_trade desc
+	</select>
+
+    <!--   总成交量 自身的交易可以累加-->
+    <select id="getSelfTotalTradeRankingByZcAndUsdtList" parameterType="map" resultType="java.util.Map">
+		SELECT t.account as account, t.uid as uid, sum(t.num) as num
+		FROM (
+		SELECT ttbzc.member_id uid, m.m_name AS account, SUM( ttbzc.volume ) num
+		FROM t_trade_${zc} ttbzc
+		LEFT JOIN m_member m ON ttbzc.member_id = m.id
+		WHERE 1 = 1
+		<![CDATA[AND ttbzc.done_time >= #{startdate}]]>
+		<![CDATA[AND ttbzc.done_time <= #{enddate}]]>
+		GROUP BY ttbzc.member_id
+
+		UNION
+
+		SELECT ttbusdt.member_id uid, m.m_name AS account, SUM( ttbusdt.volume ) num
+		FROM t_trade_${usdt} ttbusdt
+		LEFT JOIN m_member m ON ttbusdt.member_id = m.id
+
+		WHERE 1 = 1
+		<![CDATA[AND ttbusdt.done_time >= #{startdate}]]>
+		<![CDATA[AND ttbusdt.done_time <= #{enddate}]]>
+		GROUP BY ttbusdt.member_id
+		) t
+		GROUP BY t.account
+		ORDER BY num DESC
+		LIMIT #{count}
+	</select>
+
+	<select id="findMemberAccountRankByCurrency" parameterType="map" resultType="java.util.Map">
+		SELECT oa.total_balance as num,oa.currency,mm.m_name as account
+		FROM m_account oa LEFT JOIN t_currency_ranking tcr on oa.currency = tcr.currency
+		LEFT JOIN m_member mm on oa.member_id = mm.id
+		WHERE oa.currency = #{type}
+		<![CDATA[AND tcr.startdate <= #{current_time}]]>
+		<![CDATA[AND tcr.enddate >= #{current_time}]]>
+		order by oa.total_balance desc limit #{size}
+	</select>
+
+	<select id="findCurrencyRankingIsOpen" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT tcr.startdate,tcr.enddate FROM t_currency_ranking tcr WHERE tcr.currency = #{type} and tcr.is_open = 1
+	</select>
+
+	<select id="findCurrencyPairTradeRankList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT * FROM t_trade_ranking_set ttrs
+		WHERE ttrs.is_open = 1 AND ttrs.key_name LIKE concat(#{type},'%')
+	</select>
+
+	<!-- ========================通用交易排名查询================================= -->
+	<!-- 查询某个交易对总交易量排名-->
+	<select id="getTotalTradeRankingList" parameterType="map" resultType="com.pmzhongguo.ex.business.dto.TradeRankDto">
+		SELECT ttbzc.member_id uid, m.m_name AS account, SUM( ttbzc.volume ) num
+		FROM t_trade_${pair} ttbzc
+		LEFT JOIN m_member m ON ttbzc.member_id = m.id
+		LEFT JOIN t_order_${pair} toezc ON ttbzc.opposite_o_id = toezc.id
+		WHERE 1 = 1
+		AND ttbzc.member_id != toezc.member_id
+		<![CDATA[AND ttbzc.done_time >= #{startdate}]]>
+		<![CDATA[AND ttbzc.done_time <= #{enddate}]]>
+		GROUP BY ttbzc.member_id
+	</select>
+
+	<!-- 查询zc,usdt，eth24h交易量排名-->
+	<select id="getDayTradeRankingByZcAndUsdtAndEthList" parameterType="map" resultType="com.pmzhongguo.ex.business.dto.TradeRankDto">
+
+		SELECT sum( ttezc.volume ) as dayNum, ttezc.member_id as uid
+			FROM t_order_${zc} toezc
+			LEFT JOIN t_trade_${zc} ttezc
+			ON ttezc.opposite_o_id = toezc.id
+			WHERE ttezc.member_id != toezc.member_id
+			AND ttezc.done_time >= ( NOW( ) - INTERVAL 24 HOUR )
+			<![CDATA[AND ttezc.done_time >= #{startdate}]]>
+			<![CDATA[AND ttezc.done_time <= #{enddate}]]>
+			GROUP BY ttezc.member_id
+	</select>
+
+    <insert id="insertCurrencyRank" parameterType="java.util.Map">
+        insert into t_currency_ranking
+        <trim prefix="(" suffixOverrides="," suffix=")">
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+			<if test="is_open != null">
+				is_open,
+			</if>
+			<if test="currency != null">
+				currency,
+			</if>
+		</trim>
+		<trim prefix="values (" suffixOverrides="," suffix=")">
+			<if test="create_time != null">
+				#{create_time},
+			</if>
+			<if test="update_time != null">
+				#{update_time},
+			</if>
+			<if test="is_open != null">
+				#{is_open},
+			</if>
+			<if test="currency != null">
+				#{currency},
+			</if>
+		</trim>
+    </insert>
+
+	<select id="findCurrencyList" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from t_currency_ranking
+	</select>
+	<select id="fineCurrencyTradeRankingOne" parameterType="java.lang.Integer" resultType="java.util.Map">
+		select tcr.*  from t_currency_ranking tcr WHERE id = #{id}
+	</select>
+
+	<update id="updateCurrencyTradeRankingSet" parameterType="java.util.Map">
+		update t_currency_ranking
+		<set>
+			<if test="currency != null">currency=#{currency},</if>
+			<if test="startdate != null">startdate=#{startdate},</if>
+			<if test="enddate != null">enddate=#{enddate},</if>
+			<if test="is_open != null">is_open=#{is_open},</if>
+			<if test="create_time != null">create_time=#{create_time},</if>
+			<if test="update_time != null">update_time=#{update_time}</if>
+		</set>
+		WHERE id=#{id};
+	</update>
+
+
+</mapper>
